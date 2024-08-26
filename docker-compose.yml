@@ -1,0 +1,15 @@
+services:
+  backend:
+    build:
+        context: backend
+        dockerfile: ./docker/Dockerfile
+    ports:
+      - '8082:8082'
+    environment:
+        - NODE_ENV=development
+        - PORT=8082
+    restart: always
+    networks:
+      - app_network
+networks:
+  app_network:

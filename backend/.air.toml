@@ -1,0 +1,6 @@
+# Config file for `air`
+[build]
+bin = "bin/main" # Binary output path
+cmd = "go build -o ./bin/main" # Build command
+include_ext = ["go", "tpl", "tmpl", "html"] # File extensions to watch
+exclude_dir = ["vendor", "node_modules"] # Directories to exclude
