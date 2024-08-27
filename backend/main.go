@@ -1,29 +1,27 @@
 package main
 
 import (
+	"db-tool/environments"
+	"db-tool/modules/backup"
 	"fmt"
 	"net/http"
 	"os"
 )
 
 func main() {
-	//Read the environment variables
-	port := os.Getenv("PORT")
 
-	///Frontend serve
-	fs := http.FileServer(http.Dir("static/"))
-	http.Handle("/", fs)
+	environments.SetupEnvironments()
 
-	//Serve API
-	http.HandleFunc("/api", func(w http.ResponseWriter, r *http.Request) {
-		_, err := fmt.Fprintf(w, "Hello World")
-		if err != nil {
-			return
-		}
+	//Serving the backup endpoint
+	http.HandleFunc("/backup", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Printf("Backup requested\n")
+		backup.BackUpDatabase()
+		w.Write([]byte("Backup completed"))
 	})
 
-	fmt.Printf("Server is running on port %s\n", port)
-	err := http.ListenAndServe(":"+port, nil)
+	//Start the server
+	fmt.Println("Server is running on port:" + os.Getenv("PORT"))
+	err := http.ListenAndServe(":"+os.Getenv("PORT"), nil)
 	if err != nil {
 		return
 	}

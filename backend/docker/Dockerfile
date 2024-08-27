@@ -14,8 +14,25 @@ COPY . .
 # Build the Go application
 RUN go build -o server
 
+RUN echo "Building the Go application"
+
+# Stage 2: Create a minimal image with the built application
+FROM ubuntu:24.04
+
+# Update package list and install required packages
+RUN apt-get update && \
+    apt-get install -y postgresql-client postgresql-client-common libpq-dev
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the built application from the builder stage
+COPY --from=builder /app/server .
+
+COPY ./docker/entrypoint.sh /entrypoint.sh
+
 # Expose the port the application runs on (if applicable)
 EXPOSE 8081
 
-# Command to run the executable
-CMD ["./server"]
+RUN chmod +x /entrypoint.sh
+
+RUN #echo "Building the Go application"

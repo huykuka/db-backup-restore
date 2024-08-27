@@ -5,11 +5,20 @@ services:
         dockerfile: ./docker/Dockerfile
     ports:
       - '8082:8082'
+    entrypoint: /entrypoint.sh
     environment:
-        - NODE_ENV=development
+        - ENV=prod
         - PORT=8082
+        - BACKUP_PATH=/home/thaiqu/backup
     restart: always
-    networks:
-      - app_network
-networks:
-  app_network:
+    volumes:
+      - backup_data:/app/backup
+
+
+volumes:
+  backup_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/thaiqu/backup

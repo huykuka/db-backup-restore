@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: bitnami/postgresql:latest
+    container_name: postgres-primary
+    environment:
+      POSTGRESQL_USERNAME: ${POSTGRES_USER:-postgres}
+      POSTGRESQL_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRESQL_DATABASE: ${POSTGRES_DB:-postgres-go}
+      POSTGRESQL_CLIENT_MIN_MESSAGES: info
+    ports:
+      - "5432:5432"
+    networks:
+      - app_network
+networks:
+  app_network:
