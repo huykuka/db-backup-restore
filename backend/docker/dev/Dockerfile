@@ -4,12 +4,8 @@ FROM golang:1.23-alpine
 # Install necessary packages
 # Install necessary packages
 RUN apk add \
-    postgresql-client \
-    postgresql-dev
+    postgresql-client
 
-
-# Install air for live reloading
-RUN go install github.com/air-verse/air@latest
 
 # Set the Current Working Directory inside the container
 WORKDIR /app

@@ -5,7 +5,7 @@ services:
     build:
       context: backend
       dockerfile: docker/dev/Dockerfile
-    command: air
+    command: go run .
     develop:
       watch:
         - action: sync
