@@ -19,6 +19,8 @@ func main() {
 		w.Write([]byte("Backup completed"))
 	})
 	fmt.Println("Hello3")
+	fmt.Println("Hello4")
+	fmt.Println("Hello7")
 	//Start the server
 	err := http.ListenAndServe(":"+os.Getenv("PORT"), nil)
 	if err != nil {
