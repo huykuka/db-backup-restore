@@ -21,6 +21,3 @@ RUN go mod download
 
 ## Copy the air configuration file
 #COPY .air.toml .
-
-# Command to run air for live reloading
-CMD ["air"]

@@ -5,14 +5,19 @@ services:
     build:
       context: backend
       dockerfile: docker/dev/Dockerfile
-    volumes:
-      - ./backend:/app
+    develop:
+      watch:
+        - action: sync
+          path: ./backend
+          target: /app
+        - action: rebuild
+          path: go.mod
     environment:
       - ENV=container-dev
-      - PORT=3001
+      - PORT=${APP_PORT:-3000}
       - BACKUP_PATH=/home/thaiqu/backup
     ports:
-      - "8080:3001"
+      - "8080:${APP_PORT:-3000}"
 
   postgres:
     image: bitnami/postgresql:latest
