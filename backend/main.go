@@ -18,8 +18,6 @@ func main() {
 		backup.BackUpDatabase()
 		w.Write([]byte("Backup completed"))
 	})
-	fmt.Println("Hello13456")
-	fmt.Println("Hello2")
 	fmt.Println("Hello3")
 	//Start the server
 	err := http.ListenAndServe(":"+os.Getenv("PORT"), nil)
