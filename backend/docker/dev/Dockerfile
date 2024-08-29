@@ -22,8 +22,5 @@ RUN go mod download
 ## Copy the air configuration file
 #COPY .air.toml .
 
-# Expose the application on a specific port (optional)
-EXPOSE 3001
-
 # Command to run air for live reloading
 CMD ["air"]
