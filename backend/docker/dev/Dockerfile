@@ -14,6 +14,3 @@ WORKDIR /app
 COPY . .
 
 RUN go mod download
-
-## Copy the air configuration file
-#COPY .air.toml .

@@ -1,7 +1,22 @@
-version: '3.8'
-
 services:
-  app:
+  frontend:
+    build:
+      context: frontend
+      dockerfile: docker/dev/Dockerfile
+    container_name: frontend
+    command: npm run start
+    develop:
+      watch:
+        - action: sync
+          path: ./frontend
+          target: /app
+        - action: rebuild
+          path: package.json
+    ports:
+      - "4200:4200"
+    networks:
+      - app_network
+  backend:
     build:
       context: backend
       dockerfile: docker/dev/Dockerfile
@@ -19,7 +34,8 @@ services:
       - BACKUP_PATH=/home/thaiqu/backup
     ports:
       - "8080:${APP_PORT:-3000}"
-
+    networks:
+      - app_network
   postgres:
     image: bitnami/postgresql:latest
     container_name: postgres-primary
@@ -31,3 +47,5 @@ services:
     ports:
       - "5432:5432"
 
+networks:
+  app_network:
