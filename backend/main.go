@@ -20,7 +20,6 @@ func main() {
 	})
 
 	//Start the server
-	fmt.Println("Server is running on port:" + os.Getenv("PORT"))
 	err := http.ListenAndServe(":"+os.Getenv("PORT"), nil)
 	if err != nil {
 		return

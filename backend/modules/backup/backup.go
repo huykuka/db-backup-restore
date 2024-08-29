@@ -11,7 +11,7 @@ func BackUpDatabase() {
 
 	//Define variables
 	user := "postgres"
-	host := "localhost"
+	host := "postgres"
 	port := "5432"
 	password := "postgres"
 	dbName := "postgres-go"

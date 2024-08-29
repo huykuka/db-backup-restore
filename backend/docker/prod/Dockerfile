@@ -9,7 +9,7 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 # Copy the rest of the application source code
-COPY . .
+COPY .. .
 
 # Build the Go application
 RUN go build -o server
@@ -28,7 +28,7 @@ WORKDIR /app
 # Copy the built application from the builder stage
 COPY --from=builder /app/server .
 
-COPY ./docker/entrypoint.sh /entrypoint.sh
+COPY ./docker/prod/entrypoint.sh /entrypoint.sh
 
 # Expose the port the application runs on (if applicable)
 EXPOSE 8081

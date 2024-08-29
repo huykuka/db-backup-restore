@@ -1,6 +1,14 @@
-# Config file for `air`
+# Config file for air
 [build]
-bin = "bin/main" # Binary output path
-cmd = "go build -o ./bin/main" # Build command
-include_ext = ["go", "tpl", "tmpl", "html"] # File extensions to watch
-exclude_dir = ["vendor", "node_modules"] # Directories to exclude
+  cmd = "go build -o ./tmp/main ."
+  bin = "./tmp/main"
+  include_ext = ["go", "tpl", "html"]
+  exclude_dir = ["assets", "tmp", "vendor"]
+  exclude_file = ["*_test.go"]
+  delay = 1000
+  stop_on_error = true
+
+[log]
+  level = "debug"
+  color = true
+  timestamp = "2006-01-02 15:04:05"

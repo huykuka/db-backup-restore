@@ -1,4 +1,19 @@
+version: '3.8'
+
 services:
+  app:
+    build:
+      context: backend
+      dockerfile: docker/dev/Dockerfile
+    volumes:
+      - ./backend:/app
+    environment:
+      - ENV=container-dev
+      - PORT=3001
+      - BACKUP_PATH=/home/thaiqu/backup
+    ports:
+      - "8080:3001"
+
   postgres:
     image: bitnami/postgresql:latest
     container_name: postgres-primary
@@ -9,7 +24,4 @@ services:
       POSTGRESQL_CLIENT_MIN_MESSAGES: info
     ports:
       - "5432:5432"
-    networks:
-      - app_network
-networks:
-  app_network:
+

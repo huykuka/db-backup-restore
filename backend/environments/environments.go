@@ -1,6 +1,7 @@
 package environments
 
 import (
+	"fmt"
 	"github.com/joho/godotenv"
 	"os"
 )
@@ -8,6 +9,7 @@ import (
 func SetupEnvironments() {
 	//Setup the environment
 	env := os.Getenv("ENV")
+	fmt.Print(env)
 	if env == "" {
 		env = "dev"
 	}
