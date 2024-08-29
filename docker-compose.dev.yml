@@ -5,6 +5,7 @@ services:
     build:
       context: backend
       dockerfile: docker/dev/Dockerfile
+    command: air
     develop:
       watch:
         - action: sync
