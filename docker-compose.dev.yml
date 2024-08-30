@@ -39,6 +39,8 @@ services:
   postgres:
     image: bitnami/postgresql:latest
     container_name: postgres-primary
+    networks:
+      - app_network
     environment:
       POSTGRESQL_USERNAME: ${POSTGRES_USER:-postgres}
       POSTGRESQL_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
