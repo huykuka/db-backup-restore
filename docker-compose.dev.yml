@@ -17,7 +17,9 @@ services:
             - dist/
             - .nx/
         - action: rebuild
-          path: package.json
+          path: frontend/package.json
+        - action: rebuild
+          path: frontend/package-lock.json
     ports:
       - "4200:4200"
     networks:
@@ -38,7 +40,7 @@ services:
            - bin/
            - tmp/
         - action: rebuild
-          path: go.mod
+          path: backend/go.mod
     restart: unless-stopped
     environment:
       - ENV=container-dev
