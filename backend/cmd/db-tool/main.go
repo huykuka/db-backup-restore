@@ -2,7 +2,7 @@ package main
 
 import (
 	"db-tool/environments"
-	"db-tool/modules/backup"
+	"db-tool/internal/backup"
 	"fmt"
 	"net/http"
 	"os"
@@ -18,9 +18,11 @@ func main() {
 		backup.BackUpDatabase()
 		w.Write([]byte("Backup completed"))
 	})
-	fmt.Println("Hello3")
-	fmt.Println("Hello332reqd")
-	fmt.Println("Hello332reqdsfdsd")
+
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("hello12sdfsafwq"))
+	})
+
 	//Start the server
 	err := http.ListenAndServe(":"+os.Getenv("PORT"), nil)
 	if err != nil {
