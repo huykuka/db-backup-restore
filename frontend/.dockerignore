@@ -15,3 +15,5 @@ Dockerfile
 pgdata
 secrets
 docker/
+.nx/
+e2e/

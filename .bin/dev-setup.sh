@@ -12,10 +12,10 @@ if [ "$1" == "reset" ]; then
     docker volume prune -a -f
 
     # Rebuild and start services with Docker Compose
-    docker compose -f docker-compose.dev.yml up --build
+    docker compose -f docker-compose.dev.yml up -w --build
 else
     echo "Starting services without pruning or rebuilding..."
 
     # Just start the services without rebuilding
-    docker compose -f docker-compose.dev.yml up
+    docker compose -f docker-compose.dev.yml up -w
 fi
