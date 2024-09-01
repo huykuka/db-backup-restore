@@ -11,6 +11,10 @@ services:
         - action: sync
           path: ./frontend
           target: /app
+          ignore:
+            - node_modules/
+            - docker/
+            - dist/
         - action: rebuild
           path: package.json
     ports:
@@ -22,16 +26,22 @@ services:
       context: backend
       dockerfile: docker/dev/Dockerfile
     command: air
+    container_name: backend
     develop:
       watch:
         - action: sync
           path: ./backend
           target: /app
+          ignore:
+           - docker/
+           - bin/
+           - tmp/
         - action: rebuild
           path: go.mod
     restart: unless-stopped
     environment:
       - ENV=container-dev
+      - APP_PORT=3001
       - PORT=${APP_PORT:-3000}
       - BACKUP_PATH=/home/thaiqu/backup
     ports:
@@ -40,7 +50,9 @@ services:
       - app_network
   postgres:
     image: bitnami/postgresql:latest
-    container_name: postgres-primary
+    container_name: postgres
+    logging:
+      driver: "none"
     networks:
       - app_network
     restart: unless-stopped
