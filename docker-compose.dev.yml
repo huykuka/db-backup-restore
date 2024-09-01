@@ -5,6 +5,7 @@ services:
       dockerfile: docker/dev/Dockerfile
     container_name: frontend
     command: npm run start
+    restart: unless-stopped
     develop:
       watch:
         - action: sync
@@ -20,14 +21,15 @@ services:
     build:
       context: backend
       dockerfile: docker/dev/Dockerfile
-    command: go run .
+    command: air
     develop:
       watch:
-        - action: sync+restart
+        - action: sync
           path: ./backend
           target: /app
         - action: rebuild
           path: go.mod
+    restart: unless-stopped
     environment:
       - ENV=container-dev
       - PORT=${APP_PORT:-3000}
@@ -41,6 +43,7 @@ services:
     container_name: postgres-primary
     networks:
       - app_network
+    restart: unless-stopped
     environment:
       POSTGRESQL_USERNAME: ${POSTGRES_USER:-postgres}
       POSTGRESQL_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
