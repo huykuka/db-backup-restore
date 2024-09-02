@@ -2,30 +2,32 @@ package api
 
 import (
 	user "db-tool/internal/routes/users"
-	"github.com/gorilla/mux"
-	"net/http"
+	"fmt"
+	"github.com/gin-gonic/gin"
 	"os"
 )
 
 func ServeEndPoints() {
-	//Setup Mux
-	r := mux.NewRouter()
+	port := os.Getenv("PORT")
+	//Setup GIN
+	r := gin.Default()
 
 	//Serving static
 
 	//
 
 	//Serving API
-	var api = r.PathPrefix("/api").Subrouter()
-	api.NotFoundHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {})
+	var api = r.Group("/api")
 
 	//Register modules
 	user.Serve(api)
 	////
 
-	//Start the server
-	err := http.ListenAndServe(":"+os.Getenv("PORT"), r)
+	fmt.Println("Server is running on port: ", port)
+
+	err := r.Run(":" + port)
 	if err != nil {
 		return
 	}
+
 }

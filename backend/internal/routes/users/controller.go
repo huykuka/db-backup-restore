@@ -1,11 +1,11 @@
 package user
 
 import (
-	"github.com/gorilla/mux"
+	"github.com/gin-gonic/gin"
 )
 
-func Serve(r *mux.Router) {
-	r.HandleFunc("/users", getAll).Methods("GET")
-	r.HandleFunc("/users/{id}", getByID).Methods("GET")
-	r.HandleFunc("/users", create).Methods("POST")
+func Serve(r *gin.RouterGroup) {
+	r.GET("/users", getAll)
+	r.GET("/users/:id", getByID)
+	r.POST("/users", create)
 }
