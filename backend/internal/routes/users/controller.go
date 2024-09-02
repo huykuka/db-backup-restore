@@ -5,7 +5,8 @@ import (
 )
 
 func Serve(r *gin.RouterGroup) {
-	r.GET("/users", getAll)
-	r.GET("/users/:id", getByID)
-	r.POST("/users", create)
+	user := new(User)
+	r.GET("/users", user.getAll)
+	r.GET("/users/:id", user.getByID)
+	r.POST("/users", user.create)
 }

@@ -1,4 +1,6 @@
 # Config file for air
+
+
 [build]
   cmd = "go build -o  ./tmp/main ./cmd/db-tool"
   bin = "./tmp/main"

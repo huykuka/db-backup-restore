@@ -1,11 +1,10 @@
 package main
 
 import (
-	"db-tool/config/api"
-	"db-tool/config/environments"
+	"db-tool/config"
 )
 
 func main() {
-	environments.SetupEnvironments()
-	api.ServeEndPoints()
+	config.Init()
+
 }
