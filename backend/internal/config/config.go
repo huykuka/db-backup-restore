@@ -1,7 +1,6 @@
 package config
 
 import (
-	"db-tool/internal/config/api"
 	"db-tool/internal/config/environments"
 	"db-tool/internal/config/logger"
 )
@@ -12,5 +11,4 @@ func Init() {
 	logger.Init()
 	///Must be run last because it will block the application
 
-	api.Init()
 }

@@ -16,6 +16,7 @@ func Init() {
 	//Setup GIN
 	r := gin.Default()
 	r.Use(middlewares.Logger())
+	r.Use(interceptors.JsonApiInterceptor())
 	//Serving static
 
 	//
@@ -25,9 +26,6 @@ func Init() {
 
 	//Register modules
 	users.Register(api)
-
-	r.Use(interceptors.JsonApiInterceptor())
-
 	fmt.Println("Server is running on port: ", port)
 	err := r.Run(":" + port)
 	if err != nil {

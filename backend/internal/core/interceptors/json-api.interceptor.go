@@ -23,8 +23,7 @@ type JSONAPIError struct {
 
 func JsonApiInterceptor() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Next() // Process the request first
-
+		c.Next()
 		// Initialize the JSON API response
 		jsonApiResponse := JSONAPIResponse{
 			Meta:  make(map[string]interface{}),
@@ -35,16 +34,23 @@ func JsonApiInterceptor() gin.HandlerFunc {
 
 		// Handle errors
 		if len(c.Errors) > 0 {
+			// Retrieve the status code from the context, defaulting to 400 if not set
+			statusCode := http.StatusBadRequest
+			if code, exists := c.Get("statusCode"); exists {
+				statusCode = code.(int)
+			}
+
 			errors := make([]JSONAPIError, len(c.Errors))
 			for i, e := range c.Errors {
 				errors[i] = JSONAPIError{
-					Status: http.StatusText(c.Writer.Status()),
+					Status: http.StatusText(statusCode),
 					Title:  e.Error(),
-					Detail: e.Err.Error(),
 				}
 			}
 			jsonApiResponse.Errors = errors
-			c.JSON(c.Writer.Status(), jsonApiResponse)
+
+			// Set the status code and send the JSON:API formatted error response
+			c.JSON(statusCode, jsonApiResponse)
 			return
 		}
 

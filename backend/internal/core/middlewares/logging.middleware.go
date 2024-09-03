@@ -2,6 +2,7 @@ package middlewares
 
 import (
 	"github.com/gin-gonic/gin"
+	"log"
 )
 
 func Logger() gin.HandlerFunc {
@@ -9,7 +10,7 @@ func Logger() gin.HandlerFunc {
 
 		c.Next()
 		// access the status we are sending
-		//status := c.Writer.Status()
-		//log.Println(status)
+		status := c.Writer.Status()
+		log.Println(status)
 	}
 }
