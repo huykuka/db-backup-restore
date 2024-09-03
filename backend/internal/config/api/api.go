@@ -1,7 +1,9 @@
 package api
 
 import (
+	"db-tool/internal/core/interceptors"
 	"db-tool/internal/core/middlewares"
+	"db-tool/internal/routes/users"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"os"
@@ -22,11 +24,11 @@ func Init() {
 	api = r.Group("/api")
 
 	//Register modules
+	users.Register(api)
 
-	////
+	r.Use(interceptors.JsonApiInterceptor())
 
 	fmt.Println("Server is running on port: ", port)
-
 	err := r.Run(":" + port)
 	if err != nil {
 		panic("Can not start server")
