@@ -2,15 +2,14 @@ package api
 
 import (
 	"db-tool/internal/core/middlewares"
-	user "db-tool/internal/routes/users"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"os"
 )
 
-var Api *gin.RouterGroup
+var api *gin.RouterGroup
 
-func ServeEndPoints() {
+func Init() {
 	port := os.Getenv("PORT")
 	//Setup GIN
 	r := gin.Default()
@@ -20,10 +19,10 @@ func ServeEndPoints() {
 	//
 
 	//Serving API
-	Api = r.Group("/api")
+	api = r.Group("/api")
 
 	//Register modules
-	user.Serve(Api)
+
 	////
 
 	fmt.Println("Server is running on port: ", port)

@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func Setup() {
+func Init() {
 	gin.ForceConsoleColor()
 	// Logging to a file.
 	f, _ := os.Create("gin.log")

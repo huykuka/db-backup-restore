@@ -1,10 +1,9 @@
 package main
 
 import (
-	"db-tool/config"
+	"db-tool/internal/config"
 )
 
 func main() {
 	config.Init()
-
 }

@@ -10,7 +10,7 @@ var validate = validator.New()
 
 func BodyValidator[T any](c *gin.Context) {
 	var dto T //Data Transfer Object
-	if err := c.ShouldBindJSON(&dto); err != nil {
+	if err := c.ShouldBindBodyWithJSON(&dto); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		c.Abort()
 		return

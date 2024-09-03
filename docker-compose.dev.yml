@@ -1,31 +1,31 @@
 services:
-  frontend:
-    build:
-      context: frontend
-      dockerfile: docker/dev/Dockerfile
-    container_name: frontend
-    command: npm run start
-    restart: unless-stopped
-    environment:
-      - TERM=xterm-256color
-    develop:
-      watch:
-        - action: sync
-          path: ./frontend
-          target: /app
-          ignore:
-            - node_modules/
-            - docker/
-            - dist/
-            - .nx/
-        - action: rebuild
-          path: frontend/package.json
-        - action: rebuild
-          path: frontend/package-lock.json
-    ports:
-      - "4200:4200"
-    networks:
-      - app_network
+#  frontend:
+#    build:
+#      context: frontend
+#      dockerfile: docker/dev/Dockerfile
+#    container_name: frontend
+#    command: npm run start
+#    restart: unless-stopped
+#    environment:
+#      - TERM=xterm-256color
+#    develop:
+#      watch:
+#        - action: sync
+#          path: ./frontend
+#          target: /app
+#          ignore:
+#            - node_modules/
+#            - docker/
+#            - dist/
+#            - .nx/
+#        - action: rebuild
+#          path: frontend/package.json
+#        - action: rebuild
+#          path: frontend/package-lock.json
+#    ports:
+#      - "4200:4200"
+#    networks:
+#      - app_network
   backend:
     build:
       context: backend
@@ -54,21 +54,21 @@ services:
       - "8080:${APP_PORT:-3000}"
     networks:
       - app_network
-  postgres:
-    image: bitnami/postgresql:latest
-    container_name: postgres
-    logging:
-      driver: "none"
-    networks:
-      - app_network
-    restart: unless-stopped
-    environment:
-      POSTGRESQL_USERNAME: ${POSTGRES_USER:-postgres}
-      POSTGRESQL_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      POSTGRESQL_DATABASE: ${POSTGRES_DB:-postgres-go}
-      POSTGRESQL_CLIENT_MIN_MESSAGES: info
-    ports:
-      - "5432:5432"
+#  postgres:
+#    image: bitnami/postgresql:latest
+#    container_name: postgres
+#    logging:
+#      driver: "none"
+#    networks:
+#      - app_network
+#    restart: unless-stopped
+#    environment:
+#      POSTGRESQL_USERNAME: ${POSTGRES_USER:-postgres}
+#      POSTGRESQL_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+#      POSTGRESQL_DATABASE: ${POSTGRES_DB:-postgres-go}
+#      POSTGRESQL_CLIENT_MIN_MESSAGES: info
+#    ports:
+#      - "5432:5432"
 
 networks:
   app_network:
