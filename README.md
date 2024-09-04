@@ -1,5 +1,7 @@
 # PostgreSQL Backup and Restore Tool
 
+This tool is used to backup and restore PostgreSQL databases. It is built using Go-Gin for backend and React for frontend and Docker.
+
 ### Prerequisites
 
 - Docker 
@@ -11,5 +13,18 @@
 In the main directory, run the following command to start the Docker containers:
 
 ```bash
-docker compose -f .\docker-compose.dev.yml up --watch
+sh ./bin/dev-setup.sh
 ```
+
+If you want to clear all the data and start fresh, run the following command:
+
+```bash
+sh ./bin/dev-setup.sh reset
+```
+
+If you want to destroy the environment, run the following command:
+
+```bash
+sh ./bin/dev-setup.sh destroy
+```
+

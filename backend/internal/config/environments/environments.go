@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-func SetupEnvironments() {
+func Init() {
 	//Setup the environment
 	env := os.Getenv("ENV")
 	if env == "" {
