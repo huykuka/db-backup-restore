@@ -22,17 +22,7 @@ func Body[T any](c *gin.Context) {
 		c.Set("statusCode", http.StatusBadRequest)
 	}
 
-	// Validate the DTO using the validator instance
-	if err := validate.Struct(dto); err != nil {
-		log.Printf("Validation Error: %v", err)
-		// Append the validation error to the context without aborting the request
-		c.Error(fmt.Errorf("Invalid Input"))
-		// Set the status code to 400
-		c.Set("statusCode", http.StatusBadRequest)
-	}
-
-	// Proceed to the next middleware or handler
-	c.Next()
+	structValidate(c, dto)
 }
 
 func Query[T any](c *gin.Context) {
@@ -45,9 +35,12 @@ func Query[T any](c *gin.Context) {
 		// Set the status code to 400
 		c.Set("statusCode", http.StatusBadRequest)
 	}
+	structValidate(c, query)
+}
 
+func structValidate[T any](c *gin.Context, dto T) {
 	// Validate the DTO using the validator instance
-	if err := validate.Struct(query); err != nil {
+	if err := validate.Struct(dto); err != nil {
 		log.Printf("Validation Error: %v", err)
 		// Append the validation error to the context without aborting the request
 		c.Error(fmt.Errorf("Invalid query"))
