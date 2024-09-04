@@ -10,6 +10,7 @@ import (
 
 var validate = validator.New()
 
+// TODO add JWT validator here
 func BodyValidator[T any](c *gin.Context) {
 	var dto T // Data Transfer Object
 

@@ -14,6 +14,11 @@ if [ "$1" = "reset" ]; then
 
     # Rebuild and start services with Docker Compose
     docker compose -f docker-compose.dev.yml up -w --build
+elif [ "$1" = "clear" ]; then
+    echo "Stopping and removing containers..."
+
+    # Stop and remove containers
+    docker compose -f docker-compose.dev.yml down
 else
     echo "Starting services without pruning or rebuilding..."
 

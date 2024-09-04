@@ -2,12 +2,30 @@ package backup
 
 import (
 	"fmt"
+	"github.com/gin-gonic/gin"
+	"net/http"
 	"os"
 	"os/exec"
 	"time"
 )
 
-func BackUpDatabase() {
+type BackupService struct{}
+
+func (b *BackupService) backupHandler(c *gin.Context) {
+	err := backup()
+	if err != nil {
+		c.Error(fmt.Errorf("Backup failed"))
+		// Set the status code to 400
+		c.Set("statusCode", http.StatusBadRequest)
+		return
+	}
+	c.Set("response", gin.H{
+		"message": "Backup completed",
+	})
+
+}
+
+func backup() (err error) {
 
 	//Define variables
 	user := "postgres"
@@ -23,7 +41,7 @@ func BackUpDatabase() {
 		err := os.MkdirAll(backupDir, 0755)
 		if err != nil {
 			fmt.Printf("Failed to create backup directory: %v\n", err)
-			return
+			return err
 		}
 	}
 	os.Setenv("PGPASSWORD", password) // Uncomment if password is needed
@@ -45,11 +63,12 @@ func BackUpDatabase() {
 	// Run the pg_dump command
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	err := cmd.Run()
+	err = cmd.Run()
 	if err != nil {
 		fmt.Printf("Backup failed: %v\n", err)
-		return
+		return err
 	}
 
 	fmt.Printf("Backup completed: %s\n", backupFile)
+	return nil
 }
