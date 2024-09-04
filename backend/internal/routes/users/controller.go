@@ -11,8 +11,8 @@ func Register(r *gin.RouterGroup) {
 
 	userService := new(UserService)
 	///Register routes
-	route.GET("/", userService.getAll)
+	route.GET("/", pipes.Query[GetUserQuery], userService.getAll)
 	route.GET("/:id", userService.getByID)
-	route.PATCH("/:id", pipes.BodyValidator[UpdateUserDTO], userService.update)
-	route.POST("/", pipes.BodyValidator[CreateUserDTO], userService.create)
+	route.PATCH("/:id", pipes.Body[UpdateUserDTO], userService.update)
+	route.POST("/", pipes.Body[CreateUserDTO], userService.create)
 }

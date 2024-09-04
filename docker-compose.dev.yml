@@ -50,6 +50,7 @@ services:
       - PORT=${APP_PORT:-3000}
       - TERM=xterm-256color
       - BACKUP_PATH=/home/thaiqu/backup
+      - GIN_MODE=release
     ports:
       - "8080:${APP_PORT:-3000}"
     networks:

@@ -1,7 +1,8 @@
 #!/bin/sh
 echo "$1"
 # Check for an argument to decide whether to update or not
-if [ "$1" == "reset" ]; then
+# shellcheck disable=SC3014
+if [ "$1" = "reset" ]; then
     echo "Pruning system and rebuilding images..."
 
     # Prune unused Docker objects
