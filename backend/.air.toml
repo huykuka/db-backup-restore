@@ -5,8 +5,9 @@
   cmd = "go build -o  ./tmp/main ./cmd/db-tool"
   bin = "./tmp/main"
   include_ext = ["go", "tpl", "html"]
+  exclude_ext = ["db"]
   exclude_dir = ["assets", "tmp", "vendor"]
-  exclude_file = ["*_test.go"]
+  exclude_file = ["*_test.go","app.db"]
   delay = 100
   stop_on_error = true
 

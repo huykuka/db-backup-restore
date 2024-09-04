@@ -4,6 +4,7 @@ import (
 	"db-tool/internal/core/interceptors"
 	"db-tool/internal/core/middlewares"
 	"db-tool/internal/routes/backup"
+	"db-tool/internal/routes/settings"
 	"db-tool/internal/routes/users"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
@@ -28,7 +29,7 @@ func Init() {
 	//Register modules
 	users.Register(api)
 	backup.Register(api)
-
+	settings.Register(api)
 	// Start the Server
 	log.Printf("Server is running on port: %s", port)
 	if err := r.Run(":" + port); err != nil {
