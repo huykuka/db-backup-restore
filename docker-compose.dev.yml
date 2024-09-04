@@ -6,6 +6,8 @@ services:
     container_name: frontend
     command: npm run start
     restart: unless-stopped
+    environment:
+      - TERM=xterm-256color
     develop:
       watch:
         - action: sync
@@ -46,7 +48,9 @@ services:
       - ENV=container-dev
       - APP_PORT=3001
       - PORT=${APP_PORT:-3000}
+      - TERM=xterm-256color
       - BACKUP_PATH=/home/thaiqu/backup
+      - GIN_MODE=release
     ports:
       - "8080:${APP_PORT:-3000}"
     networks:
