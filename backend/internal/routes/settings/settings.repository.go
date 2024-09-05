@@ -35,7 +35,7 @@ func (s *SettingRepository) findMany(filters *GetSettingQuery) ([]Setting, error
 	return settings, nil
 }
 
-func (s *SettingRepository) update(id string, data *UpdateSettingDTO) (*Setting, error) {
+func (s *SettingRepository) update(id *string, data *UpdateSettingDTO) (*Setting, error) {
 	var setting Setting
 	// Find the existing setting by ID
 	if err := db.GetDB().Model(&Setting{}).Where("id = ?", id).First(&setting).Error; err != nil {

@@ -27,7 +27,7 @@ func (s *SettingService) update(c *gin.Context) {
 	req, _ := c.MustGet("Body").(UpdateSettingDTO)
 	id := c.Param("id")
 
-	setting, err := settingRepository.update(id, &req)
+	setting, err := settingRepository.update(&id, &req)
 	if err != nil {
 		utils.HandleError(c, "Can not edit Setting", http.StatusBadRequest)
 		return

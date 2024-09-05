@@ -23,7 +23,7 @@ func Body[T any](c *gin.Context) {
 
 	c.Set("Body", dto)
 
-	structValidate(c, dto)
+	structValidate(c, &dto)
 }
 
 func Query[T any](c *gin.Context) {
@@ -37,10 +37,10 @@ func Query[T any](c *gin.Context) {
 	}
 	c.Set("Query", query)
 
-	structValidate(c, query)
+	structValidate(c, &query)
 }
 
-func structValidate[T any](c *gin.Context, dto T) {
+func structValidate[T any](c *gin.Context, dto *T) {
 	// Validate the DTO using the validator instance
 	if err := validate.Struct(dto); err != nil {
 		log.Printf("Validation Error: %v", err)
