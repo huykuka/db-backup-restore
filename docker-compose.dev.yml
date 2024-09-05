@@ -46,9 +46,10 @@ services:
     restart: unless-stopped
     environment:
       - ENV=container-dev
-      - APP_PORT=3001
       - PORT=${APP_PORT:-3000}
       - BACKUP_PATH=/home/thaiqu/backup
+      - SECRET_USERNAME:admin
+      - SECRET_PASSWORD:password
     ports:
       - "8080:${APP_PORT:-3000}"
     networks:

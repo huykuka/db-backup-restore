@@ -1,6 +1,7 @@
 package settings
 
 import (
+	"db-tool/internal/core/guards"
 	"db-tool/internal/core/pipes"
 	"github.com/gin-gonic/gin"
 )
@@ -11,5 +12,5 @@ func Register(r *gin.RouterGroup) {
 	settingService := new(SettingService)
 	///Register routes
 	route.GET("/", pipes.Query[GetSettingQuery], settingService.getAll)
-	route.POST("/:id", pipes.Body[UpdateSettingDTO], settingService.update)
+	route.POST("/:id", guards.BasicAuthGuard(), pipes.Body[UpdateSettingDTO], settingService.update)
 }

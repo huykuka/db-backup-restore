@@ -9,6 +9,11 @@ func Register(r *gin.RouterGroup) {
 	route := r.Group("/backup")
 
 	backupService := new(BackupService)
+
 	///Register routes
-	route.GET("/", backupService.backupHandler)
+	route.POST("/", backupService.backup)
+	route.GET("/list", backupService.getBackupList)
+	route.POST("/restore/:id", gin.BasicAuth(gin.Accounts{
+		"admin": "admin",
+	}), backupService.restoreBackup)
 }
