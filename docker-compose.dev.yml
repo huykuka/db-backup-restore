@@ -38,11 +38,12 @@ services:
           path: ./backend
           target: /app
           ignore:
-           - docker/
            - bin/
            - tmp/
         - action: rebuild
           path: backend/go.mod
+        - action: rebuild
+          path: backend/docker/dev/Dockerfile
     restart: unless-stopped
     environment:
       - ENV=container-dev
