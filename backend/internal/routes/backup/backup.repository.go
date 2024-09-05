@@ -2,6 +2,7 @@ package backup
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"time"
@@ -24,7 +25,7 @@ func (b *BackUpRepository) backup() (err error) {
 	if _, err := os.Stat(backupDir); os.IsNotExist(err) {
 		err := os.MkdirAll(backupDir, 0755)
 		if err != nil {
-			fmt.Printf("Failed to create backup directory: %v\n", err)
+			log.Printf("Failed to create backup directory: %v\n", err)
 			return err
 		}
 	}
@@ -52,10 +53,10 @@ func (b *BackUpRepository) backup() (err error) {
 	cmd.Stderr = os.Stderr
 	err = cmd.Run()
 	if err != nil {
-		fmt.Printf("Backup failed: %v\n", err)
+		log.Printf("Backup failed: %v\n", err)
 		return err
 	}
 
-	fmt.Printf("Backup completed: %s\n", backupFile)
+	log.Printf("Backup completed: %s\n", backupFile)
 	return nil
 }

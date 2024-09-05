@@ -10,6 +10,6 @@ var password = os.Getenv("SECRET_PASSWORD")
 
 func BasicAuthGuard() gin.HandlerFunc {
 	return gin.BasicAuth(gin.Accounts{
-		"admin": "admin",
+		username: password,
 	})
 }
