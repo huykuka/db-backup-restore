@@ -1,6 +1,7 @@
 package settings
 
 import (
+	"db-tool/internal/core/pipes"
 	"github.com/gin-gonic/gin"
 )
 
@@ -9,6 +10,6 @@ func Register(r *gin.RouterGroup) {
 
 	settingService := new(SettingService)
 	///Register routes
-	route.GET("/", settingService.getAll)
-
+	route.GET("/", pipes.Query[GetSettingQuery], settingService.getAll)
+	route.POST("/:id", pipes.Body[UpdateSettingDTO], settingService.update)
 }

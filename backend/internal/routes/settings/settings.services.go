@@ -1,7 +1,7 @@
 package settings
 
 import (
-	"fmt"
+	"db-tool/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -12,14 +12,27 @@ type SettingService struct {
 var settingRepository = new(SettingRepository)
 
 func (s *SettingService) getAll(c *gin.Context) {
-	settings, err := settingRepository.findMany()
+	query, _ := c.MustGet("Query").(GetSettingQuery)
+	settings, err := settingRepository.findMany(&query)
 	if err != nil {
-		c.Error(fmt.Errorf("can not retrieve settings"))
-		// Set the status code to 400
-		c.Set("statusCode", http.StatusBadRequest)
+		utils.HandleError(c, "Can not retrieve Settings", http.StatusBadRequest)
 		return
 	}
 	c.Set("response", gin.H{
 		"settings": settings,
+	})
+}
+func (s *SettingService) update(c *gin.Context) {
+	//Extract Context data
+	req, _ := c.MustGet("Body").(UpdateSettingDTO)
+	id := c.Param("id")
+
+	setting, err := settingRepository.update(&id, &req)
+	if err != nil {
+		utils.HandleError(c, "Can not edit Setting", http.StatusBadRequest)
+		return
+	}
+	c.Set("response", gin.H{
+		"setting": setting,
 	})
 }

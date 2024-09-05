@@ -1,6 +1,7 @@
 package backup
 
 import (
+	"db-tool/utils"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -14,9 +15,7 @@ type BackupService struct{}
 func (b *BackupService) backupHandler(c *gin.Context) {
 	err := backup()
 	if err != nil {
-		c.Error(fmt.Errorf("Backup failed"))
-		// Set the status code to 400
-		c.Set("statusCode", http.StatusBadRequest)
+		utils.HandleError(c, "Backup failed!", http.StatusBadRequest)
 		return
 	}
 	c.Set("response", gin.H{
