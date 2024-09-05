@@ -1,7 +1,7 @@
 package pipes
 
 import (
-	"fmt"
+	"db-tool/utils"
 	"log"
 	"net/http"
 
@@ -17,10 +17,11 @@ func Body[T any](c *gin.Context) {
 	if err := c.ShouldBindJSON(&dto); err != nil {
 		log.Printf("Validation Error: %v", err)
 		// Append the error to the context without aborting the request
-		c.Error(fmt.Errorf("Invalid Input"))
-		// Set the status code to 400
-		c.Set("statusCode", http.StatusBadRequest)
+		utils.HandleError(c, "Invalid Input", http.StatusBadRequest)
+		c.Next()
 	}
+
+	c.Set("Body", dto)
 
 	structValidate(c, dto)
 }
@@ -31,10 +32,11 @@ func Query[T any](c *gin.Context) {
 	if err := c.ShouldBindQuery(&query); err != nil {
 		log.Printf("Validation Error: %v", err)
 		// Append the error to the context without aborting the request
-		c.Error(fmt.Errorf("Invalid query"))
-		// Set the status code to 400
-		c.Set("statusCode", http.StatusBadRequest)
+		utils.HandleError(c, "Invalid Query", http.StatusBadRequest)
+		c.Next()
 	}
+	c.Set("Query", query)
+
 	structValidate(c, query)
 }
 
@@ -43,10 +45,7 @@ func structValidate[T any](c *gin.Context, dto T) {
 	if err := validate.Struct(dto); err != nil {
 		log.Printf("Validation Error: %v", err)
 		// Append the validation error to the context without aborting the request
-		c.Error(fmt.Errorf("Invalid query"))
-
-		// Set the status code to 400
-		c.Set("statusCode", http.StatusBadRequest)
+		utils.HandleError(c, "Invalid Input", http.StatusBadRequest)
 	}
 
 	// Proceed to the next middleware or handler
