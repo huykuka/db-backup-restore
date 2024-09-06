@@ -1,6 +1,7 @@
 package backup
 
 import (
+	"db-tool/internal/core/pipes"
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,8 +13,7 @@ func Register(r *gin.RouterGroup) {
 
 	///Register routes
 	route.POST("/", backupService.backup)
-	route.GET("/list", backupService.getBackupList)
-	route.POST("/restore/:id", gin.BasicAuth(gin.Accounts{
-		"admin": "admin",
-	}), backupService.restoreBackup)
+	route.GET("/list", pipes.Query[QueryBackup], backupService.getBackupList)
+	route.DELETE("/:id", backupService.deleteBackup)
+	route.POST("/restore/:id", backupService.restoreBackup)
 }

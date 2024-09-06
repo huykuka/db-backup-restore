@@ -1,7 +1,9 @@
 package backup
 
 import (
+	"db-tool/internal/config/db"
 	"fmt"
+	"gorm.io/gorm"
 	"log"
 	"os"
 	"os/exec"
@@ -10,7 +12,9 @@ import (
 
 type BackUpRepository struct{}
 
-func (b *BackUpRepository) backup() (err error) {
+type BackUp db.BackUp
+
+func (b *BackUpRepository) backup() (filename string, err error) {
 
 	//Define variables
 	user := "postgres"
@@ -26,12 +30,12 @@ func (b *BackUpRepository) backup() (err error) {
 		err := os.MkdirAll(backupDir, 0755)
 		if err != nil {
 			log.Printf("Failed to create backup directory: %v\n", err)
-			return err
+			return "", err
 		}
 	}
 	err = os.Setenv("PGPASSWORD", password)
 	if err != nil {
-		return err
+		return "", err
 	} // Uncomment if password is needed
 
 	// Build the pg_dump command
@@ -54,9 +58,53 @@ func (b *BackUpRepository) backup() (err error) {
 	err = cmd.Run()
 	if err != nil {
 		log.Printf("Backup failed: %v\n", err)
-		return err
+		return "", err
 	}
 
 	log.Printf("Backup completed: %s\n", backupFile)
+	return backupFile, nil
+}
+
+func (b *BackUpRepository) createBackUp(filename string) error {
+	var backup = BackUp{
+		Filename: filename,
+	}
+
+	if err := db.GetDB().Create(&backup).Error; err != nil {
+		log.Println(err.Error())
+		return err
+	}
 	return nil
+}
+
+func (b *BackUpRepository) delete(id string) error {
+	if err := db.GetDB().Delete(&BackUp{}, id).Error; err != nil {
+		log.Println(err.Error())
+		return err
+	}
+	return nil
+}
+
+func (b *BackUpRepository) findMany(filters *QueryBackup) ([]BackUp, error) {
+	var backups []BackUp
+	qr := db.GetDB().Model(&db.BackUp{})
+	createFilter(qr, filters)
+	result := qr.Find(&backups)
+	if result.Error != nil {
+		log.Println(result.Error)
+		return nil, result.Error
+	}
+	return backups, nil
+}
+
+func createFilter(qr *gorm.DB, query *QueryBackup) {
+	filter := query.Filter
+	// Apply date filter (fromDate)
+	if filter.FromDate != "" {
+		qr = qr.Where("createdAt >= ?", query.Filter.FromDate)
+	}
+
+	if query.Filter.ToDate != "" {
+		qr = qr.Where("createdAt >= ?", query.Filter.FromDate)
+	}
 }
