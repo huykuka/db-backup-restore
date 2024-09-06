@@ -11,7 +11,7 @@ type Setting db.Setting
 
 type SettingRepository struct{}
 
-func createFilter(qr *gorm.DB, query *GetSettingQuery) {
+func createFilter(qr *gorm.DB, query *GetSettingQueryDTO) {
 	filter := query.Filter
 	///NAme must be exact
 	if filter.Name != "" {
@@ -23,7 +23,7 @@ func createFilter(qr *gorm.DB, query *GetSettingQuery) {
 	}
 }
 
-func (s *SettingRepository) findMany(filters *GetSettingQuery) ([]Setting, error) {
+func (s *SettingRepository) findMany(filters *GetSettingQueryDTO) ([]Setting, error) {
 	var settings []Setting
 	qr := db.GetDB().Model(&db.Setting{})
 	createFilter(qr, filters)

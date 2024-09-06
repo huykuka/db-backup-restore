@@ -13,9 +13,9 @@ func Register(r *gin.RouterGroup) {
 
 	///Register routes
 	route.POST("/", backupService.backup)
-	route.GET("/list", pipes.Query[QueryBackup], backupService.getBackupList)
+	route.GET("/list", pipes.Query[QueryBackupDTO], backupService.getBackupList)
 	route.POST("/restore/:id", backupService.restoreBackup)
 	route.DELETE("/:id", backupService.deleteBackUp)
-	//route.DELETE("/", deleteBulk)
+	route.DELETE("/", pipes.Body[BulkBackupDeleteDTO], backupService.bulkDeleteBackup)
 
 }

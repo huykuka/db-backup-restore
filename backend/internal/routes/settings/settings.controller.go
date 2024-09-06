@@ -11,6 +11,6 @@ func Register(r *gin.RouterGroup) {
 
 	settingService := new(SettingService)
 	///Register routes
-	route.GET("/", pipes.Query[GetSettingQuery], settingService.getAll)
+	route.GET("/", pipes.Query[GetSettingQueryDTO], settingService.getAll)
 	route.POST("/:id", guards.BasicAuthGuard(), pipes.Body[UpdateSettingDTO], settingService.update)
 }

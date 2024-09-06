@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"time"
 )
 
@@ -65,9 +66,9 @@ func (b *BackUpRepository) backup() (filename string, err error) {
 	return backupFile, nil
 }
 
-func (b *BackUpRepository) createBackUp(filename string) error {
+func (b *BackUpRepository) createBackUp(filename *string) error {
 	var backup = BackUp{
-		Filename: filename,
+		Filename: *filename,
 	}
 
 	if err := db.GetDB().Create(&backup).Error; err != nil {
@@ -77,15 +78,22 @@ func (b *BackUpRepository) createBackUp(filename string) error {
 	return nil
 }
 
-func (b *BackUpRepository) delete(id string) error {
-	if err := db.GetDB().Delete(&BackUp{}, id).Error; err != nil {
+func (b *BackUpRepository) delete(id string) (string, error) {
+	var backup BackUp
+	if err := db.GetDB().First(&backup, id).Error; err != nil {
 		log.Println(err.Error())
-		return err
+		return "", err
 	}
-	return nil
+
+	if err := db.GetDB().Delete(&backup).Error; err != nil {
+		log.Println(err.Error())
+		return "", err
+	}
+
+	return backup.Filename, nil
 }
 
-func (b *BackUpRepository) findMany(filters *QueryBackup) ([]BackUp, error) {
+func (b *BackUpRepository) findMany(filters *QueryBackupDTO) ([]BackUp, error) {
 	var backups []BackUp
 	qr := db.GetDB().Model(&db.BackUp{})
 	createFilter(qr, filters)
@@ -97,7 +105,47 @@ func (b *BackUpRepository) findMany(filters *QueryBackup) ([]BackUp, error) {
 	return backups, nil
 }
 
-func createFilter(qr *gorm.DB, query *QueryBackup) {
+func (b *BackUpRepository) bulkDelete(ids *[]string) ([]string, error) {
+	var backups []BackUp
+	if err := db.GetDB().Where("id IN ?", *ids).Find(&backups).Error; err != nil {
+		log.Println(err.Error())
+		return nil, err
+	}
+
+	if err := db.GetDB().Delete(&BackUp{}, *ids).Error; err != nil {
+		log.Println(err.Error())
+		return nil, err
+	}
+
+	var filenames []string
+	for _, backup := range backups {
+		filenames = append(filenames, backup.Filename)
+	}
+
+	return filenames, nil
+}
+
+func (b *BackUpRepository) moveBackUpFileToArchive(filename *string) {
+	// Move the backup file to the archive directory
+	archiveDir := "/tmp/archive/backup"
+	if _, err := os.Stat(archiveDir); os.IsNotExist(err) {
+		err := os.MkdirAll(archiveDir, 0755)
+		if err != nil {
+			log.Printf("Failed to create archive directory: %v\n", err)
+			return
+		}
+	}
+	// Extract the base filename from the full path
+	baseFilename := filepath.Base(*filename)
+	// Move the backup file to the archive directory
+	err := os.Rename(*filename, fmt.Sprintf("%s/%s", archiveDir, baseFilename))
+	if err != nil {
+		log.Printf("Failed to move backup file to archive: %v\n", err)
+		return
+	}
+}
+
+func createFilter(qr *gorm.DB, query *QueryBackupDTO) {
 	filter := query.Filter
 	// Apply date filter (fromDate)
 	if filter.FromDate != "" {
