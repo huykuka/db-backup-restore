@@ -7,6 +7,11 @@ import (
 func initLogger() *logrus.Logger {
 	log := logrus.New()
 
+	log.SetFormatter(&logrus.TextFormatter{
+		DisableColors: false,
+		FullTimestamp: true,
+		DisableQuote:  true,
+	})
 	// Create a log file
 	//file, err := os.OpenFile("app.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	//if err != nil {
