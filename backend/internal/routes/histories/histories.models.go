@@ -10,3 +10,7 @@ type QueryHistorianDTO struct {
 	} `json:"filter,omitempty" form:"filter"`
 	utils.Page `json:"page,omitempty" form:"page"`
 }
+
+func (q QueryHistorianDTO) GetPage() utils.Page {
+	return q.Page
+}

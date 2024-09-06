@@ -47,13 +47,14 @@ func (b *BackupService) backup(c *gin.Context) {
 
 func (b *BackupService) getBackupList(c *gin.Context) {
 	query, _ := c.MustGet("Query").(QueryBackupDTO)
-	backups, err := backupRepository.findMany(&query)
+	backups, total, err := backupRepository.findMany(&query)
 	if err != nil {
 		utils.HandleError(c, "Can not retrieve Settings", http.StatusBadRequest)
 		return
 	}
 	c.Set("response", gin.H{
 		"backups": backups,
+		"total":   total,
 	})
 }
 

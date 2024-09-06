@@ -10,6 +10,10 @@ type QueryBackupDTO struct {
 	utils.Page `json:"page,omitempty" form:"page"`
 }
 
+func (q QueryBackupDTO) GetPage() utils.Page {
+	return q.Page
+}
+
 type BulkBackupDeleteDTO struct {
 	Ids []string `json:"ids" validate:"required"`
 }

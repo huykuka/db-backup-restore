@@ -2,6 +2,7 @@ package histories
 
 import (
 	"db-tool/internal/config/db"
+	"db-tool/utils"
 	"gorm.io/gorm"
 	"log"
 )
@@ -24,21 +25,28 @@ func (h *HistoriesRepository) Create(status string) error {
 
 }
 
-func (h *HistoriesRepository) FindMany(filters *QueryHistorianDTO) ([]History, error) {
+func (h *HistoriesRepository) FindMany(filters *QueryHistorianDTO) ([]History, int64, error) {
 	var histories []History
+	var count int64
+
 	qr := db.GetDB().Model(&History{})
 	createFilter(qr, filters)
+
+	// Get the total count of records that match the filters
+	qr.Count(&count)
+
+	// Apply filter and get the records
+	utils.CreatePaging[QueryHistorianDTO](qr, *filters)
 	result := qr.Find(&histories)
 	if result.Error != nil {
 		log.Println(result.Error)
-		return nil, result.Error
+		return nil, 0, result.Error
 	}
-	return histories, nil
+	return histories, count, nil
 }
 
 func createFilter(qr *gorm.DB, query *QueryHistorianDTO) {
 	filter := query.Filter
-	page := query.Page
 	// Apply date filter (fromDate)
 	if filter.FromDate != "" {
 		qr = qr.Where("createdAt >= ?", query.Filter.FromDate)
@@ -46,15 +54,5 @@ func createFilter(qr *gorm.DB, query *QueryHistorianDTO) {
 
 	if query.Filter.ToDate != "" {
 		qr = qr.Where("createdAt >= ?", query.Filter.FromDate)
-	}
-
-	// Apply pagination
-	if page.Size > 0 {
-		if page.Number > 0 {
-			offset := (page.Number - 1) * page.Size
-			qr = qr.Offset(offset).Limit(page.Size)
-		} else {
-			qr = qr.Limit(page.Size)
-		}
 	}
 }
