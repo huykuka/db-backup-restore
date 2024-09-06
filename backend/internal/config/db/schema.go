@@ -17,8 +17,13 @@ type Setting struct {
 type BackUp struct {
 	ID        uint           `json:"id" gorm:"primaryKey"`
 	CreatedAt time.Time      `json:"createdAt"`
-	UpdatedAt time.Time      `json:"updatedAt"`
 	DeletedAt gorm.DeletedAt `json:"deletedAt,omitempty" gorm:"index"`
 	Filename  string         `json:"filename" gorm:"unique"`
 	POC       string         `json:"poc"`
+}
+
+type History struct {
+	ID        uint      `json:"id" gorm:"primaryKey"`
+	CreatedAt time.Time `json:"createdAt"`
+	Status    string    `json:"status" gorm:"index"`
 }

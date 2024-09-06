@@ -13,7 +13,7 @@ func Init() {
 	if err != nil {
 		panic("failed to connect database")
 	}
-	err = Handler.AutoMigrate(&Setting{}, &BackUp{})
+	err = Handler.AutoMigrate(&Setting{}, &BackUp{}, &History{})
 
 	if err != nil {
 		return

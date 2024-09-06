@@ -2,27 +2,44 @@ package backup
 
 import "C"
 import (
+	"db-tool/internal/routes/histories"
 	"db-tool/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 var backupRepository = new(BackUpRepository)
+var historianRepository = new(histories.HistoriesRepository)
 
 type BackupService struct{}
 
 func (b *BackupService) backup(c *gin.Context) {
+	handleError := func(err error, message string) {
+		if err != nil {
+			historianRepository.Create("failed")
+			utils.HandleError(c, message, http.StatusBadRequest)
+		}
+	}
+
+	// Backup the database
 	filename, err := backupRepository.backup()
 	if err != nil {
-		utils.HandleError(c, "Backup failed!", http.StatusBadRequest)
+		handleError(err, "Backup failed!")
 		return
 	}
-	err = backupRepository.createBackUp(&filename)
 
+	// Save the backup record to database
+	err = backupRepository.createBackUp(&filename)
 	if err != nil {
-		utils.HandleError(c, "Backup failed!", http.StatusBadRequest)
+		handleError(err, "Backup failed!")
 		return
 	}
+
+	err = historianRepository.Create("success")
+	if err != nil {
+		return
+	}
+
 	c.Set("response", gin.H{
 		"message": "Backup completed",
 	})

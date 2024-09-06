@@ -22,6 +22,7 @@ func (s *SettingService) getAll(c *gin.Context) {
 		"settings": settings,
 	})
 }
+
 func (s *SettingService) update(c *gin.Context) {
 	//Extract Context data
 	req, _ := c.MustGet("Body").(UpdateSettingDTO)
