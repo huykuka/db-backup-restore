@@ -58,6 +58,6 @@ func createFilter(qr *gorm.DB, query *QueryHistorianDTO) {
 	}
 
 	if filter.Status != "" {
-		qr = qr.Where("UPPER(key) LIKE ?", strings.ToUpper(filter.Status)+"%")
+		qr = qr.Where("UPPER(status) LIKE ?", strings.ToUpper(filter.Status)+"%")
 	}
 }
