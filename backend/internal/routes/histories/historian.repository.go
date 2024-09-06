@@ -5,6 +5,7 @@ import (
 	"db-tool/utils"
 	"gorm.io/gorm"
 	"log"
+	"strings"
 )
 
 type HistoriesRepository struct {
@@ -49,10 +50,14 @@ func createFilter(qr *gorm.DB, query *QueryHistorianDTO) {
 	filter := query.Filter
 	// Apply date filter (fromDate)
 	if filter.FromDate != "" {
-		qr = qr.Where("createdAt >= ?", query.Filter.FromDate)
+		qr = qr.Where("createdAt >= ?", filter.FromDate)
 	}
 
-	if query.Filter.ToDate != "" {
-		qr = qr.Where("createdAt >= ?", query.Filter.FromDate)
+	if filter.ToDate != "" {
+		qr = qr.Where("createdAt >= ?", filter.FromDate)
+	}
+
+	if filter.Status != "" {
+		qr = qr.Where("UPPER(key) LIKE ?", strings.ToUpper(filter.Status)+"%")
 	}
 }
