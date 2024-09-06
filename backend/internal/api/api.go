@@ -10,6 +10,7 @@ import (
 	"db-tool/internal/routes/users"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
+	ginlogrus "github.com/toorop/gin-logrus"
 	"golang.org/x/time/rate"
 	"log"
 	"os"
@@ -19,9 +20,9 @@ var api *gin.RouterGroup
 
 func Init() {
 	port := os.Getenv("PORT")
-	//Setup GIN
-	r := gin.Default()
-	//r.Use(ginlogrus.Logger(initLogger()), gin.Recovery())
+
+	r := gin.New()
+	r.Use(ginlogrus.Logger(initLogger()), gin.Recovery())
 
 	r.Use(static.Serve("/", static.LocalFile("web", false)))
 	r.Use(middlewares.Logger())

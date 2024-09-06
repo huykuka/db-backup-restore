@@ -3,8 +3,8 @@ package histories
 import (
 	"db-tool/internal/config/db"
 	"db-tool/utils"
+	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
-	"log"
 	"strings"
 )
 
@@ -19,7 +19,7 @@ func (h *HistoriesRepository) Create(status string) error {
 	}
 
 	if err := db.GetDB().Create(&backup).Error; err != nil {
-		log.Println(err.Error())
+		log.Error(err.Error())
 		return err
 	}
 	return nil
@@ -40,7 +40,7 @@ func (h *HistoriesRepository) FindMany(filters *QueryHistorianDTO) ([]History, i
 	utils.CreatePaging[QueryHistorianDTO](qr, *filters)
 	result := qr.Find(&histories)
 	if result.Error != nil {
-		log.Println(result.Error)
+		log.Error(result.Error)
 		return nil, 0, result.Error
 	}
 	return histories, count, nil
