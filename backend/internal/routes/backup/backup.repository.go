@@ -147,6 +147,7 @@ func (b *BackUpRepository) moveBackUpFileToArchive(filename *string) {
 
 func createFilter(qr *gorm.DB, query *QueryBackupDTO) {
 	filter := query.Filter
+	page := query.Page
 	// Apply date filter (fromDate)
 	if filter.FromDate != "" {
 		qr = qr.Where("createdAt >= ?", query.Filter.FromDate)
@@ -154,5 +155,14 @@ func createFilter(qr *gorm.DB, query *QueryBackupDTO) {
 
 	if query.Filter.ToDate != "" {
 		qr = qr.Where("createdAt >= ?", query.Filter.FromDate)
+	}
+
+	if page.Size > 0 {
+		if page.Number > 0 {
+			offset := (page.Number - 1) * page.Size
+			qr = qr.Offset(offset).Limit(page.Size)
+		} else {
+			qr = qr.Limit(page.Size)
+		}
 	}
 }

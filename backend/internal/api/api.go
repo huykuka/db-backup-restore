@@ -9,6 +9,7 @@ import (
 	"db-tool/internal/routes/users"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/time/rate"
 	"log"
 	"os"
 )
@@ -25,7 +26,7 @@ func Init() {
 	r.Use(interceptors.JsonApiInterceptor())
 
 	//Serving API
-	api = r.Group("/api")
+	api = r.Group("/api", middlewares.RateLimiter(rate.NewLimiter(10, 1)))
 
 	//Register modules
 	users.Register(api)

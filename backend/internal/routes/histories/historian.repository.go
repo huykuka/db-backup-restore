@@ -38,6 +38,7 @@ func (h *HistoriesRepository) FindMany(filters *QueryHistorianDTO) ([]History, e
 
 func createFilter(qr *gorm.DB, query *QueryHistorianDTO) {
 	filter := query.Filter
+	page := query.Page
 	// Apply date filter (fromDate)
 	if filter.FromDate != "" {
 		qr = qr.Where("createdAt >= ?", query.Filter.FromDate)
@@ -48,8 +49,12 @@ func createFilter(qr *gorm.DB, query *QueryHistorianDTO) {
 	}
 
 	// Apply pagination
-	if query.Page.Number > 0 && query.Page.Size > 0 {
-		offset := (query.Page.Number - 1) * query.Page.Size
-		qr = qr.Offset(offset).Limit(query.Page.Size)
+	if page.Size > 0 {
+		if page.Number > 0 {
+			offset := (page.Number - 1) * page.Size
+			qr = qr.Offset(offset).Limit(page.Size)
+		} else {
+			qr = qr.Limit(page.Size)
+		}
 	}
 }
