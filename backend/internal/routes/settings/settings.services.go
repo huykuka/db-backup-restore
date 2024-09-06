@@ -12,7 +12,7 @@ type SettingService struct {
 var settingRepository = new(SettingRepository)
 
 func (s *SettingService) getAll(c *gin.Context) {
-	query, _ := c.MustGet("Query").(GetSettingQuery)
+	query, _ := c.MustGet("Query").(GetSettingQueryDTO)
 	settings, err := settingRepository.findMany(&query)
 	if err != nil {
 		utils.HandleError(c, "Can not retrieve Settings", http.StatusBadRequest)

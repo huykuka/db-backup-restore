@@ -1,19 +1,24 @@
 package backup
 
+import "C"
 import (
 	"db-tool/utils"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"os"
-	"os/exec"
-	"time"
 )
+
+var backupRepository = new(BackUpRepository)
 
 type BackupService struct{}
 
-func (b *BackupService) backupHandler(c *gin.Context) {
-	err := backup()
+func (b *BackupService) backup(c *gin.Context) {
+	filename, err := backupRepository.backup()
+	if err != nil {
+		utils.HandleError(c, "Backup failed!", http.StatusBadRequest)
+		return
+	}
+	err = backupRepository.createBackUp(&filename)
+
 	if err != nil {
 		utils.HandleError(c, "Backup failed!", http.StatusBadRequest)
 		return
@@ -21,53 +26,58 @@ func (b *BackupService) backupHandler(c *gin.Context) {
 	c.Set("response", gin.H{
 		"message": "Backup completed",
 	})
-
 }
 
-func backup() (err error) {
-
-	//Define variables
-	user := "postgres"
-	host := "postgres"
-	port := "5432"
-	password := "postgres"
-	dbName := "postgres-go"
-	backupDir := os.Getenv("BACKUP_PATH")
-	backupFile := fmt.Sprintf("%s/%s_%s.sql", backupDir, time.Now().Format("20060102150405"), dbName)
-
-	// Create the backup directory if it doesn't exist
-	if _, err := os.Stat(backupDir); os.IsNotExist(err) {
-		err := os.MkdirAll(backupDir, 0755)
-		if err != nil {
-			fmt.Printf("Failed to create backup directory: %v\n", err)
-			return err
-		}
-	}
-	os.Setenv("PGPASSWORD", password) // Uncomment if password is needed
-
-	// Build the pg_dump command
-	cmd := exec.Command("pg_dump",
-		"-U", user,
-		"-h", host,
-		"-p", port,
-		"-F", "c",
-		"-b",
-		"-v",
-		"-f", backupFile,
-		dbName,
-	)
-
-	//Set the password environment variable if needed
-
-	// Run the pg_dump command
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	err = cmd.Run()
+func (b *BackupService) getBackupList(c *gin.Context) {
+	query, _ := c.MustGet("Query").(QueryBackupDTO)
+	backups, err := backupRepository.findMany(&query)
 	if err != nil {
-		fmt.Printf("Backup failed: %v\n", err)
-		return err
+		utils.HandleError(c, "Can not retrieve Settings", http.StatusBadRequest)
+		return
+	}
+	c.Set("response", gin.H{
+		"backups": backups,
+	})
+}
+
+func (b *BackupService) deleteBackUp(c *gin.Context) {
+	id := c.Param("id")
+	//Delete the backup record from database
+	filename, err := backupRepository.delete(id)
+	if err != nil {
+		utils.HandleError(c, "Can not delete backup", http.StatusBadRequest)
+		return
 	}
 
-	fmt.Printf("Backup completed: %s\n", backupFile)
-	return nil
+	//Move the backup file to archive then using cron job to delete later
+	backupRepository.moveBackUpFileToArchive(&filename)
+	c.Set("response", gin.H{
+		"messages": "Deleted backup successful",
+	})
+}
+
+func (b *BackupService) bulkDeleteBackup(c *gin.Context) {
+	ids := c.MustGet("Body").(BulkBackupDeleteDTO)
+
+	//Delete the backup records from database
+	filenames, err := backupRepository.bulkDelete(&ids.Ids)
+	if err != nil {
+		utils.HandleError(c, "Can not delete backups", http.StatusBadRequest)
+		return
+	}
+	//Move the backup files to archive then using cron job to delete later
+	for _, filename := range filenames {
+		backupRepository.moveBackUpFileToArchive(&filename)
+	}
+
+	//Set response
+	c.Set("response", gin.H{
+		"message": "Deleted backups successful",
+	})
+}
+
+func (b *BackupService) restoreBackup(c *gin.Context) {
+	c.Set("response", gin.H{
+		"message": "restore",
+	})
 }

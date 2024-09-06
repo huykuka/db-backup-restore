@@ -1,6 +1,7 @@
 package backup
 
 import (
+	"db-tool/internal/core/pipes"
 	"github.com/gin-gonic/gin"
 )
 
@@ -9,6 +10,12 @@ func Register(r *gin.RouterGroup) {
 	route := r.Group("/backup")
 
 	backupService := new(BackupService)
+
 	///Register routes
-	route.GET("/", backupService.backupHandler)
+	route.POST("/", backupService.backup)
+	route.GET("/list", pipes.Query[QueryBackupDTO], backupService.getBackupList)
+	route.POST("/restore/:id", backupService.restoreBackup)
+	route.DELETE("/:id", backupService.deleteBackUp)
+	route.DELETE("/", pipes.Body[BulkBackupDeleteDTO], backupService.bulkDeleteBackup)
+
 }

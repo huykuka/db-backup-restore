@@ -5,7 +5,7 @@ type UpdateSettingDTO struct {
 	Value string `json:"value" validate:"required"`
 }
 
-type GetSettingQuery struct {
+type GetSettingQueryDTO struct {
 	Filter struct {
 		Name     string `json:"name,omitempty" form:"filter[name]" validate:"omitempty"`
 		Category string `json:"category,omitempty" form:"filter[category]" validate:"omitempty"`
