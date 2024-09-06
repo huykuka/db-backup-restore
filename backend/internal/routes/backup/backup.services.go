@@ -93,9 +93,3 @@ func (b *BackupService) bulkDeleteBackup(c *gin.Context) {
 		"message": "Deleted backups successful",
 	})
 }
-
-func (b *BackupService) restoreBackup(c *gin.Context) {
-	c.Set("response", gin.H{
-		"message": "restore",
-	})
-}

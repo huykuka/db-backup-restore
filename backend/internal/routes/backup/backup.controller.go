@@ -17,7 +17,6 @@ func Register(r *gin.RouterGroup) {
 	///Register routes
 	route.POST("/", guards.BasicAuthGuard(), middlewares.RateLimiter(rate.NewLimiter(0.1, 1)), backupService.backup)
 	route.GET("/list", pipes.Query[QueryBackupDTO], backupService.getBackupList)
-	route.POST("/restore/:id", backupService.restoreBackup)
 	route.DELETE("/:id", backupService.deleteBackUp)
 	route.DELETE("/", pipes.Body[BulkBackupDeleteDTO], backupService.bulkDeleteBackup)
 
