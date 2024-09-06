@@ -73,7 +73,7 @@ func (b *BackUpRepository) createBackUp(filename *string) error {
 	}
 
 	if err := db.GetDB().Create(&backup).Error; err != nil {
-		log.Println(err.Error())
+		log.Error(err.Error())
 		return err
 	}
 	return nil
@@ -82,12 +82,12 @@ func (b *BackUpRepository) createBackUp(filename *string) error {
 func (b *BackUpRepository) delete(id string) (string, error) {
 	var backup BackUp
 	if err := db.GetDB().First(&backup, id).Error; err != nil {
-		log.Println(err.Error())
+		log.Error(err.Error())
 		return "", err
 	}
 
 	if err := db.GetDB().Delete(&backup).Error; err != nil {
-		log.Println(err.Error())
+		log.Error(err.Error())
 		return "", err
 	}
 
@@ -108,7 +108,7 @@ func (b *BackUpRepository) findMany(filters *QueryBackupDTO) ([]BackUp, int64, e
 	utils.CreatePaging[QueryBackupDTO](qr, *filters)
 	result := qr.Find(&backups)
 	if result.Error != nil {
-		log.Println(result.Error)
+		log.Error(result.Error)
 		return nil, 0, result.Error
 	}
 	return backups, count, nil
@@ -117,12 +117,12 @@ func (b *BackUpRepository) findMany(filters *QueryBackupDTO) ([]BackUp, int64, e
 func (b *BackUpRepository) bulkDelete(ids *[]string) ([]string, error) {
 	var backups []BackUp
 	if err := db.GetDB().Where("id IN ?", *ids).Find(&backups).Error; err != nil {
-		log.Println(err.Error())
+		log.Error(err.Error())
 		return nil, err
 	}
 
 	if err := db.GetDB().Delete(&BackUp{}, *ids).Error; err != nil {
-		log.Println(err.Error())
+		log.Error(err.Error())
 		return nil, err
 	}
 
@@ -140,7 +140,7 @@ func (b *BackUpRepository) moveBackUpFileToArchive(filename *string) {
 	if _, err := os.Stat(archiveDir); os.IsNotExist(err) {
 		err := os.MkdirAll(archiveDir, 0755)
 		if err != nil {
-			log.Printf("Failed to create archive directory: %v\n", err)
+			log.Error("Failed to create archive directory: %v\n", err)
 			return
 		}
 	}
@@ -149,7 +149,7 @@ func (b *BackUpRepository) moveBackUpFileToArchive(filename *string) {
 	// Move the backup file to the archive directory
 	err := os.Rename(*filename, fmt.Sprintf("%s/%s", archiveDir, baseFilename))
 	if err != nil {
-		log.Printf("Failed to move backup file to archive: %v\n", err)
+		log.Error("Failed to move backup file to archive: %v\n", err)
 		return
 	}
 }
