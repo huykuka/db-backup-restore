@@ -33,7 +33,6 @@ func Query[T any](c *gin.Context) {
 		log.Printf("Validation Error: %v", err)
 		// Append the error to the context without aborting the request
 		utils.HandleError(c, "Invalid Query", http.StatusBadRequest)
-		c.Next()
 	}
 	c.Set("Query", query)
 

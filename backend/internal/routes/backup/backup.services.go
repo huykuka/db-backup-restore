@@ -4,6 +4,7 @@ import "C"
 import (
 	"db-tool/internal/routes/histories"
 	"db-tool/utils"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -14,6 +15,7 @@ var historianRepository = new(histories.HistoriesRepository)
 type BackupService struct{}
 
 func (b *BackupService) backup(c *gin.Context) {
+	fmt.Println("hello")
 	handleError := func(err error, message string) {
 		if err != nil {
 			historianRepository.Create("failed")
