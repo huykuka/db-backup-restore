@@ -15,7 +15,7 @@ func (s *SettingService) getAll(c *gin.Context) {
 	query, _ := c.MustGet("Query").(GetSettingQueryDTO)
 	settings, err := settingRepository.findMany(&query)
 	if err != nil {
-		utils.HandleError(c, err.Error(), "Can not retrieve Settings", http.StatusBadRequest)
+		utils.HandleHTTPError(c, err.Error(), "Can not retrieve Settings", http.StatusBadRequest)
 		return
 	}
 	c.Set("response", gin.H{
@@ -30,7 +30,7 @@ func (s *SettingService) update(c *gin.Context) {
 
 	setting, err := settingRepository.update(&id, &req)
 	if err != nil {
-		utils.HandleError(c, err.Error(), "Can not edit Setting", http.StatusBadRequest)
+		utils.HandleHTTPError(c, err.Error(), "Can not edit Setting", http.StatusBadRequest)
 		return
 	}
 	c.Set("response", gin.H{

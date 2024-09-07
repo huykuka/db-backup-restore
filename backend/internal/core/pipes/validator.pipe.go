@@ -14,7 +14,7 @@ func Body[T any](c *gin.Context) {
 	// Bind JSON to the DTO
 	if err := c.ShouldBindJSON(&dto); err != nil {
 		// Append the error to the context without aborting the request
-		utils.HandleError(c, err.Error(), "Invalid Body", http.StatusBadRequest)
+		utils.HandleHTTPError(c, err.Error(), "Invalid Body", http.StatusBadRequest)
 		c.Next()
 	}
 
@@ -28,7 +28,7 @@ func Query[T any](c *gin.Context) {
 	// Bind JSON to the DTO
 	if err := c.ShouldBindQuery(&query); err != nil {
 		// Append the error to the context without aborting the request
-		utils.HandleError(c, err.Error(), "Invalid Query", http.StatusBadRequest)
+		utils.HandleHTTPError(c, err.Error(), "Invalid Query", http.StatusBadRequest)
 	}
 	c.Set("Query", query)
 
@@ -39,7 +39,7 @@ func structValidate[T any](c *gin.Context, dto *T) {
 	// Validate the DTO using the validator instance
 	if err := validate.Struct(dto); err != nil {
 		// Append the validation error to the context without aborting the request
-		utils.HandleError(c, err.Error(), "Invalid Input", http.StatusBadRequest)
+		utils.HandleHTTPError(c, err.Error(), "Invalid Input", http.StatusBadRequest)
 	}
 
 	// Proceed to the next middleware or handler
