@@ -10,9 +10,9 @@ import (
 	"db-tool/internal/routes/users"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 	ginlogrus "github.com/toorop/gin-logrus"
 	"golang.org/x/time/rate"
-	"log"
 	"os"
 )
 
@@ -22,10 +22,8 @@ func Init() {
 	port := os.Getenv("PORT")
 
 	r := gin.New()
-	r.Use(ginlogrus.Logger(initLogger()), gin.Recovery())
-
+	r.Use(ginlogrus.Logger(log.StandardLogger()), gin.Recovery())
 	r.Use(static.Serve("/", static.LocalFile("web", false)))
-	r.Use(middlewares.Logger())
 	r.Use(interceptors.JsonApiInterceptor())
 
 	//Serving API
@@ -38,7 +36,7 @@ func Init() {
 	histories.Register(api)
 
 	// Start the Server
-	log.Printf("Server is running on port: %s", port)
+	log.Print("Server is running on port: %s", port)
 	if err := r.Run(":" + port); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}

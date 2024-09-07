@@ -1,31 +1,21 @@
 package api
 
 import (
-	"fmt"
-	"github.com/sirupsen/logrus"
-	"github.com/sirupsen/logrus/hooks/writer"
+	log "github.com/sirupsen/logrus"
+
 	"os"
 )
 
-func initLogger() *logrus.Logger {
-	log := logrus.New()
-	//log.SetOutput(ioutil.Discard) // Send all logs to nowhere by default
-
-	log.AddHook(&writer.Hook{ // Send colored format to stdout
-		Writer: os.Stdout,
+// Need to put the logrus config here so the api can understand the log config
+func init() {
+	// Use the Airbrake hook to report errors that have Error severity or above to
+	// an exception tracker. You can create custom hooks, see the Hooks section.
+	log.SetFormatter(&log.TextFormatter{
+		FullTimestamp:    true, // Enables full timestamps
+		DisableTimestamp: false,
+		PadLevelText:     true,
 	})
 
-	logFile, err := os.OpenFile("logs.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-	if err != nil {
-		panic(fmt.Sprintf("[Error]: %s", err))
-	}
-
-	log.AddHook(&writer.Hook{ // Send uncolored format to file
-		Writer: logFile,
-		LogLevels: []logrus.Level{
-			logrus.InfoLevel,
-		},
-	})
-
-	return log
+	// Log to stdout for now to verify output
+	log.SetOutput(os.Stdout)
 }
