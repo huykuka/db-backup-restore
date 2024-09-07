@@ -2,6 +2,7 @@ package backup
 
 import (
 	"db-tool/internal/config/db"
+	"db-tool/utils"
 	"fmt"
 	"gorm.io/gorm"
 	"log"
@@ -93,16 +94,24 @@ func (b *BackUpRepository) delete(id string) (string, error) {
 	return backup.Filename, nil
 }
 
-func (b *BackUpRepository) findMany(filters *QueryBackupDTO) ([]BackUp, error) {
+func (b *BackUpRepository) findMany(filters *QueryBackupDTO) ([]BackUp, int64, error) {
 	var backups []BackUp
+	var count int64
+
 	qr := db.GetDB().Model(&db.BackUp{})
 	createFilter(qr, filters)
+
+	// Get the total count of records that match the filters
+	qr.Count(&count)
+
+	// Apply filter and get the records
+	utils.CreatePaging[QueryBackupDTO](qr, *filters)
 	result := qr.Find(&backups)
 	if result.Error != nil {
 		log.Println(result.Error)
-		return nil, result.Error
+		return nil, 0, result.Error
 	}
-	return backups, nil
+	return backups, count, nil
 }
 
 func (b *BackUpRepository) bulkDelete(ids *[]string) ([]string, error) {
@@ -149,10 +158,10 @@ func createFilter(qr *gorm.DB, query *QueryBackupDTO) {
 	filter := query.Filter
 	// Apply date filter (fromDate)
 	if filter.FromDate != "" {
-		qr = qr.Where("createdAt >= ?", query.Filter.FromDate)
+		qr = qr.Where("createdAt >= ?", filter.FromDate)
 	}
 
-	if query.Filter.ToDate != "" {
-		qr = qr.Where("createdAt >= ?", query.Filter.FromDate)
+	if filter.ToDate != "" {
+		qr = qr.Where("createdAt >= ?", filter.FromDate)
 	}
 }

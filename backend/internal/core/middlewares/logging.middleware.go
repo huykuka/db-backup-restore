@@ -6,7 +6,7 @@ import (
 
 func Logger() gin.HandlerFunc {
 	return func(c *gin.Context) {
-
+		// Start timer
 		c.Next()
 		// access the status we are sending
 		//status := c.Writer.Status()

@@ -2,8 +2,10 @@ package histories
 
 import (
 	"db-tool/internal/config/db"
+	"db-tool/utils"
 	"gorm.io/gorm"
 	"log"
+	"strings"
 )
 
 type HistoriesRepository struct {
@@ -24,32 +26,38 @@ func (h *HistoriesRepository) Create(status string) error {
 
 }
 
-func (h *HistoriesRepository) FindMany(filters *QueryHistorianDTO) ([]History, error) {
+func (h *HistoriesRepository) FindMany(filters *QueryHistorianDTO) ([]History, int64, error) {
 	var histories []History
+	var count int64
+
 	qr := db.GetDB().Model(&History{})
 	createFilter(qr, filters)
+
+	// Get the total count of records that match the filters
+	qr.Count(&count)
+
+	// Apply filter and get the records
+	utils.CreatePaging[QueryHistorianDTO](qr, *filters)
 	result := qr.Find(&histories)
 	if result.Error != nil {
 		log.Println(result.Error)
-		return nil, result.Error
+		return nil, 0, result.Error
 	}
-	return histories, nil
+	return histories, count, nil
 }
 
 func createFilter(qr *gorm.DB, query *QueryHistorianDTO) {
 	filter := query.Filter
 	// Apply date filter (fromDate)
 	if filter.FromDate != "" {
-		qr = qr.Where("createdAt >= ?", query.Filter.FromDate)
+		qr = qr.Where("createdAt >= ?", filter.FromDate)
 	}
 
-	if query.Filter.ToDate != "" {
-		qr = qr.Where("createdAt >= ?", query.Filter.FromDate)
+	if filter.ToDate != "" {
+		qr = qr.Where("createdAt >= ?", filter.FromDate)
 	}
 
-	// Apply pagination
-	if query.Page.Number > 0 && query.Page.Size > 0 {
-		offset := (query.Page.Number - 1) * query.Page.Size
-		qr = qr.Offset(offset).Limit(query.Page.Size)
+	if filter.Status != "" {
+		qr = qr.Where("UPPER(status) LIKE ?", strings.ToUpper(filter.Status)+"%")
 	}
 }
