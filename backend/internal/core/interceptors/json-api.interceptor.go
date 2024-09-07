@@ -12,12 +12,12 @@ type JSONAPIResponse struct {
 	Meta  map[string]interface{} `json:"meta,omitempty"`
 	Links map[string]string      `json:"links,omitempty"`
 	Data  interface{}            `json:"data,omitempty"`
-	Error JSONAPIError           `json:"error,omitempty"`
+	Error *JSONAPIError          `json:"error,omitempty"`
 }
 
 type JSONAPIError struct {
-	Status string `json:"status"`
-	Title  string `json:"title"`
+	Status string `json:"status,omitempty"`
+	Title  string `json:"title,omitempty"`
 	Detail string `json:"detail,omitempty"`
 }
 
@@ -33,7 +33,6 @@ func JsonApiInterceptor() gin.HandlerFunc {
 		jsonApiResponse.Links["self"] = c.Request.URL.String()
 		err, errorExist := c.Get("error")
 		// Handle errors
-		// Handle errors
 		if errorExist {
 			// Retrieve the status code from the context, defaulting to 400 if not set
 			statusCode := http.StatusBadRequest
@@ -42,7 +41,7 @@ func JsonApiInterceptor() gin.HandlerFunc {
 			}
 
 			// Only append the first error from the Gin context to the JSON:API response
-			jsonApiResponse.Error = JSONAPIError{
+			jsonApiResponse.Error = &JSONAPIError{
 
 				Status: http.StatusText(statusCode),
 				Title:  err.(string), // Append only the first error

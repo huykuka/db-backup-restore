@@ -19,7 +19,7 @@ func (b *BackupService) backup(c *gin.Context) {
 	handleError := func(err error, message string) {
 		if err != nil {
 			historianRepository.Create("failed")
-			utils.HandleError(c, message, http.StatusBadRequest)
+			utils.HandleError(c, err.Error(), message, http.StatusBadRequest)
 		}
 	}
 
@@ -51,7 +51,7 @@ func (b *BackupService) getBackupList(c *gin.Context) {
 	query, _ := c.MustGet("Query").(QueryBackupDTO)
 	backups, total, err := backupRepository.findMany(&query)
 	if err != nil {
-		utils.HandleError(c, "Can not retrieve Settings", http.StatusBadRequest)
+		utils.HandleError(c, err.Error(), "Can not retrieve Settings", http.StatusBadRequest)
 		return
 	}
 	c.Set("response", gin.H{
@@ -65,7 +65,7 @@ func (b *BackupService) deleteBackUp(c *gin.Context) {
 	//Delete the backup record from database
 	filename, err := backupRepository.delete(id)
 	if err != nil {
-		utils.HandleError(c, "Can not delete backup", http.StatusBadRequest)
+		utils.HandleError(c, err.Error(), "Can not delete backup", http.StatusBadRequest)
 		return
 	}
 
@@ -82,7 +82,7 @@ func (b *BackupService) bulkDeleteBackup(c *gin.Context) {
 	//Delete the backup records from database
 	filenames, err := backupRepository.bulkDelete(&ids.Ids)
 	if err != nil {
-		utils.HandleError(c, "Can not delete backups", http.StatusBadRequest)
+		utils.HandleError(c, err.Error(), "Can not delete backups", http.StatusBadRequest)
 		return
 	}
 	//Move the backup files to archive then using cron job to delete later

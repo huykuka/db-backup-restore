@@ -2,12 +2,13 @@ package utils
 
 import (
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
 
-func HandleError(c *gin.Context, errMsg string, statusCode int) {
-	c.Set("error", errMsg)
-	//c.Error(errors.New(errMsg)
+func HandleError(c *gin.Context, errMsg string, details string, statusCode int) {
+	log.WithFields(log.Fields{}).Error(errMsg)
+	c.Set("error", details)
 	c.AbortWithStatus(statusCode)
 }
 

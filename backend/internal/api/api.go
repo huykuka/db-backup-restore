@@ -36,7 +36,7 @@ func Init() {
 	histories.Register(api)
 
 	// Start the Server
-	log.Print("Server is running on port: %s", port)
+	log.Printf("Server is running on port: %s", port)
 	if err := r.Run(":" + port); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
