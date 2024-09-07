@@ -14,6 +14,5 @@ COPY . .
 
 RUN go mod download
 
-ENV TERM=xterm-256color
 ENV GIN_MODE=release
 ENV CGO_ENABLED=1

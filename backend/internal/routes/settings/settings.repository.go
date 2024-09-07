@@ -2,8 +2,8 @@ package settings
 
 import (
 	"db-tool/internal/config/db"
+	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
-	"log"
 	"strings"
 )
 
@@ -29,7 +29,7 @@ func (s *SettingRepository) findMany(filters *GetSettingQueryDTO) ([]Setting, er
 	createFilter(qr, filters)
 	result := qr.Find(&settings)
 	if result.Error != nil {
-		log.Println(result.Error)
+		log.Error(result.Error)
 		return nil, result.Error
 	}
 	return settings, nil
@@ -39,13 +39,13 @@ func (s *SettingRepository) update(id *string, data *UpdateSettingDTO) (*Setting
 	var setting Setting
 	// Find the existing setting by ID
 	if err := db.GetDB().Model(&Setting{}).Where("id = ?", id).First(&setting).Error; err != nil {
-		log.Println(err.Error())
+		log.Error(err.Error())
 		return nil, err
 	}
 
 	// Update the setting with the provided data
 	if err := db.GetDB().Model(&setting).Updates(data).Error; err != nil {
-		log.Println(err.Error())
+		log.Error(err.Error())
 		return nil, err
 	}
 

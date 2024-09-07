@@ -2,8 +2,8 @@ package db
 
 import (
 	"errors"
+	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
-	"log"
 )
 
 var settingSeed = []*Setting{

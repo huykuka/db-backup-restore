@@ -2,11 +2,9 @@ package pipes
 
 import (
 	"db-tool/utils"
-	"log"
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"net/http"
 )
 
 var validate = validator.New()
@@ -15,9 +13,8 @@ func Body[T any](c *gin.Context) {
 	var dto T // Data Transfer Object
 	// Bind JSON to the DTO
 	if err := c.ShouldBindJSON(&dto); err != nil {
-		log.Printf("Validation Error: %v", err)
 		// Append the error to the context without aborting the request
-		utils.HandleError(c, "Invalid Input", http.StatusBadRequest)
+		utils.HandleError(c, err.Error(), "Invalid Body", http.StatusBadRequest)
 		c.Next()
 	}
 
@@ -30,10 +27,8 @@ func Query[T any](c *gin.Context) {
 	var query T // Data Transfer Object
 	// Bind JSON to the DTO
 	if err := c.ShouldBindQuery(&query); err != nil {
-		log.Printf("Validation Error: %v", err)
 		// Append the error to the context without aborting the request
-		utils.HandleError(c, "Invalid Query", http.StatusBadRequest)
-		c.Next()
+		utils.HandleError(c, err.Error(), "Invalid Query", http.StatusBadRequest)
 	}
 	c.Set("Query", query)
 
@@ -43,9 +38,8 @@ func Query[T any](c *gin.Context) {
 func structValidate[T any](c *gin.Context, dto *T) {
 	// Validate the DTO using the validator instance
 	if err := validate.Struct(dto); err != nil {
-		log.Printf("Validation Error: %v", err)
 		// Append the validation error to the context without aborting the request
-		utils.HandleError(c, "Invalid Input", http.StatusBadRequest)
+		utils.HandleError(c, err.Error(), "Invalid Input", http.StatusBadRequest)
 	}
 
 	// Proceed to the next middleware or handler

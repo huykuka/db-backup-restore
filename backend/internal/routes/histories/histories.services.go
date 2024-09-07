@@ -15,7 +15,7 @@ func (s *HistoriesService) getAll(c *gin.Context) {
 	query, _ := c.MustGet("Query").(QueryHistorianDTO)
 	settings, total, err := historiesRepository.FindMany(&query)
 	if err != nil {
-		utils.HandleError(c, "Can not retrieve histories", http.StatusBadRequest)
+		utils.HandleError(c, err.Error(), "Can not retrieve histories", http.StatusBadRequest)
 		return
 	}
 	c.Set("response", gin.H{

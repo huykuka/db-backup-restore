@@ -9,11 +9,10 @@ import (
 
 func RateLimiter(limiter *rate.Limiter) gin.HandlerFunc {
 	return func(c *gin.Context) {
-
 		if limiter.Allow() {
 			c.Next()
 		} else {
-			utils.HandleError(c, "Rate Limit exceed", http.StatusTooManyRequests)
+			utils.HandleError(c, "Rate limit exceed", "Rate Limit exceed", http.StatusTooManyRequests)
 		}
 	}
 }

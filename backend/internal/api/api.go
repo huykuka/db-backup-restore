@@ -1,6 +1,7 @@
 package api
 
 import (
+	"db-tool/internal/core/guards"
 	"db-tool/internal/core/interceptors"
 	"db-tool/internal/core/middlewares"
 	"db-tool/internal/routes/backup"
@@ -9,8 +10,9 @@ import (
 	"db-tool/internal/routes/users"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
+	ginlogrus "github.com/toorop/gin-logrus"
 	"golang.org/x/time/rate"
-	"log"
 	"os"
 )
 
@@ -18,15 +20,14 @@ var api *gin.RouterGroup
 
 func Init() {
 	port := os.Getenv("PORT")
-	//Setup GIN
-	r := gin.Default()
 
+	r := gin.New()
+	r.Use(ginlogrus.Logger(log.StandardLogger()), gin.Recovery())
 	r.Use(static.Serve("/", static.LocalFile("web", false)))
-	r.Use(middlewares.Logger())
 	r.Use(interceptors.JsonApiInterceptor())
 
 	//Serving API
-	api = r.Group("/api", middlewares.RateLimiter(rate.NewLimiter(10, 1)))
+	api = r.Group("/api", guards.BasicAuthGuard(), middlewares.RateLimiter(rate.NewLimiter(10, 1)))
 
 	//Register modules
 	users.Register(api)
