@@ -20,6 +20,8 @@ type Database struct {
 var dbStrategies = map[string]DBType{
 	"postgresql": &postgresql.PostgreSQL{},
 	"mysql":      &mysql.MySQL{},
+
+	///Add more if you need others engine
 }
 
 var settingRepository = new(settings.SettingRepository)

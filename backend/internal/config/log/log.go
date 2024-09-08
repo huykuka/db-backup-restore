@@ -1,4 +1,4 @@
-package api
+package log
 
 import (
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
@@ -8,8 +8,7 @@ import (
 	"time"
 )
 
-// Need to put the logrus config here so the api can understand the log config
-func init() {
+func Init() {
 	log.SetFormatter(&log.TextFormatter{
 		FullTimestamp:    true, // Enables full timestamps
 		DisableTimestamp: false,
