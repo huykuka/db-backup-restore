@@ -2,6 +2,7 @@ package database
 
 import (
 	"db-tool/internal/routes/settings"
+	"db-tool/internal/strategies/database/mysql"
 	"db-tool/internal/strategies/database/postgresql"
 	log "github.com/sirupsen/logrus"
 )
@@ -18,7 +19,7 @@ type Database struct {
 // Define a map to store database types and their corresponding strategies
 var dbStrategies = map[string]DBType{
 	"postgresql": &postgresql.PostgreSQL{},
-	"mysql":      &postgresql.PostgreSQL{},
+	"mysql":      &mysql.MySQL{},
 }
 
 var settingRepository = new(settings.SettingRepository)
