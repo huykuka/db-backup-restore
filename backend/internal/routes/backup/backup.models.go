@@ -1,6 +1,6 @@
 package backup
 
-import "db-tool/utils"
+import "db-tool/internal/utils"
 
 type QueryBackupDTO struct {
 	Filter struct {

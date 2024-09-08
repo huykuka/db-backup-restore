@@ -1,6 +1,6 @@
 package histories
 
-import "db-tool/utils"
+import "db-tool/internal/utils"
 
 type QueryHistorianDTO struct {
 	Filter struct {

@@ -3,7 +3,7 @@ package backup
 import "C"
 import (
 	"db-tool/internal/routes/histories"
-	"db-tool/utils"
+	"db-tool/internal/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

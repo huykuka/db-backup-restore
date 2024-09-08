@@ -6,6 +6,7 @@ import (
 	"db-tool/internal/core/middlewares"
 	"db-tool/internal/routes/backup"
 	"db-tool/internal/routes/histories"
+	"db-tool/internal/routes/restore"
 	"db-tool/internal/routes/settings"
 	"db-tool/internal/routes/users"
 	"github.com/gin-contrib/static"
@@ -33,6 +34,7 @@ func Init() {
 	users.Register(api)
 	backup.Register(api)
 	settings.Register(api)
+	restore.Register(api)
 	histories.Register(api)
 
 	// Start the Server

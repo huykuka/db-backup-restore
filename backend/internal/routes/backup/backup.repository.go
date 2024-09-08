@@ -2,67 +2,36 @@ package backup
 
 import (
 	"db-tool/internal/config/db"
-	"db-tool/utils"
+	"db-tool/internal/routes/settings"
+	"db-tool/internal/strategies/database"
+	"db-tool/internal/utils"
 	"fmt"
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"os"
-	"os/exec"
 	"path/filepath"
-	"time"
 )
 
 type BackUpRepository struct{}
 
 type BackUp db.BackUp
 
-func (b *BackUpRepository) Backup() (filename string, err error) {
+var settingRepository = new(settings.SettingRepository)
 
-	//Define variables
-	user := "postgres"
-	host := "postgres"
-	port := "5432"
-	password := "postgres"
-	dbName := "postgres-go"
-	backupDir := os.Getenv("BACKUP_PATH")
-	backupFile := fmt.Sprintf("%s/%s_%s.sql", backupDir, time.Now().Format("20060102150405"), dbName)
-
-	// Create the backup directory if it doesn't exist
-	if _, err := os.Stat(backupDir); os.IsNotExist(err) {
-		err := os.MkdirAll(backupDir, 0755)
-		if err != nil {
-			log.Printf("Failed to create backup directory: %v\n", err)
-			return "", err
-		}
-	}
-	err = os.Setenv("PGPASSWORD", password)
+func (b *BackUpRepository) Backup() (string, error) {
+	//Retrieve DB Settings
+	dbSetting, err := settingRepository.GetDBSetting()
 	if err != nil {
+		log.Printf("Failed to retrieve DB configuration: %v\n", err)
 		return "", err
-	} // Uncomment if password is needed
+	}
+	filename, err := database.SelectDB().BackUp(&dbSetting)
 
-	// Build the pg_dump command
-	cmd := exec.Command("pg_dump",
-		"-U", user,
-		"-h", host,
-		"-p", port,
-		"-F", "c",
-		"-b",
-		"-v",
-		"-f", backupFile,
-		dbName,
-	)
-
-	//Set the password environment variable if needed
-
-	// Run the pg_dump command
-	err = cmd.Run()
 	if err != nil {
-		log.Printf("Backup failed: %v\n", err)
 		return "", err
 	}
 
-	log.Printf("Backup completed: %s\n", backupFile)
-	return backupFile, nil
+	return filename, nil
 }
 
 func (b *BackUpRepository) CreateBackUp(filename *string) error {
@@ -110,6 +79,15 @@ func (b *BackUpRepository) FindMany(filters *QueryBackupDTO) ([]BackUp, int64, e
 		return nil, 0, result.Error
 	}
 	return backups, count, nil
+}
+
+func (b *BackUpRepository) FindOne(id string) (BackUp, error) {
+	var backup BackUp
+	if err := db.GetDB().Model(BackUp{}).Where("id = ?", id).First(&backup).Error; err != nil {
+		log.Error(err.Error())
+		return BackUp{}, err
+	}
+	return backup, nil
 }
 
 func (b *BackUpRepository) BulkDelete(ids *[]string) ([]string, error) {
