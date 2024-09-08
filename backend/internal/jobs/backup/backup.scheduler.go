@@ -17,8 +17,9 @@ func Init() {
 	// add a job to the scheduler
 	_, err = s.NewJob(
 		gocron.DurationJob(
-			20*time.Second,
+			20*time.Minute,
 		),
+
 		gocron.NewTask(
 			func() {
 				backUpTask.Run()
