@@ -50,6 +50,7 @@ services:
       - PORT=${APP_PORT:-3000}
       - BACKUP_PATH=/home/thaiqu/backup
       - SECRET_USERNAME=admin
+      - SECRET_MAIL=admin@mail.com
       - SECRET_PASSWORD=admin
     ports:
       - "8080:${APP_PORT:-3000}"

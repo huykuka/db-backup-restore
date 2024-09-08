@@ -27,3 +27,12 @@ type History struct {
 	CreatedAt time.Time `json:"createdAt"`
 	Status    string    `json:"status" gorm:"index"`
 }
+
+type User struct {
+	ID        uint      `json:"id" gorm:"primaryKey"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
+	Name      string    `json:"name" gorm:"required"`
+	Email     string    `json:"email" gorm:"unique"`
+	Password  string    `json:"password"`
+}
