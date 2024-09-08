@@ -1,9 +1,9 @@
 package main
 
 import (
-	"db-tool/internal/api"
 	"db-tool/internal/config"
 	"db-tool/internal/cron"
+	"db-tool/internal/routes"
 	"sync"
 )
 
@@ -20,7 +20,7 @@ func main() {
 
 	go func() {
 		defer wg.Done()
-		api.Init()
+		routes.Init()
 	}()
 
 	wg.Wait()
