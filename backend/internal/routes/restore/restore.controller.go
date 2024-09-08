@@ -2,8 +2,8 @@ package restore
 
 import "github.com/gin-gonic/gin"
 
-func Register(route *gin.RouterGroup) {
-	route.Group("/restore")
+func Register(r *gin.RouterGroup) {
+	route := r.Group("/restore")
 
 	restoreService := new(RestoreService)
 

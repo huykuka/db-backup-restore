@@ -52,3 +52,7 @@ func (s *SettingRepository) update(id *string, data *UpdateSettingDTO) (*Setting
 	// Return the updated setting
 	return &setting, nil
 }
+
+func (s *SettingRepository) GetDBSetting() {
+
+}

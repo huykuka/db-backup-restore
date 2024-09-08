@@ -11,7 +11,7 @@ var restoreRepository = new(RestoreRepository)
 
 func (r *RestoreService) restore(c *gin.Context) {
 	id := c.Param("id")
-	err := restoreRepository.restore(id)
+	err := restoreRepository.Restore(id)
 	if err != nil {
 		utils.HandleHTTPError(c, err.Error(), "Restore failed!")
 		return

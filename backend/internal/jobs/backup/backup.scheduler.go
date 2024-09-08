@@ -2,6 +2,7 @@ package backup
 
 import (
 	"github.com/go-co-op/gocron/v2"
+	log "github.com/sirupsen/logrus"
 	"time"
 )
 
@@ -12,10 +13,11 @@ func Init() {
 	s, err := gocron.NewScheduler()
 	if err != nil {
 		// handle error
+		log.Error("Can not create backup scheduler")
 	}
 
 	// add a job to the scheduler
-	_, err = s.NewJob(
+	j, err := s.NewJob(
 		gocron.DurationJob(
 			20*time.Minute,
 		),
@@ -28,5 +30,6 @@ func Init() {
 	)
 
 	// start the scheduler
+	log.Printf("Backup job with ID %d has been started...", j.ID())
 	s.Start()
 }

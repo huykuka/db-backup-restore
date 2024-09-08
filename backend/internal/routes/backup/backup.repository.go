@@ -53,7 +53,9 @@ func (b *BackUpRepository) Backup() (filename string, err error) {
 	)
 
 	//Set the password environment variable if needed
-
+	// Run the pg_restore command
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
 	// Run the pg_dump command
 	err = cmd.Run()
 	if err != nil {
@@ -110,6 +112,15 @@ func (b *BackUpRepository) FindMany(filters *QueryBackupDTO) ([]BackUp, int64, e
 		return nil, 0, result.Error
 	}
 	return backups, count, nil
+}
+
+func (b *BackUpRepository) FindOne(id string) (BackUp, error) {
+	var backup BackUp
+	if err := db.GetDB().Model(BackUp{}).Where("id = ?", id).First(&backup).Error; err != nil {
+		log.Error(err.Error())
+		return BackUp{}, err
+	}
+	return backup, nil
 }
 
 func (b *BackUpRepository) BulkDelete(ids *[]string) ([]string, error) {
