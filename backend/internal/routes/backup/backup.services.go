@@ -4,6 +4,7 @@ import "C"
 import (
 	"db-tool/internal/routes/histories"
 	"db-tool/internal/utils"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -49,13 +50,27 @@ func (b *BackupService) getBackupList(c *gin.Context) {
 	query, _ := c.MustGet("Query").(QueryBackupDTO)
 	backups, total, err := backupRepository.FindMany(&query)
 	if err != nil {
-		utils.HandleHTTPError(c, err.Error(), "Can not retrieve Settings", http.StatusBadRequest)
+		utils.HandleHTTPError(c, err.Error(), "Can not retrieve Backups", http.StatusBadRequest)
 		return
 	}
 	c.Set("response", gin.H{
 		"backups": backups,
 		"total":   total,
 	})
+}
+
+func (b *BackupService) downloadBackUpFile(c *gin.Context) {
+	id := c.Param("id")
+	backup, err := backupRepository.FindOne(id)
+	if err != nil {
+		utils.HandleHTTPError(c, err.Error(), "Can not retrieve backup", http.StatusBadRequest)
+		return
+	}
+	// Format CreatedAt timestamp as part of the filename
+	formattedDate := backup.CreatedAt.Format("20060102") // YYYYMMDD format
+	filename := fmt.Sprintf("backup_%s.sql", formattedDate)
+
+	c.FileAttachment(backup.Filename, filename)
 }
 
 func (b *BackupService) deleteBackUp(c *gin.Context) {
