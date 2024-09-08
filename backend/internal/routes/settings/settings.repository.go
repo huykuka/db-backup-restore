@@ -62,6 +62,16 @@ func (s *SettingRepository) update(id *string, data *UpdateSettingDTO) (*Setting
 	return &setting, nil
 }
 
+func (s *SettingRepository) FindByKey(key string) (*Setting, error) {
+	var setting Setting
+	// Convert key to uppercase and find the setting by key
+	if err := db.GetDB().Model(&Setting{}).Where("UPPER(key) = ?", strings.ToUpper(key)).First(&setting).Error; err != nil {
+		log.Error(err.Error())
+		return nil, err
+	}
+	return &setting, nil
+}
+
 func (s *SettingRepository) GetDBSetting() (DBSetting, error) {
 	var settings []Setting
 	qr := db.GetDB().Model(&db.Setting{}).Where("UPPER(key) LIKE ?", "DB_%")

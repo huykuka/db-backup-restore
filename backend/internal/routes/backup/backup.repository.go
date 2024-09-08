@@ -3,14 +3,13 @@ package backup
 import (
 	"db-tool/internal/config/db"
 	"db-tool/internal/routes/settings"
+	"db-tool/internal/strategies/database"
 	"db-tool/internal/utils"
 	"fmt"
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"os"
-	"os/exec"
 	"path/filepath"
-	"time"
 )
 
 type BackUpRepository struct{}
@@ -26,30 +25,13 @@ func (b *BackUpRepository) Backup() (string, error) {
 		log.Printf("Failed to retrieve DB configuration: %v\n", err)
 		return "", err
 	}
+	filename, err := database.SelectDB().BackUp(&dbSetting)
 
-	//Format the output file
-	backupFile := fmt.Sprintf("%s/%s_%s.sql", dbSetting.BackUpDir, time.Now().Format("20060102150405"), dbSetting.DbName)
-
-	if err := os.MkdirAll(dbSetting.BackUpDir, 0755); err != nil && !os.IsExist(err) {
-		log.Printf("Failed to create backup directory: %v\n", err)
+	if err != nil {
 		return "", err
 	}
 
-	if err := os.Setenv("PGPASSWORD", dbSetting.Password); err != nil {
-		return "", err
-	}
-
-	//Execute Restore command
-	cmd := exec.Command("pg_dump", "-U", dbSetting.User, "-h", dbSetting.Host, "-p", dbSetting.Port, "-F", "c", "-b", "-v", "-f", backupFile, dbSetting.DbName)
-	cmd.Stdout, cmd.Stderr = os.Stdout, os.Stderr
-
-	if err := cmd.Run(); err != nil {
-		log.Printf("Backup failed: %v\n", err)
-		return "", err
-	}
-
-	log.Printf("Backup completed: %s\n", backupFile)
-	return backupFile, nil
+	return filename, nil
 }
 
 func (b *BackUpRepository) CreateBackUp(filename *string) error {

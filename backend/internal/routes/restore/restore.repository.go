@@ -4,9 +4,8 @@ import (
 	"db-tool/internal/config/db"
 	"db-tool/internal/routes/backup"
 	"db-tool/internal/routes/settings"
+	"db-tool/internal/strategies/database"
 	log "github.com/sirupsen/logrus"
-	"os"
-	"os/exec"
 )
 
 type BackUp db.BackUp
@@ -30,19 +29,11 @@ func (r *RestoreRepository) Restore(backupId string) error {
 		return err
 	}
 
-	if err := os.Setenv("PGPASSWORD", dbSetting.Password); err != nil {
+	//Restore DB
+	err = database.SelectDB().Restore(&dbSetting, &backUp.Filename)
+
+	if err != nil {
 		return err
 	}
-
-	//Execute Restore command
-	cmd := exec.Command("pg_restore", "-U", dbSetting.User, "-h", dbSetting.Host, "-p", dbSetting.Port, "-d", dbSetting.DbName, "-v", backUp.Filename)
-	cmd.Stdout, cmd.Stderr = os.Stdout, os.Stderr
-
-	if err := cmd.Run(); err != nil {
-		log.Printf("Restore failed: %v\n", err)
-		return err
-	}
-
-	log.Printf("Restore completed: %s\n", backUp.Filename)
 	return nil
 }
