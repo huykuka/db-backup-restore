@@ -27,6 +27,22 @@ var settingSeed = []*Setting{
 		Key:   "DB_NAME",
 		Value: "postgres-go",
 	},
+	{
+		Key:   "DB_BACKUP_DIR",
+		Value: "/home/thaiqu/backup",
+	},
+	{
+		Key:   "GENERAL_DB_TYPE",
+		Value: "postgresql",
+	},
+	{
+		Key:   "GENERAL_BACKUP_INTERVAL",
+		Value: "midnight",
+		//"midnight": Backup at midnight.
+		//"daily": Backup once every day.
+		//"weekly": Backup once every week.
+		//"hourly": Backup every hour.
+	},
 }
 
 func seedSetting(handler *gorm.DB) {

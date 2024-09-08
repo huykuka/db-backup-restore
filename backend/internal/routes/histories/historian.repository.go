@@ -2,7 +2,7 @@ package histories
 
 import (
 	"db-tool/internal/config/db"
-	"db-tool/utils"
+	"db-tool/internal/utils"
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"strings"
