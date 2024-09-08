@@ -1,7 +1,7 @@
 package pipes
 
 import (
-	"db-tool/utils"
+	"db-tool/internal/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"net/http"

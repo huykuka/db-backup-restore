@@ -3,7 +3,7 @@ package backup
 import (
 	"db-tool/internal/config/db"
 	"db-tool/internal/routes/settings"
-	"db-tool/utils"
+	"db-tool/internal/utils"
 	"fmt"
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"

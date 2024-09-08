@@ -1,7 +1,7 @@
 package histories
 
 import (
-	"db-tool/utils"
+	"db-tool/internal/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

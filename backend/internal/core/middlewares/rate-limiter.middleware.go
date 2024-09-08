@@ -1,7 +1,7 @@
 package middlewares
 
 import (
-	"db-tool/utils"
+	"db-tool/internal/utils"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/time/rate"
 	"net/http"
