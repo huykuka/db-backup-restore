@@ -5,8 +5,9 @@ import {
   ChevronRightIcon,
   DotFilledIcon,
 } from "@radix-ui/react-icons"
+import {cn} from "@frontend/shared/lib/utils";
 
-import { cn } from "@frontend/shared/shared/utils"
+
 
 const DropdownMenu = DropdownMenuPrimitive.Root
 

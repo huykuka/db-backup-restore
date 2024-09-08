@@ -1,3 +1,4 @@
+// @ts-ignore
 import styled from 'tailwind';
 
 const StyledShared = styled.div`
