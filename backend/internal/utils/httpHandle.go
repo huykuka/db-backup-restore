@@ -7,6 +7,15 @@ import (
 	"net/http"
 )
 
+type Page struct {
+	Size   int `json:"fromDate,omitempty" form:"page[size]" validate:"omitempty,gt=0"`
+	Number int `json:"toDate,omitempty" form:"page[number]" validate:"omitempty,gt=0"`
+}
+
+type Pageable interface {
+	GetPage() Page
+}
+
 // HandleHTTPError handles HTTP errors by logging the error message, setting error details in the context, and aborting the request with a status code.
 //
 // Parameters:
@@ -22,10 +31,6 @@ func HandleHTTPError(c *gin.Context, errMsg string, details string, statusCode .
 	log.WithFields(log.Fields{}).Error(errMsg)
 	c.Set("error", details)
 	c.AbortWithStatus(code)
-}
-
-type Pageable interface {
-	GetPage() Page
 }
 
 func CreatePaging[T Pageable](qr *gorm.DB, query T) {
