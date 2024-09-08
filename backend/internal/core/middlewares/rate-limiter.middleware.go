@@ -12,7 +12,7 @@ func RateLimiter(limiter *rate.Limiter) gin.HandlerFunc {
 		if limiter.Allow() {
 			c.Next()
 		} else {
-			utils.HandleError(c, "Rate limit exceed", "Rate Limit exceed", http.StatusTooManyRequests)
+			utils.HandleHTTPError(c, "Rate limit exceed", "Rate Limit exceed", http.StatusTooManyRequests)
 		}
 	}
 }

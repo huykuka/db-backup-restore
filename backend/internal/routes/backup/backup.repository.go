@@ -16,7 +16,7 @@ type BackUpRepository struct{}
 
 type BackUp db.BackUp
 
-func (b *BackUpRepository) backup() (filename string, err error) {
+func (b *BackUpRepository) Backup() (filename string, err error) {
 
 	//Define variables
 	user := "postgres"
@@ -55,8 +55,6 @@ func (b *BackUpRepository) backup() (filename string, err error) {
 	//Set the password environment variable if needed
 
 	// Run the pg_dump command
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
 	err = cmd.Run()
 	if err != nil {
 		log.Printf("Backup failed: %v\n", err)
@@ -67,7 +65,7 @@ func (b *BackUpRepository) backup() (filename string, err error) {
 	return backupFile, nil
 }
 
-func (b *BackUpRepository) createBackUp(filename *string) error {
+func (b *BackUpRepository) CreateBackUp(filename *string) error {
 	var backup = BackUp{
 		Filename: *filename,
 	}
@@ -79,7 +77,7 @@ func (b *BackUpRepository) createBackUp(filename *string) error {
 	return nil
 }
 
-func (b *BackUpRepository) delete(id string) (string, error) {
+func (b *BackUpRepository) Delete(id string) (string, error) {
 	var backup BackUp
 	if err := db.GetDB().First(&backup, id).Error; err != nil {
 		log.Error(err.Error())
@@ -94,7 +92,7 @@ func (b *BackUpRepository) delete(id string) (string, error) {
 	return backup.Filename, nil
 }
 
-func (b *BackUpRepository) findMany(filters *QueryBackupDTO) ([]BackUp, int64, error) {
+func (b *BackUpRepository) FindMany(filters *QueryBackupDTO) ([]BackUp, int64, error) {
 	var backups []BackUp
 	var count int64
 
@@ -114,7 +112,7 @@ func (b *BackUpRepository) findMany(filters *QueryBackupDTO) ([]BackUp, int64, e
 	return backups, count, nil
 }
 
-func (b *BackUpRepository) bulkDelete(ids *[]string) ([]string, error) {
+func (b *BackUpRepository) BulkDelete(ids *[]string) ([]string, error) {
 	var backups []BackUp
 	if err := db.GetDB().Where("id IN ?", *ids).Find(&backups).Error; err != nil {
 		log.Error(err.Error())
@@ -134,7 +132,7 @@ func (b *BackUpRepository) bulkDelete(ids *[]string) ([]string, error) {
 	return filenames, nil
 }
 
-func (b *BackUpRepository) moveBackUpFileToArchive(filename *string) {
+func (b *BackUpRepository) MoveBackUpFileToArchive(filename *string) {
 	// Move the backup file to the archive directory
 	archiveDir := "/tmp/archive/backup"
 	if _, err := os.Stat(archiveDir); os.IsNotExist(err) {

@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func HandleError(c *gin.Context, errMsg string, details string, statusCode int) {
+func HandleHTTPError(c *gin.Context, errMsg string, details string, statusCode int) {
 	log.WithFields(log.Fields{}).Error(errMsg)
 	c.Set("error", details)
 	c.AbortWithStatus(statusCode)
