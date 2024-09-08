@@ -2,6 +2,7 @@ package backup
 
 import (
 	"db-tool/internal/config/db"
+	"db-tool/internal/routes/settings"
 	"db-tool/utils"
 	"fmt"
 	log "github.com/sirupsen/logrus"
@@ -16,49 +17,33 @@ type BackUpRepository struct{}
 
 type BackUp db.BackUp
 
-func (b *BackUpRepository) Backup() (filename string, err error) {
+var settingRepository = new(settings.SettingRepository)
 
-	//Define variables
-	user := "postgres"
-	host := "postgres"
-	port := "5432"
-	password := "postgres"
-	dbName := "postgres-go"
-	backupDir := os.Getenv("BACKUP_PATH")
-	backupFile := fmt.Sprintf("%s/%s_%s.sql", backupDir, time.Now().Format("20060102150405"), dbName)
-
-	// Create the backup directory if it doesn't exist
-	if _, err := os.Stat(backupDir); os.IsNotExist(err) {
-		err := os.MkdirAll(backupDir, 0755)
-		if err != nil {
-			log.Printf("Failed to create backup directory: %v\n", err)
-			return "", err
-		}
-	}
-	err = os.Setenv("PGPASSWORD", password)
+func (b *BackUpRepository) Backup() (string, error) {
+	//Retrieve DB Settings
+	dbSetting, err := settingRepository.GetDBSetting()
 	if err != nil {
+		log.Printf("Failed to retrieve DB configuration: %v\n", err)
 		return "", err
-	} // Uncomment if password is needed
+	}
 
-	// Build the pg_dump command
-	cmd := exec.Command("pg_dump",
-		"-U", user,
-		"-h", host,
-		"-p", port,
-		"-F", "c",
-		"-b",
-		"-v",
-		"-f", backupFile,
-		dbName,
-	)
+	//Format the output file
+	backupFile := fmt.Sprintf("%s/%s_%s.sql", dbSetting.BackUpDir, time.Now().Format("20060102150405"), dbSetting.DbName)
 
-	//Set the password environment variable if needed
-	// Run the pg_restore command
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	// Run the pg_dump command
-	err = cmd.Run()
-	if err != nil {
+	if err := os.MkdirAll(dbSetting.BackUpDir, 0755); err != nil && !os.IsExist(err) {
+		log.Printf("Failed to create backup directory: %v\n", err)
+		return "", err
+	}
+
+	if err := os.Setenv("PGPASSWORD", dbSetting.Password); err != nil {
+		return "", err
+	}
+
+	//Execute Restore command
+	cmd := exec.Command("pg_dump", "-U", dbSetting.User, "-h", dbSetting.Host, "-p", dbSetting.Port, "-F", "c", "-b", "-v", "-f", backupFile, dbSetting.DbName)
+	cmd.Stdout, cmd.Stderr = os.Stdout, os.Stderr
+
+	if err := cmd.Run(); err != nil {
 		log.Printf("Backup failed: %v\n", err)
 		return "", err
 	}

@@ -27,6 +27,14 @@ var settingSeed = []*Setting{
 		Key:   "DB_NAME",
 		Value: "postgres-go",
 	},
+	{
+		Key:   "DB_BACKUP_DIR",
+		Value: "/home/thaiqu/backup",
+	},
+	{
+		Key:   "GENERAL_DB_TYPE",
+		Value: "postgresql",
+	},
 }
 
 func seedSetting(handler *gorm.DB) {
