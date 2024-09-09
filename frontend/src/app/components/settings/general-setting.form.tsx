@@ -1,6 +1,6 @@
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
+import {zodResolver} from "@hookform/resolvers/zod"
+import {useForm} from "react-hook-form"
+import {z} from "zod"
 import {
     Form,
     FormControl,
@@ -10,22 +10,14 @@ import {
     FormLabel,
     FormMessage
 } from "@frontend/shared/components/ui/form";
-import { Button } from "@frontend/shared/components/ui/button";
-import { Input } from "@frontend/shared/components/ui/input";
+import {Button} from "@frontend/shared/components/ui/button";
 
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle
-} from "@frontend/shared/components/ui/card";
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@frontend/shared/components/ui/card";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@frontend/shared/components/ui/select";
 
 const formSchema = z.object({
-    dbType: z.string().min(1, { message: "Database type is required." }),
-    backupInterval: z.enum(["midnight", "daily", "weekly", "hourly", "monthly"], { message: "Invalid backup interval." }),
+    dbType: z.enum(["postgresql", "mysql"], {message: "Database type is required."}),
+    backupInterval: z.enum(["midnight", "daily", "weekly", "hourly", "monthly"], {message: "Invalid backup interval."}),
 })
 
 export function GeneralSettingForm() {
@@ -53,29 +45,37 @@ export function GeneralSettingForm() {
                         <FormField
                             control={form.control}
                             name="dbType"
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <FormItem>
                                     <FormLabel>Database Type</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Database Type" {...field} />
+                                        <Select {...field}>
+                                            <SelectTrigger className="w-[180px]">
+                                                <SelectValue placeholder="Database Type"/>
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="postgresql">PostgreSQL</SelectItem>
+                                                <SelectItem value="mysql">MySQL</SelectItem>
+                                            </SelectContent>
+                                        </Select>
                                     </FormControl>
                                     <FormDescription>
                                         This is your database type.
                                     </FormDescription>
-                                    <FormMessage />
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                         />
                         <FormField
                             control={form.control}
                             name="backupInterval"
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <FormItem>
                                     <FormLabel>Backup Interval</FormLabel>
                                     <FormControl>
                                         <Select {...field}>
                                             <SelectTrigger className="w-[180px]">
-                                                <SelectValue placeholder="Theme" />
+                                                <SelectValue placeholder="Backup Interval"/>
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectItem value="midnight">Midnight</SelectItem>
@@ -89,7 +89,7 @@ export function GeneralSettingForm() {
                                     <FormDescription>
                                         This is your backup interval.
                                     </FormDescription>
-                                    <FormMessage />
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                         />
