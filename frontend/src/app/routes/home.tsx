@@ -1,43 +1,21 @@
 import React from 'react';
-import { DatabaseSettingForm } from "../components/settings/database-setting.form";
-import { GeneralSettingForm } from "../components/settings/general-setting.form";
-import { Tabs, TabsList, TabsContent, TabsTrigger } from "@frontend/shared/components/ui/tabs";
-
-const tabConfigurations = [
-    {
-        value: "database",
-        label: "Database",
-        component: <DatabaseSettingForm />
-    },
-    {
-        value: "general",
-        label: "General",
-        component: <GeneralSettingForm />
-    }
-];
+import Settings from "../components/settings/settings";
+import {Histories} from "../components/histories/histories";
+import {Separator} from "@frontend/shared/components/ui/separator";
 
 const Home = () => {
     return (
-        <div className="w-full flex">
-            <div className="w-1/3">
-                <Tabs defaultValue="database" className="w-full">
-                    <TabsList>
-                        {tabConfigurations.map(tab => (
-                            <TabsTrigger key={tab.value} value={tab.value}>
-                                {tab.label}
-                            </TabsTrigger>
-                        ))}
-                    </TabsList>
-                    {tabConfigurations.map(tab => (
-                        <TabsContent key={tab.value} value={tab.value}>
-                            {tab.component}
-                        </TabsContent>
-                    ))}
-                </Tabs>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 w-full">
+            <div className="md:col-span-1">
+                <Settings/>
             </div>
 
-            <div className="w-2/3">
-                {/* Content for the first 1/3 width div */}
+            <div className="block md:hidden">
+                <Separator/>
+            </div>
+
+            <div className="md:col-span-2">
+                <Histories/>
             </div>
         </div>
     );
