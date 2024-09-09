@@ -1,10 +1,9 @@
 const { createGlobPatternsForDependencies } = require('@nx/react/tailwind');
 const { join } = require('path');
 const { fontFamily } = require("tailwindcss/defaultTheme")
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: ["class"],
+  darkMode: "class",
   content: [
     join(
       __dirname,
@@ -61,9 +60,7 @@ module.exports = {
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
   		},
-		// fontFamily: {
-		// 	sans: ["var(--font-sans)", ...fontFamily.serif],
-		// },
+
   		keyframes: {
   			'accordion-down': {
   				from: {
