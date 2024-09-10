@@ -93,7 +93,7 @@ export function GeneralSettingForm() {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit">Submit</Button>
+                        <Button type="submit">Save Preferences</Button>
                     </form>
                 </Form>
             </CardContent>

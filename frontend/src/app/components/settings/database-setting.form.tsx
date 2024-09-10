@@ -1,6 +1,6 @@
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
+import {zodResolver} from "@hookform/resolvers/zod"
+import {useForm} from "react-hook-form"
+import {z} from "zod"
 import {
     Form,
     FormControl,
@@ -10,23 +10,16 @@ import {
     FormLabel,
     FormMessage
 } from "@frontend/shared/components/ui/form";
-import { Button } from "@frontend/shared/components/ui/button";
-import { Input } from "@frontend/shared/components/ui/input";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle
-} from "@frontend/shared/components/ui/card";
+import {Button} from "@frontend/shared/components/ui/button";
+import {Input} from "@frontend/shared/components/ui/input";
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@frontend/shared/components/ui/card";
 
 const formSchema = z.object({
-    username: z.string().min(2, { message: "Username must be at least 2 characters." }),
-    password: z.string().min(6, { message: "Password must be at least 6 characters." }),
-    port: z.number().min(1, { message: "Port must be a positive number." }),
-    dbName: z.string().min(1, { message: "Database name is required." }),
-    dbHost: z.string().min(1, { message: "Database host is required." }),
+    username: z.string().min(2, {message: "Username must be at least 2 characters."}),
+    password: z.string().min(6, {message: "Password must be at least 6 characters."}),
+    port: z.number().min(1, {message: "Port must be a positive number."}),
+    dbName: z.string().min(1, {message: "Database name is required."}),
+    dbHost: z.string().min(1, {message: "Database host is required."}),
 })
 
 export function DatabaseSettingForm() {
@@ -57,7 +50,7 @@ export function DatabaseSettingForm() {
                         <FormField
                             control={form.control}
                             name="username"
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <FormItem>
                                     <FormLabel>Username</FormLabel>
                                     <FormControl>
@@ -66,14 +59,14 @@ export function DatabaseSettingForm() {
                                     <FormDescription>
                                         This is your database username.
                                     </FormDescription>
-                                    <FormMessage />
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                         />
                         <FormField
                             control={form.control}
                             name="password"
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <FormItem>
                                     <FormLabel>Password</FormLabel>
                                     <FormControl>
@@ -82,14 +75,14 @@ export function DatabaseSettingForm() {
                                     <FormDescription>
                                         This is your database password.
                                     </FormDescription>
-                                    <FormMessage />
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                         />
                         <FormField
                             control={form.control}
                             name="port"
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <FormItem>
                                     <FormLabel>Port</FormLabel>
                                     <FormControl>
@@ -98,14 +91,14 @@ export function DatabaseSettingForm() {
                                     <FormDescription>
                                         This is your database port.
                                     </FormDescription>
-                                    <FormMessage />
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                         />
                         <FormField
                             control={form.control}
                             name="dbName"
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <FormItem>
                                     <FormLabel>Database Name</FormLabel>
                                     <FormControl>
@@ -114,14 +107,14 @@ export function DatabaseSettingForm() {
                                     <FormDescription>
                                         This is your database name.
                                     </FormDescription>
-                                    <FormMessage />
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                         />
                         <FormField
                             control={form.control}
                             name="dbHost"
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <FormItem>
                                     <FormLabel>Database Host</FormLabel>
                                     <FormControl>
@@ -130,11 +123,11 @@ export function DatabaseSettingForm() {
                                     <FormDescription>
                                         This is your database host.
                                     </FormDescription>
-                                    <FormMessage />
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit">Submit</Button>
+                        <Button type="submit">Save Preferences</Button>
                     </form>
                 </Form>
             </CardContent>

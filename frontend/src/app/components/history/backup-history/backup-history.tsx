@@ -1,9 +1,9 @@
-import {DataTableHistories} from "./data-table";
 import {Toolbox} from "./toolbox/toolbox";
-import {HistoryTablePaging} from "./history-table-paging";
+import {BackupTablePaging} from "./backup-table-paging";
 import {Card, CardContent, CardHeader, CardTitle} from "@frontend/shared/components/ui/card";
+import {BackUpDataTable} from "./backup-data-table";
 
-export function Histories() {
+export function BackupHistory() {
     return (
         <Card>
             <CardHeader>
@@ -14,8 +14,8 @@ export function Histories() {
             <CardContent>
                 <div className="flex flex-col space-y-5">
                     <Toolbox/>
-                    <DataTableHistories/>
-                    <HistoryTablePaging/>
+                    <BackUpDataTable/>
+                    <BackupTablePaging/>
                 </div>
             </CardContent>
         </Card>

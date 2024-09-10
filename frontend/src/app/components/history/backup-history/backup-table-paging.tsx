@@ -8,7 +8,7 @@ import {
     PaginationPrevious
 } from "@frontend/shared/components/ui/pagination";
 
-export function HistoryTablePaging() {
+export function BackupTablePaging() {
     return (
         <Pagination>
             <PaginationContent>

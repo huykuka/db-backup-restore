@@ -49,8 +49,21 @@ const backups = [
 ]
 
 const onDeleteBackup = (filename: string) => {
-    toast(`Deleting backup ${filename}`, {
-        description: "Sunday, December 03, 2023 at 9:00 AM",
+    const today = new Date().toLocaleDateString();
+    toast.error("Backup deleted", {
+        description: today,
+        action: {
+            label: "Undo",
+            onClick: () => console.log("Undo"),
+        },
+    })
+
+}
+
+const onRestoreBackup = (filename: string) => {
+    const today = new Date().toLocaleDateString();
+    toast.info(`Restoring backup ${filename}`, {
+        description: today,
         action: {
             label: "Undo",
             onClick: () => console.log("Undo"),
@@ -58,11 +71,7 @@ const onDeleteBackup = (filename: string) => {
     })
 }
 
-const onRestoreBackup = (filename: string) => {
-
-}
-
-export function DataTableHistories() {
+export function BackUpDataTable() {
     return (
         <Table>
             <TableHeader>
@@ -82,7 +91,7 @@ export function DataTableHistories() {
                         <TableCell>{backup.filename}</TableCell>
                         <TableCell>{backup.performedBy}</TableCell>
                         <TableCell className="flex space-x-2 text-right justify-end">
-                            <Button variant={"ghost"}>Restore</Button>
+                            <Button variant={"ghost"} onClick={() => onRestoreBackup(backup.filename)}>Restore</Button>
                             <Button variant={"destructive"}
                                     onClick={() => onDeleteBackup(backup.filename)}>Delete</Button>
                         </TableCell>

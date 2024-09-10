@@ -1,7 +1,8 @@
 import React from 'react';
 import Settings from "../components/settings/settings";
-import {Histories} from "../components/histories/histories";
 import {Separator} from "@frontend/shared/components/ui/separator";
+import {History} from "../components/history/history";
+
 
 const Home = () => {
     return (
@@ -15,7 +16,7 @@ const Home = () => {
             </div>
 
             <div className="md:col-span-2">
-                <Histories/>
+                <History/>
             </div>
         </div>
     );
