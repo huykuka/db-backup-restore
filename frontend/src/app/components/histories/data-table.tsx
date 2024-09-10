@@ -8,6 +8,7 @@ import {
     TableRow
 } from '@frontend/shared/components/ui/table';
 import {Button} from "@frontend/shared/components/ui/button";
+import {toast} from "sonner"
 
 const backups = [
     {
@@ -48,7 +49,17 @@ const backups = [
 ]
 
 const onDeleteBackup = (filename: string) => {
-    console.log(`Deleting backup ${filename}`)
+    toast(`Deleting backup ${filename}`, {
+        description: "Sunday, December 03, 2023 at 9:00 AM",
+        action: {
+            label: "Undo",
+            onClick: () => console.log("Undo"),
+        },
+    })
+}
+
+const onRestoreBackup = (filename: string) => {
+
 }
 
 export function DataTableHistories() {

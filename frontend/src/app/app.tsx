@@ -1,10 +1,9 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import Home from "./routes/home";
 import {ThemeProvider} from "./components/core/theme-provider";
 import Layout from "./components/layout";
-import { GeistSans } from 'geist/font/sans'
-import { GeistMono } from 'geist/font/mono'
+import {Toaster} from "@frontend/shared/components/ui/sonner";
 
 
 const App = () => {
@@ -13,10 +12,11 @@ const App = () => {
             <Router>
                 <Layout>
                     <Routes>
-                        <Route path="/" element={<Home />} />
+                        <Route path="/" element={<Home/>}/>
                     </Routes>
                 </Layout>
             </Router>
+            <Toaster/>
         </ThemeProvider>
     );
 };
