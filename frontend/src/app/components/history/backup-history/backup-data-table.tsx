@@ -9,6 +9,7 @@ import {
 } from '@frontend/shared/components/ui/table';
 import {Button} from "@frontend/shared/components/ui/button";
 import {toast} from "sonner"
+import {ArchiveRestoreIcon, DeleteIcon} from "lucide-react";
 
 const backups = [
     {
@@ -91,9 +92,15 @@ export function BackUpDataTable() {
                         <TableCell>{backup.filename}</TableCell>
                         <TableCell>{backup.performedBy}</TableCell>
                         <TableCell className="flex space-x-2 text-right justify-end">
-                            <Button variant={"ghost"} onClick={() => onRestoreBackup(backup.filename)}>Restore</Button>
+                            <Button variant={"ghost"} onClick={() => onRestoreBackup(backup.filename)}>
+                                <ArchiveRestoreIcon className="mr-2"/>
+                                Restore
+                            </Button>
                             <Button variant={"destructive"}
-                                    onClick={() => onDeleteBackup(backup.filename)}>Delete</Button>
+                                    onClick={() => onDeleteBackup(backup.filename)}>
+                                <DeleteIcon className="mr-2"/>
+                                Delete
+                            </Button>
                         </TableCell>
                     </TableRow>
                 ))}

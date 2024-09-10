@@ -13,6 +13,7 @@ import {
 import {Button} from "@frontend/shared/components/ui/button";
 import {Input} from "@frontend/shared/components/ui/input";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@frontend/shared/components/ui/card";
+import {Save} from "lucide-react";
 
 const formSchema = z.object({
     username: z.string().min(2, {message: "Username must be at least 2 characters."}),
@@ -127,7 +128,10 @@ export function DatabaseSettingForm() {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit">Save Preferences</Button>
+                        <Button type="submit">
+                            <Save className="mr-2"/>
+                            Save Preferences
+                        </Button>
                     </form>
                 </Form>
             </CardContent>

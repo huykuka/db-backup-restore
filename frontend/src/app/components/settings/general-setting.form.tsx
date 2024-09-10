@@ -14,6 +14,7 @@ import {Button} from "@frontend/shared/components/ui/button";
 
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@frontend/shared/components/ui/card";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@frontend/shared/components/ui/select";
+import {Save} from "lucide-react";
 
 const formSchema = z.object({
     dbType: z.enum(["postgresql", "mysql"], {message: "Database type is required."}),
@@ -93,7 +94,10 @@ export function GeneralSettingForm() {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit">Save Preferences</Button>
+                        <Button type="submit">
+                            <Save className="mr-2"/>
+                            Save Preferences
+                        </Button>
                     </form>
                 </Form>
             </CardContent>
