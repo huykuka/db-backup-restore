@@ -1,84 +1,86 @@
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
     TableFooter,
     TableHead,
     TableHeader,
     TableRow
 } from '@frontend/shared/components/ui/table';
+import {Button} from "@frontend/shared/components/ui/button";
 
-const invoices = [
+const backups = [
     {
-        invoice: "INV001",
-        paymentStatus: "Paid",
-        totalAmount: "$250.00",
-        paymentMethod: "Credit Card",
+        createDate: "2023-01-01",
+        filename: "backup1.sql",
+        performedBy: "User1"
     },
     {
-        invoice: "INV002",
-        paymentStatus: "Pending",
-        totalAmount: "$150.00",
-        paymentMethod: "PayPal",
+        createDate: "2023-01-02",
+        filename: "backup2.sql",
+        performedBy: "User2"
     },
     {
-        invoice: "INV003",
-        paymentStatus: "Unpaid",
-        totalAmount: "$350.00",
-        paymentMethod: "Bank Transfer",
+        createDate: "2023-01-03",
+        filename: "backup3.sql",
+        performedBy: "User3"
     },
     {
-        invoice: "INV004",
-        paymentStatus: "Paid",
-        totalAmount: "$450.00",
-        paymentMethod: "Credit Card",
+        createDate: "2023-01-04",
+        filename: "backup4.sql",
+        performedBy: "User4"
     },
     {
-        invoice: "INV005",
-        paymentStatus: "Paid",
-        totalAmount: "$550.00",
-        paymentMethod: "PayPal",
+        createDate: "2023-01-05",
+        filename: "backup5.sql",
+        performedBy: "User5"
     },
     {
-        invoice: "INV006",
-        paymentStatus: "Pending",
-        totalAmount: "$200.00",
-        paymentMethod: "Bank Transfer",
+        createDate: "2023-01-06",
+        filename: "backup6.sql",
+        performedBy: "User6"
     },
     {
-        invoice: "INV007",
-        paymentStatus: "Unpaid",
-        totalAmount: "$300.00",
-        paymentMethod: "Credit Card",
+        createDate: "2023-01-07",
+        filename: "backup7.sql",
+        performedBy: "User7"
     },
 ]
+
+const onDeleteBackup = (filename: string) => {
+    console.log(`Deleting backup ${filename}`)
+}
 
 export function DataTableHistories() {
     return (
         <Table>
-            <TableCaption>A list of your recent invoices.</TableCaption>
             <TableHeader>
                 <TableRow>
-                    <TableHead className="w-[100px]">Invoice</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Method</TableHead>
-                    <TableHead className="text-right">Amount</TableHead>
+                    <TableHead className="w-[50px]">Index</TableHead>
+                    <TableHead>Create Date</TableHead>
+                    <TableHead>Filename</TableHead>
+                    <TableHead>Performed By</TableHead>
+                    <TableHead className="text-right"></TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {invoices.map((invoice) => (
-                    <TableRow key={invoice.invoice}>
-                        <TableCell className="font-medium">{invoice.invoice}</TableCell>
-                        <TableCell>{invoice.paymentStatus}</TableCell>
-                        <TableCell>{invoice.paymentMethod}</TableCell>
-                        <TableCell className="text-right">{invoice.totalAmount}</TableCell>
+                {backups.map((backup, index) => (
+                    <TableRow key={backup.filename}>
+                        <TableCell className="font-medium">{index + 1}</TableCell>
+                        <TableCell>{backup.createDate}</TableCell>
+                        <TableCell>{backup.filename}</TableCell>
+                        <TableCell>{backup.performedBy}</TableCell>
+                        <TableCell className="flex space-x-2 text-right justify-end">
+                            <Button variant={"ghost"}>Restore</Button>
+                            <Button variant={"destructive"}
+                                    onClick={() => onDeleteBackup(backup.filename)}>Delete</Button>
+                        </TableCell>
                     </TableRow>
                 ))}
             </TableBody>
             <TableFooter>
                 <TableRow>
-                    <TableCell colSpan={3}>Total</TableCell>
+                    <TableCell colSpan={4}>Total</TableCell>
                     <TableCell className="text-right">$2,500.00</TableCell>
                 </TableRow>
             </TableFooter>
