@@ -13,7 +13,7 @@ import {
 import {Button} from "@frontend/shared/components/ui/button";
 import {Input} from "@frontend/shared/components/ui/input";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@frontend/shared/components/ui/card";
-import {Save} from "lucide-react";
+import {Check, Save} from "lucide-react";
 
 const formSchema = z.object({
     username: z.string().min(2, {message: "Username must be at least 2 characters."}),
@@ -42,8 +42,8 @@ export function DatabaseSettingForm() {
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Create project</CardTitle>
-                <CardDescription>Deploy your new project in one-click.</CardDescription>
+                <CardTitle>Database Setting</CardTitle>
+                <CardDescription>Setup your database connection</CardDescription>
             </CardHeader>
             <CardContent>
                 <Form {...form}>
@@ -128,10 +128,16 @@ export function DatabaseSettingForm() {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit">
-                            <Save className="mr-2"/>
-                            Save Preferences
-                        </Button>
+                        <div className="flex space-x-2 justify-between">
+                            <Button>
+                                <Check className="mr-2"/>
+                                Verify Connection
+                            </Button>
+                            <Button type="submit">
+                                <Save className="mr-2"/>
+                                Save Preferences
+                            </Button>
+                        </div>
                     </form>
                 </Form>
             </CardContent>

@@ -3,7 +3,7 @@ import {Plus, Trash} from "lucide-react";
 
 export function Operation() {
     return (
-        <div className="flex items-center space-x-2">
+        <div className="flex flex-wrap items-center space-x-2">
             <Button className={buttonVariants({variant: "destructive"})}>
                 <Trash className="mr-2"/>
                 Mass Delete</Button>

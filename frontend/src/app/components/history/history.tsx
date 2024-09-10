@@ -15,7 +15,7 @@ const tabConfigurations = [
         component: <StatusHistory/>
     }
 ];
-export const History = () => {
+export const HistoryComponent = () => {
     return (
         <Tabs defaultValue="backup" className="w-full">
             <TabsList>
