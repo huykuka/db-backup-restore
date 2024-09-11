@@ -26,7 +26,7 @@ const Header: React.FC = () => {
                     <BurgerMenu links={links}/>
                 </div>
 
-                <NavLink to="#" className="flex items-center gap-2">
+                <NavLink to="/" className="flex items-center gap-2">
                     <span
                         className="text-white text-xl font-semibold text-center flex items-center">
                                 Database Management
