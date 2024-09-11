@@ -1,25 +1,24 @@
+import React from 'react';
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import Home from "./routes/home";
+import {ThemeProvider} from "./components/core/theme-provider";
+import Layout from "./components/layout";
+import {Toaster} from "@frontend/shared/components/ui/sonner";
 
-import {ThemeProvider} from "./components";
-import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "@frontend/shared/components/ui/accordion";
-import {ModeToggle} from "./components/mode-toggle";
-import {Button} from "@frontend/shared/components/ui/button";
-export function App() {
-  return (
-    <div>
+
+const App = () => {
+    return (
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-            <ModeToggle />
-            <Accordion type="single" collapsible>
-                <AccordionItem value="item-1">
-                    <AccordionTrigger>Is it accessible?</AccordionTrigger>
-                    <AccordionContent>
-                        Yes. It adheres to the WAI-ARIA design pattern.
-                    </AccordionContent>
-                </AccordionItem>
-            </Accordion>
-            <Button>Button</Button>
+            <Router>
+                <Layout>
+                    <Routes>
+                        <Route path="/" element={<Home/>}/>
+                    </Routes>
+                </Layout>
+            </Router>
+            <Toaster/>
         </ThemeProvider>
-    </div>
-  );
-}
+    );
+};
 
 export default App;
