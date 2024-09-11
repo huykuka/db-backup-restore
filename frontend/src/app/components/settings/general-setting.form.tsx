@@ -51,7 +51,7 @@ export function GeneralSettingForm() {
                                     <FormLabel>Database Type</FormLabel>
                                     <FormControl>
                                         <Select {...field}>
-                                            <SelectTrigger className="w-[180px]">
+                                            <SelectTrigger>
                                                 <SelectValue placeholder="Database Type"/>
                                             </SelectTrigger>
                                             <SelectContent>
@@ -75,7 +75,7 @@ export function GeneralSettingForm() {
                                     <FormLabel>Backup Interval</FormLabel>
                                     <FormControl>
                                         <Select {...field}>
-                                            <SelectTrigger className="w-[180px]">
+                                            <SelectTrigger>
                                                 <SelectValue placeholder="Backup Interval"/>
                                             </SelectTrigger>
                                             <SelectContent>

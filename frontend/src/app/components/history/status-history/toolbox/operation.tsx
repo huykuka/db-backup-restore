@@ -4,7 +4,7 @@ import {DownloadIcon} from "lucide-react";
 
 export function Operation() {
     return (
-        <div className="flex items-center space-x-2">
+        <div className="flex flex-wrap items-center gap-3">
             <Button className={buttonVariants({variant: "secondary"})}>
                 <DownloadIcon className="mr-2"/>
                 Download log

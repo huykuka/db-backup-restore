@@ -129,13 +129,13 @@ export function DatabaseSettingForm() {
                             )}
                         />
                         <div className="flex space-x-2 justify-between">
-                            <Button>
+                            <Button className="w-1/2" variant='outline' type="button">
                                 <Check className="mr-2"/>
-                                Verify Connection
+                                <span className="hidden md:inline">Verify Connection</span>
                             </Button>
-                            <Button type="submit">
+                            <Button className="w-1/2" type="submit">
                                 <Save className="mr-2"/>
-                                Save Preferences
+                                <span className="hidden md:inline">Save Preferences</span>
                             </Button>
                         </div>
                     </form>
