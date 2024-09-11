@@ -15,7 +15,7 @@ export default function BurgerMenu({links}: NavigationBarProps) {
                     <MenuIcon className="h-5 w-5 text-gray-500 dark:text-gray-400"/>
                 </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="md:hidden">
+            <SheetContent side="left" className="md:hidden">
                 <div className="grid gap-4 p-4">
                     {links.map((link: NavBarItem) => (
                         <NavLink
@@ -46,7 +46,7 @@ function MenuIcon(props: any) {
             height="24"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="currentColor"
+            stroke="#FFFFFF"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
