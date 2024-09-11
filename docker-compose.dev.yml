@@ -1,31 +1,31 @@
 services:
-#  frontend:
-#    build:
-#      context: frontend
-#      dockerfile: docker/dev/Dockerfile
-#    container_name: frontend
-#    command: npm run start
-#    restart: unless-stopped
-#    environment:
-#      - TERM=xterm-256color
-#    develop:
-#      watch:
-#        - action: sync
-#          path: ./frontend
-#          target: /app
-#          ignore:
-#            - node_modules/
-#            - docker/
-#            - dist/
-#            - .nx/
-#        - action: rebuild
-#          path: frontend/package.json
-#        - action: rebuild
-#          path: frontend/package-lock.json
-#    ports:
-#      - "4200:4200"
-#    networks:
-#      - app_network
+  frontend:
+    build:
+      context: frontend
+      dockerfile: docker/dev/Dockerfile
+    container_name: frontend
+    command: npm run start
+    restart: unless-stopped
+    environment:
+      - TERM=xterm-256color
+    develop:
+      watch:
+        - action: sync
+          path: ./frontend
+          target: /app
+          ignore:
+            - node_modules/
+            - docker/
+            - dist/
+            - .nx/
+        - action: rebuild
+          path: frontend/package.json
+        - action: rebuild
+          path: frontend/package-lock.json
+    ports:
+      - "4200:4200"
+    networks:
+      - app_network
   backend:
     build:
       context: backend

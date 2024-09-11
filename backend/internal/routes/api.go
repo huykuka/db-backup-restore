@@ -1,4 +1,4 @@
-package api
+package routes
 
 import (
 	"db-tool/internal/core/guards"
@@ -17,20 +17,20 @@ import (
 	"os"
 )
 
-var api *gin.RouterGroup
-
 func Init() {
 	port := os.Getenv("PORT")
 
 	r := gin.New()
+
+	//Middleware registration
 	r.Use(ginlogrus.Logger(log.StandardLogger()), gin.Recovery())
 	r.Use(static.Serve("/", static.LocalFile("web", false)))
 	r.Use(interceptors.JsonApiInterceptor())
 
 	//Serving API
-	api = r.Group("/api", guards.BasicAuthGuard(), middlewares.RateLimiter(rate.NewLimiter(10, 1)))
+	api := r.Group("/api", guards.BasicAuthGuard(), middlewares.RateLimiter(rate.NewLimiter(10, 1)))
 
-	//Register modules
+	//Routes registration
 	users.Register(api)
 	backup.Register(api)
 	settings.Register(api)
