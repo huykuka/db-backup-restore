@@ -13,17 +13,12 @@ type HistoriesRepository struct {
 
 type History db.History
 
-func (h *HistoriesRepository) Create(status string) error {
-	var backup = History{
-		Status: status,
-	}
-
-	if err := db.GetDB().Create(&backup).Error; err != nil {
+func (h *HistoriesRepository) Create(history *History) error {
+	if err := db.GetDB().Create(history).Error; err != nil {
 		log.Error(err.Error())
 		return err
 	}
 	return nil
-
 }
 
 func (h *HistoriesRepository) FindMany(filters *QueryHistorianDTO) ([]History, int64, error) {

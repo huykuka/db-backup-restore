@@ -17,7 +17,13 @@ type BackupService struct{}
 func (b *BackupService) backup(c *gin.Context) {
 	HandleHTTPError := func(err error, message string) {
 		if err != nil {
-			historianRepository.Create("failed")
+			err := historianRepository.Create(&histories.History{
+				Status: "failed",
+				Type:   "backup",
+			})
+			if err != nil {
+				return
+			}
 			utils.HandleHTTPError(c, err.Error(), message, http.StatusBadRequest)
 		}
 	}
@@ -36,7 +42,10 @@ func (b *BackupService) backup(c *gin.Context) {
 		return
 	}
 
-	err = historianRepository.Create("success")
+	err = historianRepository.Create(&histories.History{
+		Status: "success",
+		Type:   "backup",
+	})
 	if err != nil {
 		return
 	}

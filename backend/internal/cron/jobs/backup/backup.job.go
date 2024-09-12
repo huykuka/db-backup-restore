@@ -33,7 +33,10 @@ func (*BackUpTask) Run() {
 		return
 	}
 
-	err = historianRepository.Create("success")
+	err = historianRepository.Create(&histories.History{
+		Status: "success",
+		Type:   "backup",
+	})
 	if err != nil {
 		return
 	}
