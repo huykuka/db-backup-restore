@@ -43,34 +43,35 @@ func JsonApiInterceptor() gin.HandlerFunc {
 			return
 		}
 
-		// Handle successful responses for GET requests
-		if c.Request.Method == http.MethodGet {
-			if page, exists := c.GetQuery("page[number]"); exists {
-				jsonApiResponse.Meta["page"] = page
-			}
-			if size, exists := c.GetQuery("page[size]"); exists {
-				jsonApiResponse.Meta["size"] = size
-			}
-			if sortField, exists := c.GetQuery("sort[field]"); exists {
-				jsonApiResponse.Meta["sort"] = sortField
-			}
-			if sortOrder, exists := c.GetQuery("sort[order]"); exists {
-				jsonApiResponse.Meta["order"] = sortOrder
-			}
+		metadataResponse := handleGetMetadata(c)
+		if metadataResponse != nil {
+			jsonApiResponse.Meta = metadataResponse.Meta
 		}
 
 		// Get the actual response data
-		responseData, exists := c.Get("response")
-		if exists {
-			jsonApiResponse.Data = responseData
-			if dataList, ok := responseData.([]interface{}); ok {
-				jsonApiResponse.Meta["total"] = len(dataList)
-			}
+		responseData := handleResponseData(c)
+		if responseData != nil {
+			jsonApiResponse.Data = responseData.Data
 		}
-
 		// Replace the original response with the JSON-API formatted response
 		c.JSON(c.Writer.Status(), jsonApiResponse)
 	}
+}
+
+func handleResponseData(c *gin.Context) *JSONAPIResponse {
+	jsonApiResponse := JSONAPIResponse{
+		Meta: make(map[string]interface{}),
+	}
+	// Get the actual response data
+	responseData, exists := c.Get("response")
+	if exists {
+		jsonApiResponse.Data = responseData
+		if dataList, ok := responseData.([]interface{}); ok {
+			jsonApiResponse.Meta["total"] = len(dataList)
+		}
+	}
+
+	return &jsonApiResponse
 }
 
 func handleError(c *gin.Context, err string) (*JSONAPIError, int) {
@@ -87,6 +88,26 @@ func handleError(c *gin.Context, err string) (*JSONAPIError, int) {
 	}, statusCode
 }
 
-func handleGetPagingData(c *gin.Context) {
+func handleGetMetadata(c *gin.Context) *JSONAPIResponse {
 
+	jsonApiResponse := JSONAPIResponse{
+		Meta: make(map[string]interface{}),
+	}
+	// Handle successful responses for GET requests
+	if c.Request.Method == http.MethodGet {
+		if page, exists := c.GetQuery("page[number]"); exists {
+			jsonApiResponse.Meta["page"], _ = strconv.Atoi(page)
+		}
+		if size, exists := c.GetQuery("page[size]"); exists {
+			jsonApiResponse.Meta["size"], _ = strconv.Atoi(size)
+		}
+		if sortField, exists := c.GetQuery("sort[field]"); exists {
+			jsonApiResponse.Meta["sort"] = sortField
+		}
+		if sortOrder, exists := c.GetQuery("sort[order]"); exists {
+			jsonApiResponse.Meta["order"] = sortOrder
+		}
+	}
+
+	return &jsonApiResponse
 }
