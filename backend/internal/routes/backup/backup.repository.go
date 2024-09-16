@@ -116,7 +116,7 @@ func (b *BackUpRepository) MoveBackUpFileToArchive(filename *string) {
 	if _, err := os.Stat(archiveDir); os.IsNotExist(err) {
 		err := os.MkdirAll(archiveDir, 0755)
 		if err != nil {
-			log.Error("Failed to create archive directory: %v\n", err)
+			log.Errorf("Failed to create archive directory: %v\n", err)
 			return
 		}
 	}
@@ -125,7 +125,7 @@ func (b *BackUpRepository) MoveBackUpFileToArchive(filename *string) {
 	// Move the backup file to the archive directory
 	err := os.Rename(*filename, fmt.Sprintf("%s/%s", archiveDir, baseFilename))
 	if err != nil {
-		log.Error("Failed to move backup file to archive: %v\n", err)
+		log.Errorf("Failed to move backup file to archive: %v\n", err)
 		return
 	}
 }

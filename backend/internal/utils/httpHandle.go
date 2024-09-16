@@ -33,6 +33,24 @@ func HandleHTTPError(c *gin.Context, errMsg string, details string, statusCode .
 	c.AbortWithStatus(code)
 }
 
+// SetResponse sets the response data in the context.
+// Parameters:
+// - c: *gin.Context - The Gin context for the current request.
+// - data: map[string]any - The response data to be set in the context.
+
+func SetResponse(c *gin.Context, data map[string]any) {
+	c.Set("response", gin.H(data))
+}
+
+// CreatePaging creates a paging query for the provided GORM query and Pageable object.
+// Parameters:
+// - qr: *gorm.DB - The GORM query to be paginated.
+// - query: T - The Pageable object containing the paging information.
+// Example:
+//
+//	type GetSettingQueryDTO struct {
+//		Filter SettingFilterDTO `json:"filter"`
+//		Page   Page             `json:"page"`
 func CreatePaging[T Pageable](qr *gorm.DB, query T) {
 	page := query.GetPage()
 	if page.Size > 0 {

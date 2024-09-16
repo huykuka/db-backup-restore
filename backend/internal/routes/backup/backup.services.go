@@ -84,6 +84,11 @@ func (b *BackupService) downloadBackUpFile(c *gin.Context) {
 
 func (b *BackupService) deleteBackUp(c *gin.Context) {
 	id := c.Param("id")
+	if id == "" {
+		utils.HandleHTTPError(c, "ID is required", "Can not delete backup", http.StatusBadRequest)
+		return
+	}
+
 	//Delete the backup record from database
 	filename, err := backupRepository.Delete(id)
 	if err != nil {
