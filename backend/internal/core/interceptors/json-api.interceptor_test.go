@@ -145,17 +145,6 @@ func TestJsonApiInterceptor(t *testing.T) {
 		expectedData   interface{}
 		expectedError  *JSONAPIError
 	}{
-		//{
-		//	name:           "GET request with metadata",
-		//	method:         http.MethodGet,
-		//	query:          "?page[number]=1&page[size]=10&sort[field]=name&sort[order]=asc",
-		//	setError:       false,
-		//	responseData:   []interface{}{"item1", "item2"},
-		//	expectedStatus: http.StatusOK,
-		//	expectedMeta:   map[string]interface{}{"page": 1, "size": 10, "sort": "name", "order": "asc"},
-		//	expectedData:   []interface{}{"item1", "item2"},
-		//	expectedError:  nil,
-		//},
 		{
 			name:           "Error handling",
 			method:         http.MethodGet,
@@ -207,7 +196,7 @@ func TestJsonApiInterceptor(t *testing.T) {
 			assert.NoError(t, err)
 
 			// Check the meta data
-			assert.Equal(t, tt.expectedMeta, jsonApiResponse.Meta)
+			assert.EqualValues(t, tt.expectedMeta, jsonApiResponse.Meta)
 
 			// Check the response data
 			assert.Equal(t, tt.expectedData, jsonApiResponse.Data)
