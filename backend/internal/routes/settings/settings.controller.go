@@ -13,4 +13,5 @@ func Register(r *gin.RouterGroup) {
 	// Register routes without trailing slashes
 	route.GET("", pipes.Query[GetSettingQueryDTO], settingService.getAll)
 	route.POST("/:id", guards.BasicAuthGuard(), pipes.Body[UpdateSettingDTO], settingService.update)
+	route.POST("/update/db-settings", pipes.Body[DBSettings], settingService.bulkUpdate)
 }

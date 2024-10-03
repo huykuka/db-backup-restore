@@ -27,9 +27,10 @@ const formSchema = z.object({
 
 interface DatabaseSettingFormProps {
     settings: Setting[] | undefined;
+    onDatabaseSettingUpdate: (eventData: any) => void;
 }
 
-export function DatabaseSettingForm({ settings }: DatabaseSettingFormProps) {
+export function DatabaseSettingForm({ settings ,onDatabaseSettingUpdate  }: DatabaseSettingFormProps) {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -76,7 +77,7 @@ export function DatabaseSettingForm({ settings }: DatabaseSettingFormProps) {
     }, [settings, form]);
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values)
+            onDatabaseSettingUpdate(values);
     }
 
     return (
