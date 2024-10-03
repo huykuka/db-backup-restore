@@ -14,6 +14,8 @@ import {Button} from "@frontend/shared/components/ui/button";
 import {Input} from "@frontend/shared/components/ui/input";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@frontend/shared/components/ui/card";
 import {Check, Save} from "lucide-react";
+import {Setting} from "src/app/models/settings.model";
+import {useEffect} from "react";
 
 const formSchema = z.object({
     username: z.string().min(2, {message: "Username must be at least 2 characters."}),
@@ -23,7 +25,11 @@ const formSchema = z.object({
     dbHost: z.string().min(1, {message: "Database host is required."}),
 })
 
-export function DatabaseSettingForm() {
+interface DatabaseSettingFormProps {
+    settings: Setting[] | undefined;
+}
+
+export function DatabaseSettingForm({ settings }: DatabaseSettingFormProps) {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -34,6 +40,40 @@ export function DatabaseSettingForm() {
             dbHost: "",
         },
     })
+
+    useEffect(() => {
+        if (settings) {
+            const dbSettings = settings.reduce((acc, setting) => {
+                switch (setting.key) {
+                    case 'DB_USER':
+                        acc.username = setting.value;
+                        break;
+                    case 'DB_PASSWORD':
+                        acc.password = setting.value;
+                        break;
+                    case 'DB_PORT':
+                        acc.port = parseInt(setting.value, 10);
+                        break;
+                    case 'DB_NAME':
+                        acc.dbName = setting.value;
+                        break;
+                    case 'DB_HOST':
+                        acc.dbHost = setting.value;
+                        break;
+                    default:
+                        break;
+                }
+                return acc;
+            }, {
+                username: "",
+                password: "",
+                port: 5432,
+                dbName: "",
+                dbHost: "",
+            });
+            form.reset(dbSettings);
+        }
+    }, [settings, form]);
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values)

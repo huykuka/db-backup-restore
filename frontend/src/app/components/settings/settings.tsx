@@ -1,26 +1,40 @@
 import React from 'react';
-import {DatabaseSettingForm} from "./database-setting.form";
-import {GeneralSettingForm} from "./general-setting.form";
+import { DatabaseSettingForm } from "./database-setting.form";
+import { GeneralSettingForm } from "./general-setting.form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@frontend/shared/components/ui/tabs';
-import {useFetch} from "../../core/hooks/useFetch";
+import { useFetch } from "../../core/hooks/useFetch";
+import { ResponseApi } from "src/app/models/response-api.model";
+import { Setting } from "src/app/models/settings.model";
 
-
-const tabConfigurations = [
-    {
-        value: "database",
-        label: "Database",
-        component: <DatabaseSettingForm/>
-    },
-    {
-        value: "general",
-        label: "General",
-        component: <GeneralSettingForm/>
-    }
-];
+interface DatabaseSettingFormProps {
+    settings: Setting[] | undefined;
+}
 
 const Settings = () => {
-    const {data, loading, error} = useFetch<any>('/settings');
-    console.log(data, loading, error);
+    const { data, loading, error } = useFetch<{settings:Setting[]}>('/settings');
+
+    let dbSettings: Setting[] = [];
+    let generalSettings: Setting[] = [];
+
+    if (data) {
+        const settings = data.settings;
+        dbSettings = settings.filter(setting => setting.key.startsWith('DB')) || [];
+        generalSettings = settings.filter(setting => setting.key.startsWith('GENERAL')) || [];
+    }
+
+    const tabConfigurations = [
+        {
+            value: "database",
+            label: "Database",
+            component: <DatabaseSettingForm settings={dbSettings} />
+        },
+        {
+            value: "general",
+            label: "General",
+            component: <GeneralSettingForm settings={generalSettings} />
+        }
+    ];
+
     return (
         <Tabs defaultValue="database" className="w-full">
             <TabsList>
