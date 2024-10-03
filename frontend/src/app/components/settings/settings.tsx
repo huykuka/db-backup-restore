@@ -1,7 +1,9 @@
 import React from 'react';
 import {DatabaseSettingForm} from "./database-setting.form";
 import {GeneralSettingForm} from "./general-setting.form";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../../shared/src/components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@frontend/shared/components/ui/tabs';
+import {useFetch} from "../../core/hooks/useFetch";
+
 
 const tabConfigurations = [
     {
@@ -17,6 +19,8 @@ const tabConfigurations = [
 ];
 
 const Settings = () => {
+    const {data, loading, error} = useFetch<any>('/settings');
+    console.log(data, loading, error);
     return (
         <Tabs defaultValue="database" className="w-full">
             <TabsList>
