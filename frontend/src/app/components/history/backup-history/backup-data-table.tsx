@@ -9,7 +9,7 @@ import {
 } from '@frontend/shared/components/ui/table';
 import {Button} from "@frontend/shared/components/ui/button";
 import {ArchiveRestoreIcon, DeleteIcon} from "lucide-react";
-import {useBackupHistory} from "./backup-history";
+import {useBackupHistory} from "./backup-history.service";
 
 
 interface BackupDataTableProps {
