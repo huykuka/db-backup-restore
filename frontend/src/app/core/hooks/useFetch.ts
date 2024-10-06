@@ -49,7 +49,6 @@ export function useFetch<T>(path: string, options: FetchOptions = {}): FetchResu
                 const {data} = response.data;
                 setData(data as T);
             } catch (err) {
-                console.log("Error", err);
                 setError(err as Error);
             } finally {
                 setLoading(false);

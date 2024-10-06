@@ -6,6 +6,7 @@ import (
 	"db-tool/internal/strategies/database"
 	"db-tool/internal/utils"
 	"fmt"
+	"github.com/google/uuid"
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"os"
@@ -47,8 +48,14 @@ func (b *BackUpRepository) CreateBackUp(filename *string) error {
 }
 
 func (b *BackUpRepository) Delete(id string) (string, error) {
+	// Validate the UUID
+	if _, err := uuid.Parse(id); err != nil {
+		log.Error("Invalid UUID format")
+		return "", err
+	}
+
 	var backup BackUp
-	if err := db.GetDB().First(&backup, id).Error; err != nil {
+	if err := db.GetDB().Where("id = ?", id).First(&backup).Error; err != nil {
 		log.Error(err.Error())
 		return "", err
 	}

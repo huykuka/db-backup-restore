@@ -8,7 +8,7 @@ import (
 
 // Base contains common columns for all tables.
 type Base struct {
-	ID        string     `gorm:"type:uuid;primary_key;"`
+	ID        string     `json:"id";gorm:"type:uuid;primary_key;"`
 	CreatedAt time.Time  `json:"createdAt"`
 	UpdatedAt time.Time  `json:"updatedAt"`
 	DeletedAt *time.Time `sql:"index" json:"deletedAt"`

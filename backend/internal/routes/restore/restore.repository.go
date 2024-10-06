@@ -5,6 +5,7 @@ import (
 	"db-tool/internal/routes/backup"
 	"db-tool/internal/routes/settings"
 	"db-tool/internal/strategies/database"
+	"github.com/google/uuid"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -14,10 +15,13 @@ type RestoreRepository struct{}
 var backupRepository = new(backup.BackUpRepository)
 var settingRepository = new(settings.SettingRepository)
 
-func (r *RestoreRepository) Restore(backupId string) error {
-
+func (r *RestoreRepository) Restore(id string) error {
+	if _, err := uuid.Parse(id); err != nil {
+		log.Error("Invalid UUID format")
+		return err
+	}
 	//Find Backup file
-	backUp, err := backupRepository.FindOne(backupId)
+	backUp, err := backupRepository.FindOne(id)
 	if err != nil {
 		return err
 	}

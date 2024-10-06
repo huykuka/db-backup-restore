@@ -18,5 +18,5 @@ func Register(r *gin.RouterGroup) {
 	route.GET("/list", pipes.Query[QueryBackupDTO], backupService.getBackupList)
 	route.GET("/download/:id", backupService.downloadBackUpFile)
 	route.DELETE("/:id", backupService.deleteBackUp)
-	route.DELETE("/", pipes.Body[BulkBackupDeleteDTO], backupService.bulkDeleteBackup)
+	route.DELETE("/bulk/delete", pipes.Body[BulkBackupDeleteDTO], backupService.bulkDeleteBackup)
 }
