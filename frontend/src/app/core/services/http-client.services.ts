@@ -6,7 +6,8 @@ export class GenericHTTPService {
 
     public async get<T>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
         try {
-            return await apiClient.get<T>(url, config);
+            const response = await apiClient.get<T>(url, config);
+            return response.data;
         } catch (error) {
             const errorMessage = this.extractErrorMessage(error);
             toast.error(errorMessage);

@@ -1,10 +1,9 @@
-import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { useBackupHistory } from './backup-history';
 import {GenericHTTPService} from "../../../core/services/http-client.services";
 import {toast} from "sonner";
 
 class BackupHistoryService extends GenericHTTPService {
-    public async getBackup<T>(): Promise<AxiosResponse<T>> {
+    public async getBackup<T>(): Promise<T> {
         const state = this.getState();
         const params = {
             'page[size]': state?.size,
