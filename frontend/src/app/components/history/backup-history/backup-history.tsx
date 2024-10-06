@@ -2,12 +2,13 @@ import {Toolbox} from "./toolbox/toolbox";
 import {BackupTablePaging} from "./backup-table-paging";
 import {Card, CardContent, CardHeader, CardTitle} from "@frontend/shared/components/ui/card";
 import {BackUpDataTable} from "./backup-data-table";
-import {Backup, Setting} from "../../../models";
+import {Backup} from "../../../models";
 import {useEffect} from "react";
 import {toast} from "sonner";
-import backupHistoryService from "./backup-history.service";
+import backupHistoryService, {useBackupHistory} from "./backup-history.service";
 import {useFetch} from "../../../core/hooks/useFetch";
-import {useStore} from "../../../core/hooks/useStore";
+import {useZuStandStore} from "../../../core/hooks/useZustandStore";
+
 
 export interface BackUpHistoryState {
     backups: Backup[],
@@ -20,22 +21,10 @@ export interface BackUpHistoryState {
     }
 }
 
-const initialState:BackUpHistoryState = {
-    backups :[],
-    page : 1,
-    size : 10,
-    loading: false,
-    filter: {
-        fromDate: null,
-        toDate: null
-    }
-}
-
-export const useBackupHistory = useStore(initialState);
-
 export function BackupHistory() {
-    const { data, loading, error} = useFetch<{ backups: Backup[] }>('/backup/list');
+    const { data, loading, error} = useFetch<{ backups: Backup[] }>('/backup/list') ?? {};
     const { state, setState } = useBackupHistory();
+
 
     useEffect(() => {
         setState('loading', loading);
@@ -54,6 +43,7 @@ export function BackupHistory() {
     const handleRestoreBackup = async (id: string) => {
         try {
             await backupHistoryService.restoreBackup(id);
+            console.log("Backup Restored");
             toast.success("Backup Restored");
         } catch (error) {
             toast.error("Failed to restore backup");

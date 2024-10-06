@@ -1,7 +1,8 @@
 import {Card, CardContent, CardHeader, CardTitle} from "@frontend/shared/components/ui/card";
 import {StatusDataTable} from "./status-data-table";
-import {StatusTablePaging} from "./stauts-table-paging";
+
 import {Toolbox} from "./toolbox/toolbox";
+import {StatusTablePaging} from "./status-table-paging";
 
 export function StatusHistory() {
     return (

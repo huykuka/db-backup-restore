@@ -1,6 +1,21 @@
-import { useBackupHistory } from './backup-history';
 import {GenericHTTPService} from "../../../core/services/http-client.services";
-import {toast} from "sonner";
+
+import {useZuStandStore} from "../../../core/hooks/useZustandStore";
+import {BackUpHistoryState} from "./backup-history";
+
+const initialState:BackUpHistoryState = {
+    backups :[],
+    page : 1,
+    size : 10,
+    loading: false,
+    filter: {
+        fromDate: null,
+        toDate: null
+    }
+}
+
+export const useBackupHistory = useZuStandStore(initialState);
+
 
 class BackupHistoryService extends GenericHTTPService {
     public async getBackup<T>(): Promise<T> {
@@ -11,7 +26,8 @@ class BackupHistoryService extends GenericHTTPService {
             'filter[fromDate]': state?.filter.fromDate,
             'filter[toDate]': state?.filter.toDate,
         };
-        return super.get<T>('/backup/list', {  params });
+        const response = await super.get<T>('/backup/list', {  params });
+        return response.data;
     }
 
     public async deleteBackup(id: string) {
