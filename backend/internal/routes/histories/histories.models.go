@@ -8,6 +8,10 @@ type QueryHistorianDTO struct {
 		ToDate   string `json:"toDate,omitempty" form:"filter[toDate]" validate:"omitempty,datetime"`
 		Status   string `json:"status,omitempty" form:"filter[status]" validate:"omitempty"`
 	} `json:"filter,omitempty" form:"filter"`
+	Sort struct {
+		Key   string `json:"key,omitempty" form:"sort[key]" validate:"omitempty"`
+		Order string `json:"order,omitempty" form:"sort[order]" validate:"omitempty"`
+	} `json:"sort,omitempty" form:"sort"`
 	utils.Page `json:"page,omitempty" form:"page"`
 }
 

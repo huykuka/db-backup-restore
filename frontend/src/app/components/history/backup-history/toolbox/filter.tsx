@@ -30,6 +30,7 @@ export function Filter({ className }: React.HTMLAttributes<HTMLDivElement>) {
         fromDate: format(date.from, 'yyyy-MM-dd'),
         toDate: format(date.to, 'yyyy-MM-dd'),
       });
+      backupHistoryService.resetPaging();
       backupHistoryService.getBackup();
     }
   };
@@ -43,6 +44,7 @@ export function Filter({ className }: React.HTMLAttributes<HTMLDivElement>) {
       fromDate: null,
       toDate: null,
     });
+    backupHistoryService.resetPaging();
     backupHistoryService.getBackup();
   };
 

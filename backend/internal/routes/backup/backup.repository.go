@@ -68,18 +68,18 @@ func (b *BackUpRepository) Delete(id string) (string, error) {
 	return backup.Filename, nil
 }
 
-func (b *BackUpRepository) FindMany(filters *QueryBackupDTO) ([]BackUp, int64, error) {
+func (b *BackUpRepository) FindMany(query *QueryBackupDTO) ([]BackUp, int64, error) {
 	var backups []BackUp
 	var count int64
 
 	qr := db.GetDB().Model(&db.BackUp{})
-	createFilter(qr, filters)
-
+	createFilter(qr, query)
+	createSort(qr, query)
 	// Get the total count of records that match the filters
 	qr.Count(&count)
 
 	// Apply filter and get the records
-	utils.CreatePaging[QueryBackupDTO](qr, *filters)
+	utils.CreatePaging[QueryBackupDTO](qr, *query)
 	result := qr.Find(&backups)
 	if result.Error != nil {
 		log.Error(result.Error)
@@ -146,5 +146,13 @@ func createFilter(qr *gorm.DB, query *QueryBackupDTO) {
 
 	if filter.ToDate != "" {
 		qr = qr.Where("created_at >= ?", filter.FromDate)
+	}
+}
+
+func createSort(qr *gorm.DB, query *QueryBackupDTO) {
+	sort := query.Sort
+	// Apply sorting if key is provided
+	if sort.Key != "" {
+		qr = qr.Order(fmt.Sprintf("%s %s", sort.Key, sort.Order))
 	}
 }

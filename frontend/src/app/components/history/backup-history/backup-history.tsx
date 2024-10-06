@@ -1,5 +1,5 @@
 import { Toolbox } from './toolbox/toolbox';
-import { BackupTablePaging } from './backup-table-paging';
+
 import {
   Card,
   CardContent,
@@ -8,22 +8,28 @@ import {
 } from '@frontend/shared/components/ui/card';
 import { BackUpDataTable } from './backup-data-table';
 import { Backup } from '../../../models';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import backupHistoryService, {
   initialState,
   useBackupHistory,
 } from './backup-history.service';
 import { useFetch } from '../../../core/hooks/useFetch';
+import { Paging } from '../../core/paging';
 
 export interface BackUpHistoryState {
   backups: Backup[];
   page: number;
   size: number;
+  total?: number | null;
   loading: boolean;
   filter: {
     fromDate: string | null;
     toDate: string | null;
+  };
+  sort: {
+    key: string;
+    order: 'asc' | 'desc';
   };
 }
 
@@ -32,6 +38,7 @@ export function BackupHistory() {
     '/backup/list'
   );
   const { setState } = useBackupHistory();
+  const [currentPage, setCurrentPage] = useState(1);
   //reset the state
   useEffect(() => {
     useBackupHistory.setState({
@@ -49,6 +56,15 @@ export function BackupHistory() {
     await backupHistoryService.deleteBackup(id);
   };
 
+  const handlePageSizeChange = async (size: number) => {
+    useBackupHistory.getState().setState('size', size);
+    backupHistoryService.getBackup();
+  };
+
+  const handlePageChange = (newPage: number) => {
+    useBackupHistory.getState().setState('page', newPage);
+    backupHistoryService.getBackup();
+  };
   const handleRestoreBackup = async (id: string) => {
     try {
       await backupHistoryService.restoreBackup(id);
@@ -70,7 +86,13 @@ export function BackupHistory() {
             onDeleteBackup={handleDeleteBackup}
             onRestoreBackup={handleRestoreBackup}
           />
-          <BackupTablePaging />
+          <Paging
+            currentPage={useBackupHistory.getState().state.page || 1}
+            totalItems={useBackupHistory.getState().state.total || 0}
+            onPageChange={handlePageChange}
+            onPageSizeChange={handlePageSizeChange}
+            pageSize={useBackupHistory.getState().state.size || 1}
+          ></Paging>
         </div>
       </CardContent>
     </Card>

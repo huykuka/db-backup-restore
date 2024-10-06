@@ -2,7 +2,10 @@ export interface ResponseApi<T> {
   jsonapi: {
     version: string;
   };
-  data: T | null;
+  data: {
+    total?: number;
+    items: T;
+  };
   error?: {
     status: string;
     title: number;
