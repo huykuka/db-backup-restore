@@ -57,6 +57,7 @@ func (b *BackupService) backup(c *gin.Context) {
 
 func (b *BackupService) getBackupList(c *gin.Context) {
 	query, _ := c.MustGet("Query").(QueryBackupDTO)
+	fmt.Println(query)
 	backups, total, err := backupRepository.FindMany(&query)
 	if err != nil {
 		utils.HandleHTTPError(c, err.Error(), "Can not retrieve Backups", http.StatusBadRequest)

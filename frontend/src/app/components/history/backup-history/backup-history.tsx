@@ -22,8 +22,8 @@ export interface BackUpHistoryState {
   size: number;
   loading: boolean;
   filter: {
-    fromDate: Date | null;
-    toDate: Date | null;
+    fromDate: string | null;
+    toDate: string | null;
   };
 }
 

@@ -141,10 +141,10 @@ func createFilter(qr *gorm.DB, query *QueryBackupDTO) {
 	filter := query.Filter
 	// Apply date filter (fromDate)
 	if filter.FromDate != "" {
-		qr = qr.Where("createdAt >= ?", filter.FromDate)
+		qr = qr.Where("created_at >= ?", filter.FromDate)
 	}
 
 	if filter.ToDate != "" {
-		qr = qr.Where("createdAt >= ?", filter.FromDate)
+		qr = qr.Where("created_at >= ?", filter.FromDate)
 	}
 }
