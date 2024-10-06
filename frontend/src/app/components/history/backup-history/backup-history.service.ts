@@ -2,6 +2,7 @@ import { GenericHTTPService } from '../../../core/services/http-client.services'
 
 import { useZuStandStore } from '../../../core/hooks/useZustandStore';
 import { BackUpHistoryState } from './backup-history';
+import { toast } from 'sonner';
 
 export const initialState: BackUpHistoryState = {
   backups: [],
@@ -48,6 +49,7 @@ class BackupHistoryService extends GenericHTTPService {
   public async createBackup() {
     try {
       await this.post('/backup');
+      toast.success('Backup created successfully');
       await this.getBackup();
     } catch (error) {
       throw error;

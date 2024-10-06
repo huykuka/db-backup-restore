@@ -13,7 +13,6 @@ import { toast } from 'sonner';
 import backupHistoryService, {
   useBackupHistory,
 } from './backup-history.service';
-import { useFetch } from '../../../core/hooks/useFetch';
 import { Paging } from '../../core/paging';
 
 export interface BackUpHistoryState {
