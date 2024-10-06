@@ -15,8 +15,8 @@ export function Filter({
                            className,
                        }: React.HTMLAttributes<HTMLDivElement>) {
     const [date, setDate] = useState<DateRange | undefined>({
-        from: new Date(2022, 0, 20),
-        to: addDays(new Date(2022, 0, 20), 20),
+        from: new Date(),
+        to: new Date(),
     })
 
     return (

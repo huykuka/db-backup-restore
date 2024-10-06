@@ -7,12 +7,17 @@ import {Backup, Setting} from "../../../models";
 import {useEffect} from "react";
 import apiClientServices from "../../../core/services/api-client.services";
 import {toast} from "sonner";
+import backupHistoryService from "./backup-history.service";
 
 export interface BackUpHistoryState {
     backups: Backup[],
     page: number,
     size: number,
     loading: boolean
+    filter: {
+        fromDate: Date | null,
+        toDate: Date | null,
+    }
 }
 
 const initialState:BackUpHistoryState = {
@@ -20,6 +25,10 @@ const initialState:BackUpHistoryState = {
     page : 1,
     size : 10,
     loading: false,
+    filter: {
+        fromDate: null,
+        toDate: null
+    }
 }
 
 export const useBackupHistory = useStore(initialState);
@@ -31,25 +40,21 @@ export function BackupHistory() {
     useEffect(() => {
         setState('loading', loading);
         setState('backups', data?.backups || []);
-    }, [data, setState]); // Add data and setState to the dependency array
+    }, [data,setState]); // Add data and setState to the dependency array
 
     const handleDeleteBackup = async (id: string) => {
         try {
-            await apiClientServices.delete("/backup/" + id);
+            await backupHistoryService.deleteBackup(id);
             toast.success("Backup Deleted");
-
-            const response = await apiClientServices.get('/backup/list');
-            setState('backups', response.data.data.backups);
-        } catch (error) {
-            toast.error("Failed to create backup");
-        }
+            const response: any = await backupHistoryService.getBackup();
+            setState('backups', response?.data?.data?.backups);
+        } catch (error) {}
     }
 
     const handleRestoreBackup = async (id: string) => {
         try {
-            await apiClientServices.post("/restore/" + id).then(()=>{
-                toast.success("Backup Restored");
-            });
+            await backupHistoryService.restoreBackup(id);
+            toast.success("Backup Restored");
         } catch (error) {
             toast.error("Failed to restore backup");
         }

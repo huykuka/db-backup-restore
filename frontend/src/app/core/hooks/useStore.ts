@@ -9,13 +9,13 @@ type Store<T extends State> = {
     setState: (key: keyof T, value: T[keyof T]) => void;
 };
 
-export const useStore = <T extends State>(initialState: T) =>{
-    return create<Store<T>>((set) => ({
+export const useStore = <T extends State>(initialState: T) =>
+     create<Store<T>>((set) => ({
         state: initialState,
         setState: (key: keyof T, value: T[keyof T]) =>
             set((store) => ({
                 state: { ...store.state, [key]: value },
             })),
-    }))};
+    }));
 
 
