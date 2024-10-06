@@ -11,7 +11,6 @@ import { Backup } from '../../../models';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import backupHistoryService, {
-  initialState,
   useBackupHistory,
 } from './backup-history.service';
 import { useFetch } from '../../../core/hooks/useFetch';
@@ -34,23 +33,11 @@ export interface BackUpHistoryState {
 }
 
 export function BackupHistory() {
-  const { data, loading, error } = useFetch<{ backups: Backup[] }>(
-    '/backup/list'
-  );
-  const { setState } = useBackupHistory();
-  const [currentPage, setCurrentPage] = useState(1);
+  useBackupHistory();
   //reset the state
   useEffect(() => {
-    useBackupHistory.setState({
-      ...useBackupHistory.getState(),
-      ...initialState,
-    });
+    backupHistoryService.getBackup();
   }, []); //only run once
-
-  useEffect(() => {
-    setState('loading', loading);
-    setState('backups', data?.backups || []);
-  }, [data, setState]); // Add data and setState to the dependency array
 
   const handleDeleteBackup = async (id: string) => {
     await backupHistoryService.deleteBackup(id);
@@ -58,6 +45,7 @@ export function BackupHistory() {
 
   const handlePageSizeChange = async (size: number) => {
     useBackupHistory.getState().setState('size', size);
+    backupHistoryService.resetPaging();
     backupHistoryService.getBackup();
   };
 

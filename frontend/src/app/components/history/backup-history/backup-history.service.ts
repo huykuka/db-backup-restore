@@ -69,7 +69,6 @@ class BackupHistoryService extends GenericHTTPService {
 
   public resetPaging() {
     useBackupHistory.getState().setState('page', 1);
-    useBackupHistory.getState().setState('size', 10);
   }
 
   private getState() {
