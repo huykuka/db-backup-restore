@@ -33,16 +33,15 @@ class BackupHistoryService extends GenericHTTPService {
       'sort[order]': state?.sort.order,
     };
     try {
-      useBackupHistory.getState().setState('loading', true);
+      this.setState('loading', true);
       const response = await super.get('/backup/list', {
         params,
       });
-      useBackupHistory
-        .getState()
-        .setState('backups', response?.data?.backups || []);
-      useBackupHistory.getState().setState('total', response?.data?.total);
+      this.setState('backups', response?.data?.backups || []);
+      this.setState('total', response?.data?.total || 1);
     } finally {
-      useBackupHistory.getState().setState('loading', false);
+      // Hide the loader after 200ms
+      setTimeout(() => this.setState('loading', false), 400);
     }
   }
 
@@ -70,10 +69,14 @@ class BackupHistoryService extends GenericHTTPService {
   }
 
   public resetPaging() {
-    useBackupHistory.getState().setState('page', 1);
+    this.setState('backups', []);
   }
 
-  private getState() {
+  public setState(key: keyof BackUpHistoryState, value: any) {
+    useBackupHistory.getState().setState(key, value);
+  }
+
+  public getState(): BackUpHistoryState {
     try {
       return useBackupHistory.getState().state;
     } catch (error) {

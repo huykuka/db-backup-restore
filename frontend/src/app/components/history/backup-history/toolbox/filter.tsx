@@ -11,9 +11,7 @@ import {
 import { Button } from '@frontend/shared/components/ui/button';
 import { Calendar } from '@frontend/shared/components/ui/calendar';
 import { CalendarIcon } from '@radix-ui/react-icons';
-import backupHistoryService, {
-  useBackupHistory,
-} from '../backup-history.service';
+import backupHistoryService from '../backup-history.service';
 
 export function Filter({ className }: React.HTMLAttributes<HTMLDivElement>) {
   const [date, setDate] = useState<DateRange | undefined>({
@@ -21,7 +19,7 @@ export function Filter({ className }: React.HTMLAttributes<HTMLDivElement>) {
     to: new Date(),
   });
 
-  const { setState } = useBackupHistory();
+  const { setState, getState } = backupHistoryService;
 
   const onSetDate: SelectRangeEventHandler = (date) => {
     setDate(date);
@@ -81,7 +79,10 @@ export function Filter({ className }: React.HTMLAttributes<HTMLDivElement>) {
               initialFocus
               mode="range"
               defaultMonth={date?.from}
-              selected={date}
+              selected={{
+                from: date?.from,
+                to: date?.to,
+              }}
               onSelect={onSetDate}
               numberOfMonths={2}
             />

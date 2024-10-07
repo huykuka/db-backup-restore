@@ -2,14 +2,14 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from '@frontend/shared/components/ui/table';
 import { Button } from '@frontend/shared/components/ui/button';
 import { ArchiveRestoreIcon, DeleteIcon, DownloadIcon } from 'lucide-react';
-import { useBackupHistory } from './backup-history.service';
+import backupHistoryService from './backup-history.service';
+import LoadingOverlay from '../../core/loader';
 
 interface BackupDataTableProps {
   onDeleteBackup: (id: string) => void;
@@ -20,7 +20,7 @@ export function BackUpDataTable({
   onDeleteBackup,
   onRestoreBackup,
 }: BackupDataTableProps) {
-  const { state } = useBackupHistory();
+  const { getState } = backupHistoryService;
   return (
     <Table>
       <TableHeader>
@@ -31,7 +31,8 @@ export function BackUpDataTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {state.backups.map((backup, index) => (
+        {getState().loading && <LoadingOverlay />}
+        {getState().backups.map((backup, index) => (
           <TableRow key={backup.filename}>
             <TableCell>{new Date(backup.createdAt).toLocaleString()}</TableCell>
             <TableCell>{backup.filename}</TableCell>

@@ -8,7 +8,7 @@ import {
 } from '@frontend/shared/components/ui/card';
 import { BackUpDataTable } from './backup-data-table';
 import { Backup } from '../../../models';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { toast } from 'sonner';
 import backupHistoryService, {
   useBackupHistory,
@@ -34,6 +34,7 @@ export interface BackUpHistoryState {
 export function BackupHistory() {
   useBackupHistory();
   //reset the state
+  const { getState, setState } = backupHistoryService;
   useEffect(() => {
     backupHistoryService.getBackup();
   }, []); //only run once
@@ -43,13 +44,13 @@ export function BackupHistory() {
   };
 
   const handlePageSizeChange = async (size: number) => {
-    useBackupHistory.getState().setState('size', size);
+    setState('size', size);
     backupHistoryService.resetPaging();
     backupHistoryService.getBackup();
   };
 
-  const handlePageChange = (newPage: number) => {
-    useBackupHistory.getState().setState('page', newPage);
+  const handlePageChange = (page: number) => {
+    setState('page', page);
     backupHistoryService.getBackup();
   };
   const handleRestoreBackup = async (id: string) => {
@@ -74,11 +75,11 @@ export function BackupHistory() {
             onRestoreBackup={handleRestoreBackup}
           />
           <Paging
-            currentPage={useBackupHistory.getState().state.page || 1}
-            totalItems={useBackupHistory.getState().state.total || 0}
+            currentPage={getState().page || 1}
+            totalItems={getState().total || 0}
             onPageChange={handlePageChange}
             onPageSizeChange={handlePageSizeChange}
-            pageSize={useBackupHistory.getState().state.size || 1}
+            pageSize={getState().size || 1}
           ></Paging>
         </div>
       </CardContent>
