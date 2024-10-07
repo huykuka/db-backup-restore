@@ -50,6 +50,7 @@ class BackupHistoryService extends GenericHTTPService {
   public async createBackup() {
     try {
       await this.post('/backup');
+      this.resetPaging();
       toast.success('Backup created successfully');
       await this.getBackup();
     } catch (error) {
@@ -60,6 +61,7 @@ class BackupHistoryService extends GenericHTTPService {
   public async deleteBackup(id: string) {
     try {
       await this.delete(`/backup/${id}`);
+      this.resetPaging();
       await this.getBackup();
     } catch (error) {
       throw error;
