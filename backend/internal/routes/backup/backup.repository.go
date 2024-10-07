@@ -148,7 +148,6 @@ func createFilter(qr *gorm.DB, query *QueryBackupDTO) {
 	if filter.ToDate != "" {
 		qr = qr.Where("created_at <= ?", filter.ToDate)
 	}
-	fmt.Println(qr)
 }
 
 func createSort(qr *gorm.DB, query *QueryBackupDTO) {

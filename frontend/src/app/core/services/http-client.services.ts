@@ -59,7 +59,7 @@ export class GenericHTTPService {
     }
   }
 
-  private extractErrorMessage(error: any): string {
+  public extractErrorMessage(error: any): string {
     if (error.response && error.response.data && error.response.data.error) {
       return error.response.data.error.title;
     }

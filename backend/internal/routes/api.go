@@ -19,15 +19,8 @@ func Init() {
 	port := os.Getenv("PORT")
 
 	r := gin.New()
-	//config := cors.DefaultConfig()
-	//config.AllowAllOrigins = true
-	//config.AllowMethods = []string{"POST", "GET", "PUT", "OPTIONS"}
-	//config.AllowHeaders = []string{"Origin", "Content-Type", "Authorization", "Accept", "User-Agent", "Cache-Control", "Pragma"}
-	//config.ExposeHeaders = []string{"Content-Length"}
-	//config.AllowCredentials = true
-	//config.MaxAge = 12 * time.Hour
-
 	r.Use(cors.Default())
+
 	//Middleware registration
 	r.Use(ginlogrus.Logger(log.StandardLogger()), gin.Recovery())
 	r.Use(static.Serve("/", static.LocalFile("web", false)))

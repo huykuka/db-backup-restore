@@ -33,7 +33,6 @@ export interface BackUpHistoryState {
 
 export function BackupHistory() {
   useBackupHistory();
-  //reset the state
   const { getState, setState } = backupHistoryService;
   useEffect(() => {
     backupHistoryService.getBackup();
@@ -61,6 +60,13 @@ export function BackupHistory() {
       toast.error('Failed to restore backup');
     }
   };
+  const handleDownloadBackup = async (id: string) => {
+    try {
+      await backupHistoryService.downloadBackup(id);
+    } catch (error) {
+      toast.error('Failed to download backup');
+    }
+  };
 
   return (
     <Card>
@@ -73,6 +79,7 @@ export function BackupHistory() {
           <BackUpDataTable
             onDeleteBackup={handleDeleteBackup}
             onRestoreBackup={handleRestoreBackup}
+            onDownloadBackup={handleDownloadBackup}
           />
           <Paging
             currentPage={getState().page || 1}

@@ -3,6 +3,7 @@ import { GenericHTTPService } from '../../../core/services/http-client.services'
 import { useZuStandStore } from '../../../core/hooks/useZustandStore';
 import { BackUpHistoryState } from './backup-history';
 import { toast } from 'sonner';
+import apiClient from '../../../core/services/api-client.services';
 
 export const initialState: BackUpHistoryState = {
   backups: [],
@@ -61,10 +62,40 @@ class BackupHistoryService extends GenericHTTPService {
   public async deleteBackup(id: string) {
     try {
       await this.delete(`/backup/${id}`);
+      toast.success('Backup deleted successfully');
       this.resetPaging();
       await this.getBackup();
     } catch (error) {
       throw error;
+    }
+  }
+
+  public async downloadBackup(id: string) {
+    try {
+      const response = await apiClient.get(`/backup/download/${id}`, {
+        responseType: 'blob',
+      });
+      const href = URL.createObjectURL(response.data);
+      const contentDisposition = response.headers['content-disposition'];
+      const filename = contentDisposition
+        ? contentDisposition
+            .split('filename=')[1]
+            .split(';')[0]
+            .replace(/"/g, '')
+        : `backup_${id}.zip`;
+
+      // Create "a" HTML element with href to file & click
+      const link = document.createElement('a');
+      link.href = href;
+      link.setAttribute('download', filename); // or any other extension
+      document.body.appendChild(link);
+      link.click();
+
+      // Clean up "a" element & remove ObjectURL
+      document.body.removeChild(link);
+      URL.revokeObjectURL(href);
+    } catch (error) {
+      toast.error('Cannot download backup file');
     }
   }
 
