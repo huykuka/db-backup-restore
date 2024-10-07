@@ -53,3 +53,21 @@ func (m *MySQL) Restore(dbSetting *settings.DBSetting, filename *string) error {
 	log.Printf("Restore completed: %s\n", *filename)
 	return nil
 }
+
+func (m *MySQL) HealthCheck(dbSetting *settings.DBSetting) error {
+	if err := os.Setenv("MYSQL_PWD", dbSetting.Password); err != nil {
+		return err
+	}
+
+	//Execute Restore command
+	cmd := exec.Command("mysql_isready", "-U", dbSetting.User, "-h", dbSetting.Host, "-p", dbSetting.Port, "-d", dbSetting.DbName)
+	cmd.Stdout, cmd.Stderr = os.Stdout, os.Stderr
+
+	if err := cmd.Run(); err != nil {
+		log.Printf("Health check failed: %v\n", err)
+		return err
+	}
+
+	log.Printf("Health check completed: %s\n", dbSetting.DbName)
+	return nil
+}

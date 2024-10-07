@@ -47,21 +47,21 @@ export function BackUpDataTable({
                   onClick={() => onDownloadBackup(backup.id)}
                 >
                   <DownloadIcon className="mr-2" />
-                  Download
+                  <span className="hidden md:inline">Download</span>
                 </Button>
                 <Button
                   variant={'ghost'}
                   onClick={() => onRestoreBackup(backup.id)}
                 >
                   <ArchiveRestoreIcon className="mr-2" />
-                  Restore
+                  <span className="hidden md:inline">Restore</span>
                 </Button>
                 <Button
                   variant={'destructive'}
                   onClick={() => onDeleteBackup(backup.id)}
                 >
                   <DeleteIcon className="mr-2" />
-                  Delete
+                  <span className="hidden md:inline">Delete</span>
                 </Button>
               </TableCell>
             </TableRow>
