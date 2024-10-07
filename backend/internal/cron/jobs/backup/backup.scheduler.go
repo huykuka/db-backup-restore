@@ -1,6 +1,7 @@
 package backup
 
 import (
+	"fmt"
 	"github.com/go-co-op/gocron/v2"
 	log "github.com/sirupsen/logrus"
 	"time"
@@ -28,7 +29,7 @@ func Init() {
 			},
 		),
 	)
-
+	fmt.Println("hi")
 	// start the scheduler
 	log.Printf("Backup job with ID %d has been started...", j.ID())
 	s.Start()
