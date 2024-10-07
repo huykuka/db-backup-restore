@@ -75,6 +75,7 @@ func (b *BackUpRepository) FindMany(query *QueryBackupDTO) ([]BackUp, int64, err
 	qr := db.GetDB().Model(&db.BackUp{})
 	createFilter(qr, query)
 	createSort(qr, query)
+
 	// Get the total count of records that match the filters
 	qr.Count(&count)
 
@@ -145,8 +146,9 @@ func createFilter(qr *gorm.DB, query *QueryBackupDTO) {
 	}
 
 	if filter.ToDate != "" {
-		qr = qr.Where("created_at >= ?", filter.FromDate)
+		qr = qr.Where("created_at <= ?", filter.ToDate)
 	}
+	fmt.Println(qr)
 }
 
 func createSort(qr *gorm.DB, query *QueryBackupDTO) {

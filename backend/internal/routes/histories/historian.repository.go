@@ -50,7 +50,7 @@ func createFilter(qr *gorm.DB, query *QueryHistorianDTO) {
 	}
 
 	if filter.ToDate != "" {
-		qr = qr.Where("created_at >= ?", filter.FromDate)
+		qr = qr.Where("created_at <= ?", filter.ToDate)
 	}
 
 	if filter.Status != "" {
