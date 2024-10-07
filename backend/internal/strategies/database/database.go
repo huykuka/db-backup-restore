@@ -10,6 +10,7 @@ import (
 type DBType interface {
 	BackUp(*settings.DBSetting) (filename string, err error)
 	Restore(*settings.DBSetting, *string) error
+	HealthCheck(*settings.DBSetting) error
 }
 
 type Database struct {

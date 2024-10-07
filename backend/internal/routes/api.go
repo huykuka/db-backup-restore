@@ -3,6 +3,7 @@ package routes
 import (
 	"db-tool/internal/core/interceptors"
 	"db-tool/internal/routes/backup"
+	"db-tool/internal/routes/health"
 	"db-tool/internal/routes/histories"
 	"db-tool/internal/routes/restore"
 	"db-tool/internal/routes/settings"
@@ -35,6 +36,7 @@ func Init() {
 	settings.Register(api)
 	restore.Register(api)
 	histories.Register(api)
+	health.Register(api)
 
 	// Start the Server
 	log.Printf("Server is running on port: %s", port)

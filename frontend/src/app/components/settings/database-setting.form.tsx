@@ -19,9 +19,10 @@ import {
   CardHeader,
   CardTitle,
 } from '@frontend/shared/components/ui/card';
-import { Check, Save } from 'lucide-react';
+import { Check, Loader, Save } from 'lucide-react';
 import { Setting } from 'src/app/models/settings.model';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { CheckButton } from './components/check-button';
 
 const formSchema = z.object({
   username: z
@@ -102,7 +103,7 @@ export function DatabaseSettingForm({
         <CardTitle>Database Setting</CardTitle>
         <CardDescription>Setup your database connection</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex flex-col gap-3">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
             <FormField
@@ -188,17 +189,22 @@ export function DatabaseSettingForm({
               )}
             />
             <div className="flex space-x-2 justify-between">
-              <Button className="w-1/2" variant="outline" type="button">
-                <Check className="mr-2" />
-                <span className="hidden md:inline">Verify Connection</span>
-              </Button>
-              <Button className="w-1/2" type="submit">
+              <CheckButton />
+              <Button
+                className="w-1/2"
+                type="submit"
+                disabled={!form.formState.isValid}
+              >
                 <Save className="mr-2" />
                 <span className="hidden md:inline">Save Preferences</span>
               </Button>
             </div>
           </form>
         </Form>
+        <span className="mt-3 text-sm">
+          * New database settings must to be saved before running the connection
+          check.{' '}
+        </span>
       </CardContent>
     </Card>
   );
