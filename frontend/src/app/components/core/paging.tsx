@@ -117,10 +117,15 @@ export function Paging({
           </PaginationItem>
         </PaginationContent>
       </Pagination>
-      <span className="text-sm  whitespace-nowrap mr-4">
-        {(currentPage - 1) * pageSize + 1} -{' '}
-        {Math.min(currentPage * pageSize, totalItems)} of {totalItems}
-      </span>
+
+      {totalItems > 0 ? (
+        <span className="text-sm whitespace-nowrap mr-4">
+          {(currentPage - 1) * pageSize + 1} -{' '}
+          {Math.min(currentPage * pageSize, totalItems)} of {totalItems}
+        </span>
+      ) : (
+        <span className="text-sm whitespace-nowrap mr-4">No items</span>
+      )}
       <Select
         value={pageSize.toString()}
         onValueChange={(value) => onPageSizeChange(Number(value))}

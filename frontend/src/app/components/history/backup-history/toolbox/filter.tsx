@@ -11,7 +11,7 @@ import {
 import { Button } from '@frontend/shared/components/ui/button';
 import { Calendar } from '@frontend/shared/components/ui/calendar';
 import { CalendarIcon } from '@radix-ui/react-icons';
-import backupHistoryService from '../backup-history.service';
+import backupHistoryService, { initialState } from '../backup-history.service';
 
 export function Filter({ className }: React.HTMLAttributes<HTMLDivElement>) {
   const [date, setDate] = useState<DateRange | undefined>({
@@ -39,8 +39,8 @@ export function Filter({ className }: React.HTMLAttributes<HTMLDivElement>) {
       to: new Date(),
     });
     setState('filter', {
-      fromDate: null,
-      toDate: null,
+      fromDate: initialState.filter.fromDate,
+      toDate: initialState.filter.toDate,
     });
     backupHistoryService.resetPaging();
     backupHistoryService.getBackup();
@@ -89,7 +89,10 @@ export function Filter({ className }: React.HTMLAttributes<HTMLDivElement>) {
           </PopoverContent>
         </Popover>
       </div>
-      <Button onClick={onReset}>Reset</Button>
+      {JSON.stringify(getState().filter) !==
+        JSON.stringify(initialState.filter) && (
+        <Button onClick={onReset}>Reset</Button>
+      )}
     </div>
   );
 }

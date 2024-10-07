@@ -41,7 +41,9 @@ class BackupHistoryService extends GenericHTTPService {
       this.setState('total', response?.data?.total || 1);
     } finally {
       // Hide the loader after 200ms
-      setTimeout(() => this.setState('loading', false), 400);
+      setTimeout(() => {
+        this.setState('loading', false);
+      }, 400);
     }
   }
 
@@ -69,7 +71,7 @@ class BackupHistoryService extends GenericHTTPService {
   }
 
   public resetPaging() {
-    this.setState('backups', []);
+    this.setState('page', 1);
   }
 
   public setState(key: keyof BackUpHistoryState, value: any) {
