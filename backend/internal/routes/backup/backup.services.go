@@ -80,7 +80,7 @@ func (b *BackupService) downloadBackUpFile(c *gin.Context) {
 
 	// Format CreatedAt timestamp as part of the filename
 	path := backup.Filename
-	filename := fmt.Sprintf("backup_%s.sql", filepath.Base(path))
+	filename := filepath.Base(path)
 	fileInfo, _ := os.Stat(path)
 	// Set the appropriate headers
 	c.Header("Access-Control-Expose-Headers", "Content-Disposition")
