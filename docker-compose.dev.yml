@@ -55,19 +55,19 @@ services:
       - "8080:${APP_PORT:-3000}"
     networks:
       - app_network
-#  postgres:
-#    image: bitnami/postgresql:latest
-#    container_name: postgres
-#    networks:
-#      - app_network
-#    restart: unless-stopped
-#    environment:
-#      POSTGRESQL_USERNAME: ${POSTGRES_USER:-postgres}
-#      POSTGRESQL_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-#      POSTGRESQL_DATABASE: ${POSTGRES_DB:-postgres-go}
-#      POSTGRESQL_CLIENT_MIN_MESSAGES: info
-#    ports:
-#      - "5432:5432"
+  postgres:
+    image: bitnami/postgresql:16
+    container_name: postgres
+    networks:
+      - app_network
+    restart: unless-stopped
+    environment:
+      POSTGRESQL_USERNAME: ${POSTGRES_USER:-postgres}
+      POSTGRESQL_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRESQL_DATABASE: ${POSTGRES_DB:-postgres-go}
+      POSTGRESQL_CLIENT_MIN_MESSAGES: info
+    ports:
+      - "5432:5432"
 
 networks:
   app_network:

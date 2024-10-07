@@ -11,8 +11,8 @@ export default function BurgerMenu({links}: NavigationBarProps) {
     return (
         <Sheet>
             <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="rounded-full md:hidden">
-                    <MenuIcon className="h-5 w-5 text-gray-500 dark:text-gray-400"/>
+                <Button variant="ghost" size="icon" className="rounded-full">
+                    <MenuIcon className="h-7 w-7 text-gray-500 dark:text-gray-400"/>
                 </Button>
             </SheetTrigger>
             <SheetContent side="left" className="md:hidden">

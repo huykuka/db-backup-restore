@@ -11,5 +11,5 @@ func Register(r *gin.RouterGroup) {
 	//
 	historyService := new(HistoriesService)
 
-	route.GET("/", pipes.Query[QueryHistorianDTO], historyService.getAll)
+	route.GET("", pipes.Query[QueryHistorianDTO], historyService.getAll)
 }

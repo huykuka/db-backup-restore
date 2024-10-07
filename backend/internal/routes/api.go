@@ -1,19 +1,17 @@
 package routes
 
 import (
-	"db-tool/internal/core/guards"
 	"db-tool/internal/core/interceptors"
-	"db-tool/internal/core/middlewares"
 	"db-tool/internal/routes/backup"
 	"db-tool/internal/routes/histories"
 	"db-tool/internal/routes/restore"
 	"db-tool/internal/routes/settings"
 	"db-tool/internal/routes/users"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	ginlogrus "github.com/toorop/gin-logrus"
-	"golang.org/x/time/rate"
 	"os"
 )
 
@@ -21,6 +19,7 @@ func Init() {
 	port := os.Getenv("PORT")
 
 	r := gin.New()
+	r.Use(cors.Default())
 
 	//Middleware registration
 	r.Use(ginlogrus.Logger(log.StandardLogger()), gin.Recovery())
@@ -28,7 +27,7 @@ func Init() {
 	r.Use(interceptors.JsonApiInterceptor())
 
 	//Serving API
-	api := r.Group("/api", guards.BasicAuthGuard(), middlewares.RateLimiter(rate.NewLimiter(10, 1)))
+	api := r.Group("/api")
 
 	//Routes registration
 	users.Register(api)

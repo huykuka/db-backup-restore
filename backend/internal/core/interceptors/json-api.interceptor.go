@@ -3,6 +3,7 @@ package interceptors
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 type JSONAPIResponse struct {
@@ -34,51 +35,79 @@ func JsonApiInterceptor() gin.HandlerFunc {
 		err, errorExist := c.Get("error")
 		// Handle errors
 		if errorExist {
-			// Retrieve the status code from the context, defaulting to 400 if not set
-			statusCode := http.StatusBadRequest
-			if code, exists := c.Get("statusCode"); exists {
-				statusCode = code.(int)
-			}
-
+			var statusCode int
 			// Only append the first error from the Gin context to the JSON:API response
-			jsonApiResponse.Error = &JSONAPIError{
-
-				Status: http.StatusText(statusCode),
-				Title:  err.(string), // Append only the first error
-
-			}
-
+			jsonApiResponse.Error, statusCode = handleError(c, err.(string))
 			// Set the status code and send the JSON:API formatted error response
 			c.JSON(statusCode, jsonApiResponse)
 			return
 		}
 
-		// Handle successful responses for GET requests
-		if c.Request.Method == http.MethodGet {
-			if page, exists := c.GetQuery("page[number]"); exists {
-				jsonApiResponse.Meta["page"] = page
-			}
-			if size, exists := c.GetQuery("page[size]"); exists {
-				jsonApiResponse.Meta["size"] = size
-			}
-			if sortField, exists := c.GetQuery("sort[field]"); exists {
-				jsonApiResponse.Meta["sort"] = sortField
-			}
-			if sortOrder, exists := c.GetQuery("sort[order]"); exists {
-				jsonApiResponse.Meta["order"] = sortOrder
-			}
+		metadataResponse := handleGetMetadata(c)
+		if metadataResponse != nil {
+			jsonApiResponse.Meta = metadataResponse.Meta
 		}
 
 		// Get the actual response data
-		responseData, exists := c.Get("response")
-		if exists {
-			jsonApiResponse.Data = responseData
-			if dataList, ok := responseData.([]interface{}); ok {
-				jsonApiResponse.Meta["total"] = len(dataList)
-			}
+		responseData := handleResponseData(c)
+		if responseData != nil {
+			jsonApiResponse.Data = responseData.Data
 		}
-
 		// Replace the original response with the JSON-API formatted response
 		c.JSON(c.Writer.Status(), jsonApiResponse)
 	}
+}
+
+func handleResponseData(c *gin.Context) *JSONAPIResponse {
+	jsonApiResponse := JSONAPIResponse{
+		Meta: make(map[string]interface{}),
+	}
+	// Get the actual response data
+	responseData, exists := c.Get("response")
+	if exists {
+		jsonApiResponse.Data = responseData
+		if dataList, ok := responseData.([]interface{}); ok {
+			jsonApiResponse.Meta["total"] = len(dataList)
+		}
+	}
+
+	return &jsonApiResponse
+}
+
+func handleError(c *gin.Context, err string) (*JSONAPIError, int) {
+	// Retrieve the status code from the context, defaulting to 400 if not set
+	statusCode := http.StatusBadRequest
+
+	if code, exists := c.Get("statusCode"); exists {
+		statusCode, _ = strconv.Atoi(code.(string))
+	}
+	// Only append the first error from the Gin context to the JSON:API response
+	return &JSONAPIError{
+		Status: http.StatusText(statusCode),
+		Title:  err, // Append only the first error
+	}, statusCode
+}
+
+func handleGetMetadata(c *gin.Context) *JSONAPIResponse {
+
+	jsonApiResponse := JSONAPIResponse{
+		Meta: make(map[string]interface{}),
+	}
+	// Handle successful responses for GET requests
+	if c.Request.Method == http.MethodGet {
+		if page, exists := c.GetQuery("page[number]"); exists {
+			jsonApiResponse.Meta["page"], _ = strconv.Atoi(page)
+		}
+		if size, exists := c.GetQuery("page[size]"); exists {
+			jsonApiResponse.Meta["size"], _ = strconv.Atoi(size)
+		}
+		if sortField, exists := c.GetQuery("sort[field]"); exists {
+			jsonApiResponse.Meta["sort"] = sortField
+		}
+		if sortOrder, exists := c.GetQuery("sort[order]"); exists {
+			jsonApiResponse.Meta["order"] = sortOrder
+		}
+	}
+
+	return &jsonApiResponse
 }

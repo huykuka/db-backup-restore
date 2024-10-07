@@ -20,9 +20,9 @@ const Header: React.FC = () => {
     return (
         <header className="flex  items-center p-2 px-6 mb-2 justify-between"
                 style={{backgroundColor: '#033681'}}>
-            <div className="flex flex-row items-center space-x-5">
+            <div className="flex flex-row items-center gap-5">
 
-                <div className="items-center gap-4">
+                <div className="flex items-center gap-4 md:hidden">
                     <BurgerMenu links={links}/>
                 </div>
 
