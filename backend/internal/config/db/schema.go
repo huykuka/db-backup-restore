@@ -36,4 +36,5 @@ type History struct {
 	Base
 	Type   string `json:"type"`
 	Status string `json:"status" gorm:"index"`
+	Detail string `json:"detail"`
 }
