@@ -13,7 +13,6 @@ import statusHistoryService, {
   useStatusHistory,
 } from './status-history.service';
 import { useEffect } from 'react';
-import backupHistoryService from '../backup-history/backup-history.service';
 
 export interface StatusHistoryState {
   statuses: Status[];
@@ -40,6 +39,9 @@ export function StatusHistory() {
 
   useEffect(() => {
     statusHistoryService.getStatusHistories();
+    return () => {
+      statusHistoryService.resetState();
+    };
   }, []); //only run once
 
   const handlePageSizeChange = async (size: number) => {

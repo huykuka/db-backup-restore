@@ -111,6 +111,10 @@ class BackupHistoryService extends GenericHTTPService {
     useBackupHistory.getState().setState(key, value);
   }
 
+  public resetState() {
+    useBackupHistory.getState().reset();
+  }
+
   public getState(): BackUpHistoryState {
     try {
       return useBackupHistory.getState().state;

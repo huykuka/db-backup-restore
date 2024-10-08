@@ -52,7 +52,7 @@ class StatusHistoryService extends GenericHTTPService {
     }
   }
 
-  public async downloadBackup(id: string) {
+  public async downloadLog(id: string) {
     try {
       const response = await apiClient.get(`/backup/download/${id}`, {
         responseType: 'blob',
@@ -87,6 +87,10 @@ class StatusHistoryService extends GenericHTTPService {
 
   public setState(key: keyof StatusHistoryState, value: any) {
     useStatusHistory.getState().setState(key, value);
+  }
+
+  public resetState() {
+    useStatusHistory.getState().reset();
   }
 
   public getState(): StatusHistoryState {
