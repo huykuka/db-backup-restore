@@ -33,6 +33,7 @@ export interface BackUpHistoryState {
 
 export function BackupHistory() {
   useBackupHistory();
+
   const { getState, setState } = backupHistoryService;
   useEffect(() => {
     backupHistoryService.getBackup();

@@ -1,19 +1,17 @@
-import React, {ReactNode} from 'react';
-import Header from "./core/header";
+import React, { ReactNode } from 'react';
+import Header from './core/header';
 
 interface LayoutProps {
-    children: ReactNode;
+  children: ReactNode;
 }
 
-const Layout: React.FC<LayoutProps> = ({children}) => {
-    return (
-        <div className="flex flex-col">
-            <Header/>
-            <main className="p-5">
-                {children}
-            </main>
-        </div>
-    );
+const Layout: React.FC<LayoutProps> = ({ children }) => {
+  return (
+    <div>
+      <Header />
+      <main className="p-5 mt-12">{children}</main>
+    </div>
+  );
 };
 
 export default Layout;
