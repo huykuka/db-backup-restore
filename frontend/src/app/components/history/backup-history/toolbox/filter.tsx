@@ -34,7 +34,7 @@ export function Filter({ className }: React.HTMLAttributes<HTMLDivElement>) {
   };
 
   return (
-    <div className="flex flex-row items-center  gap-2">
+    <div className="flex flex-row items-center gap-2">
       <DatePicker ref={datePickerRef} onDateChange={handleDateChange} />
 
       {JSON.stringify(getState().filter) !==

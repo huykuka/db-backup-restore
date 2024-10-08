@@ -11,6 +11,8 @@ export function Filter() {
   const { setState, getState } = statusHistoryService;
 
   const datePickerRef = useRef<DatePickerRef>(null);
+  const typeDropdownRef = useRef<{ reset: () => void }>(null);
+  const statusDropdownRef = useRef<{ reset: () => void }>(null);
   const dropdownRef = useRef<{ reset: () => void }>(null);
 
   const handleDateChange = (date: { from: string; to: string }) => {
@@ -45,10 +47,10 @@ export function Filter() {
       type: statusHistoryInitialState.filter.type,
       status: statusHistoryInitialState.filter.status,
     });
+    datePickerRef?.current?.resetDate();
+    typeDropdownRef?.current?.reset();
+    statusDropdownRef?.current?.reset();
     handleFilterChange();
-    if (datePickerRef.current) {
-      datePickerRef.current.resetDate();
-    }
   };
 
   const handleFilterChange = () => {
@@ -57,9 +59,9 @@ export function Filter() {
   };
 
   return (
-    <div className="flex flex-row items-center gap-2">
+    <div className="flex items-center flex-wrap gap-2">
       <Dropdown
-        ref={dropdownRef}
+        ref={typeDropdownRef}
         options={[
           { label: 'Backup', value: 'backup' },
           { label: 'Restore', value: 'restore' },
@@ -70,7 +72,7 @@ export function Filter() {
       />
 
       <Dropdown
-        ref={dropdownRef}
+        ref={statusDropdownRef}
         options={[
           { label: 'Success', value: 'success' },
           { label: 'Failed', value: 'failed' },
