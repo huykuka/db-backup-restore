@@ -33,9 +33,13 @@ export interface BackUpHistoryState {
 
 export function BackupHistory() {
   useBackupHistory();
+
   const { getState, setState } = backupHistoryService;
   useEffect(() => {
     backupHistoryService.getBackup();
+    return () => {
+      backupHistoryService.resetState();
+    };
   }, []); //only run once
 
   const handleDeleteBackup = async (id: string) => {
@@ -52,6 +56,7 @@ export function BackupHistory() {
     setState('page', page);
     backupHistoryService.getBackup();
   };
+
   const handleRestoreBackup = async (id: string) => {
     try {
       await backupHistoryService.restoreBackup(id);
@@ -60,6 +65,7 @@ export function BackupHistory() {
       toast.error('Failed to restore backup');
     }
   };
+
   const handleDownloadBackup = async (id: string) => {
     try {
       await backupHistoryService.downloadBackup(id);

@@ -134,7 +134,7 @@ export function Paging({
           <SelectValue placeholder={pageSize} />
         </SelectTrigger>
         <SelectContent>
-          {[10, 20, 30, 40, 50].map((size) => (
+          {[10, 20, 50, 100].map((size) => (
             <SelectItem key={size} value={size.toString()}>
               {size}
             </SelectItem>

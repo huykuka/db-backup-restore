@@ -3,8 +3,6 @@
 @tailwind utilities;
 
 
-
-
 @layer base {
     :root {
         --background: 0 0% 100%;
@@ -19,6 +17,7 @@
         --secondary-foreground: 222.2 47.4% 11.2%;
         --muted: 210 40% 96.1%;
         --muted-foreground: 215.4 16.3% 46.9%;
+        --success: 120 100% 25%;
         --accent: 210 40% 96.1%;
         --accent-foreground: 222.2 47.4% 11.2%;
         --destructive: 0 84.2% 60.2%;
@@ -42,6 +41,7 @@
         --popover: 222.2 84% 4.9%;
         --popover-foreground: 210 40% 98%;
         --primary: 210 40% 98%;
+        --success: 120 100% 30%;
         --primary-foreground: 222.2 47.4% 11.2%;
         --secondary: 217.2 32.6% 17.5%;
         --secondary-foreground: 210 40% 98%;
@@ -61,8 +61,6 @@
         --chart-5: 340 75% 55%;
     }
 }
-
-
 
 
 @layer base {

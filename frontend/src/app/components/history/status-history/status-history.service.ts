@@ -1,18 +1,20 @@
 import { GenericHTTPService } from '../../../core/services/http-client.services';
 
 import { useZuStandStore } from '../../../core/hooks/useZustandStore';
-import { BackUpHistoryState } from './backup-history';
 import { toast } from 'sonner';
 import apiClient from '../../../core/services/api-client.services';
+import { StatusHistoryState } from './status-history';
 
-export const initialState: BackUpHistoryState = {
-  backups: [],
+export const statusHistoryInitialState: StatusHistoryState = {
+  statuses: [],
   page: 1,
   size: 10,
   loading: false,
   filter: {
     fromDate: null,
     toDate: null,
+    type: null,
+    status: null,
   },
   sort: {
     key: 'created_at',
@@ -20,25 +22,27 @@ export const initialState: BackUpHistoryState = {
   },
 };
 
-export const useBackupHistory = useZuStandStore(initialState);
+export const useStatusHistory = useZuStandStore(statusHistoryInitialState);
 
-class BackupHistoryService extends GenericHTTPService {
-  public async getBackup() {
+class StatusHistoryService extends GenericHTTPService {
+  public async getStatusHistories() {
     const state = this.getState();
     const params = {
       'page[size]': state?.size,
       'page[number]': state?.page,
       'filter[fromDate]': state?.filter.fromDate,
       'filter[toDate]': state?.filter.toDate,
+      'filter[type]': state?.filter.type,
+      'filter[status]': state?.filter.status,
       'sort[key]': state?.sort.key,
       'sort[order]': state?.sort.order,
     };
     try {
       this.setState('loading', true);
-      const response = await super.get('/backup/list', {
+      const response = await super.get('/histories', {
         params,
       });
-      this.setState('backups', response?.data?.backups || []);
+      this.setState('statuses', response?.data?.statuses || []);
       this.setState('total', response?.data?.total || 1);
     } finally {
       // Hide the loader after 200ms
@@ -48,29 +52,7 @@ class BackupHistoryService extends GenericHTTPService {
     }
   }
 
-  public async createBackup() {
-    try {
-      await this.post('/backup');
-      this.resetPaging();
-      toast.success('Backup created successfully');
-      await this.getBackup();
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  public async deleteBackup(id: string) {
-    try {
-      await this.delete(`/backup/${id}`);
-      toast.success('Backup deleted successfully');
-      this.resetPaging();
-      await this.getBackup();
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  public async downloadBackup(id: string) {
+  public async downloadLog(id: string) {
     try {
       const response = await apiClient.get(`/backup/download/${id}`, {
         responseType: 'blob',
@@ -99,30 +81,26 @@ class BackupHistoryService extends GenericHTTPService {
     }
   }
 
-  public async restoreBackup(id: string) {
-    await this.post(`/restore/${id}`);
-  }
-
   public resetPaging() {
     this.setState('page', 1);
   }
 
-  public setState(key: keyof BackUpHistoryState, value: any) {
-    useBackupHistory.getState().setState(key, value);
+  public setState(key: keyof StatusHistoryState, value: any) {
+    useStatusHistory.getState().setState(key, value);
   }
 
   public resetState() {
-    useBackupHistory.getState().reset();
+    useStatusHistory.getState().reset();
   }
 
-  public getState(): BackUpHistoryState {
+  public getState(): StatusHistoryState {
     try {
-      return useBackupHistory.getState().state;
+      return useStatusHistory.getState().state;
     } catch (error) {
       throw error;
     }
   }
 }
 
-const backupHistoryService = new BackupHistoryService();
-export default backupHistoryService;
+const statusHistoryService = new StatusHistoryService();
+export default statusHistoryService;
