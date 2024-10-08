@@ -5,20 +5,13 @@ import statusHistoryService, {
   statusHistoryInitialState,
 } from '../status-history.service';
 import { Button } from '@frontend/shared/components/ui/button';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from '@frontend/shared/components/ui/select';
-import { SelectGroup } from '@radix-ui/react-select';
+import { Dropdown } from '../../../core/dropdown';
 
 export function Filter() {
   const { setState, getState } = statusHistoryService;
 
   const datePickerRef = useRef<DatePickerRef>(null);
+  const dropdownRef = useRef<{ reset: () => void }>(null);
 
   const handleDateChange = (date: { from: string; to: string }) => {
     setState('filter', {
@@ -29,7 +22,7 @@ export function Filter() {
     handleFilterChange();
   };
 
-  const handleTypeChange = (type: string) => {
+  const handleTypeChange = (type: string | null) => {
     setState('filter', {
       ...getState().filter,
       type,
@@ -37,7 +30,7 @@ export function Filter() {
     handleFilterChange();
   };
 
-  const handleStatusChange = (status: string) => {
+  const handleStatusChange = (status: string | null) => {
     setState('filter', {
       ...getState().filter,
       status,
@@ -64,34 +57,30 @@ export function Filter() {
   };
 
   return (
-    <div className="flex flex-row gap-2">
+    <div className="flex flex-row items-center gap-2">
+      <Dropdown
+        ref={dropdownRef}
+        options={[
+          { label: 'Backup', value: 'backup' },
+          { label: 'Restore', value: 'restore' },
+        ]}
+        label="Action"
+        placeholder="Choose an action"
+        onValueChange={handleTypeChange}
+      />
+
+      <Dropdown
+        ref={dropdownRef}
+        options={[
+          { label: 'Success', value: 'success' },
+          { label: 'Failed', value: 'failed' },
+        ]}
+        label={'Status'}
+        placeholder="Choose a status"
+        onValueChange={handleStatusChange}
+      />
+
       <DatePicker ref={datePickerRef} onDateChange={handleDateChange} />
-
-      <Select onValueChange={handleTypeChange}>
-        <SelectTrigger className="w-[100px]">
-          <SelectValue placeholder="Type" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel>Action</SelectLabel>
-            <SelectItem value="backup">Backup</SelectItem>
-            <SelectItem value="restore">Restore</SelectItem>
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-
-      <Select onValueChange={handleStatusChange}>
-        <SelectTrigger className="w-[100px]">
-          <SelectValue placeholder="Status" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel>Status</SelectLabel>
-            <SelectItem value="pass">Pass</SelectItem>
-            <SelectItem value="failed">Failed</SelectItem>
-          </SelectGroup>
-        </SelectContent>
-      </Select>
 
       {JSON.stringify(getState().filter) !==
         JSON.stringify(statusHistoryInitialState.filter) && (
