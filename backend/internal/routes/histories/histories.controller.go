@@ -12,4 +12,5 @@ func Register(r *gin.RouterGroup) {
 	historyService := new(HistoriesService)
 
 	route.GET("", pipes.Query[QueryHistorianDTO], historyService.getAll)
+	route.GET("/download", pipes.Query[QueryHistorianDTO], historyService.download)
 }

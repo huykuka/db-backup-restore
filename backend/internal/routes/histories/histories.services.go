@@ -23,3 +23,17 @@ func (s *HistoriesService) getAll(c *gin.Context) {
 		"total":    total,
 	})
 }
+
+func (s *HistoriesService) download(c *gin.Context) {
+	query, _ := c.MustGet("Query").(QueryHistorianDTO)
+	statuses, _, err := historiesRepository.FindMany(&query)
+	if err != nil {
+		utils.HandleHTTPError(c, err.Error(), "Can not retrieve histories", http.StatusBadRequest)
+		return
+	}
+	c.Header("Content-Type", "application/zip")
+
+	c.Set("response", gin.H{
+		"statuses": statuses,
+	})
+}

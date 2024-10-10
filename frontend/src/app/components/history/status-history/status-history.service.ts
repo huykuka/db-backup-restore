@@ -52,9 +52,9 @@ class StatusHistoryService extends GenericHTTPService {
     }
   }
 
-  public async downloadLog(id: string) {
+  public async downloadLog() {
     try {
-      const response = await apiClient.get(`/backup/download/${id}`, {
+      const response = await apiClient.get(`/histories/download/`, {
         responseType: 'blob',
       });
       const href = URL.createObjectURL(response.data);
@@ -64,7 +64,7 @@ class StatusHistoryService extends GenericHTTPService {
             .split('filename=')[1]
             .split(';')[0]
             .replace(/"/g, '')
-        : `backup_${id}.zip`;
+        : `log.csv`;
 
       // Create "a" HTML element with href to file & click
       const link = document.createElement('a');
