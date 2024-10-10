@@ -59,7 +59,7 @@ func (m *MySQL) Restore(dbSetting *settings.DBSetting, filename *string) error {
 	output := fmt.Sprintf("Execution time: %v\n\nstdout:\n%s\n\nstderr:\n%s", duration, stdoutStr, stderrStr)
 
 	if err != nil {
-		return fmt.Errorf("restore failed: %v\nError details: %s\n%s", err, output)
+		return fmt.Errorf("restore failed: %v\nError details: %s", err, stderrStr)
 	}
 
 	log.Printf("Restore completed successfully. %s", output)
