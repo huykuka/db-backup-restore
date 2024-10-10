@@ -17,10 +17,6 @@ const (
 
 type PostgreSQL struct{}
 
-func extractErrorMessage(stderr bytes.Buffer) string {
-	return stderr.String()
-}
-
 func (p *PostgreSQL) BackUp(dbSetting *settings.DBSetting) (string, error) {
 	backupFile := fmt.Sprintf("%s/%s_%s_%s.sql", dbSetting.BackUpDir, time.Now().Format("20060102150405"), dbSetting.DbName, dbName)
 	if err := os.MkdirAll(dbSetting.BackUpDir, 0755); err != nil && !os.IsExist(err) {
@@ -35,7 +31,7 @@ func (p *PostgreSQL) BackUp(dbSetting *settings.DBSetting) (string, error) {
 	cmd.Stderr = &stderr
 
 	if err := cmd.Run(); err != nil {
-		errMsg := extractErrorMessage(stderr)
+		errMsg := stderr.String()
 		return "", fmt.Errorf("backup failed: %v\nError details: %s", err, errMsg)
 	}
 
@@ -64,8 +60,7 @@ func (p *PostgreSQL) Restore(dbSetting *settings.DBSetting, filename *string) er
 	output := fmt.Sprintf("Execution time: %v\n\nstdout:\n%s\n\nstderr:\n%s", duration, stdoutStr, stderrStr)
 
 	if err != nil {
-		errMsg := extractErrorMessage(stderrBuf)
-		return fmt.Errorf("restore failed: %v\nError details: %s\n%s", err, errMsg, output)
+		return fmt.Errorf("restore failed: %v\nError details: %s\n%s", err, output)
 	}
 
 	log.Printf("Restore completed successfully. %s", output)
