@@ -25,11 +25,14 @@ type JSONAPIError struct {
 
 func JsonApiInterceptor() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if isJsonAPI, exists := c.Get("IsJsonAPI"); exists && isJsonAPI == false {
-			c.Next() // Skip middleware processing
+		c.Next()
+		isJsonAPI, exist := c.Get("IsJsonAPI")
+		if exist && !isJsonAPI.(bool) {
+			// Bypass the middleware if IsJsonAPI is false
+			c.Next()
 			return
 		}
-		c.Next()
+
 		// Initialize the JSON API response
 		jsonApiResponse := JSONAPIResponse{
 			Meta:  make(map[string]interface{}),

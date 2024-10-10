@@ -4,9 +4,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func PublicAPi() gin.HandlerFunc {
+func NoJsonAPI() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Set("IsJsonAPI",false)
+		c.Set("IsJsonAPI", false)
 		c.Next()
 	}
 }

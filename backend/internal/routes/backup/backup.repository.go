@@ -2,15 +2,17 @@ package backup
 
 import (
 	"db-tool/internal/config/db"
+	"db-tool/internal/routes/histories"
 	"db-tool/internal/routes/settings"
 	"db-tool/internal/strategies/database"
 	"db-tool/internal/utils"
 	"fmt"
+	"os"
+	"path/filepath"
+
 	"github.com/google/uuid"
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
-	"os"
-	"path/filepath"
 )
 
 type BackUpRepository struct{}
@@ -18,6 +20,7 @@ type BackUpRepository struct{}
 type BackUp db.BackUp
 
 var settingRepository = new(settings.SettingRepository)
+var historianRepository = new(histories.HistoriesRepository)
 
 func (b *BackUpRepository) Backup() (string, error) {
 	//Retrieve DB Settings
@@ -27,9 +30,22 @@ func (b *BackUpRepository) Backup() (string, error) {
 		return "", err
 	}
 	filename, err := database.SelectDB().BackUp(&dbSetting)
+
 	if err != nil {
+		historianRepository.Create(&histories.History{
+			Status: "failed",
+			Type:   "backup",
+			Detail: err.Error(),
+		})
 		return "", err
+	}else{
+		historianRepository.Create(&histories.History{
+			Status: "success",
+			Type:   "backup",
+			Detail: "Backup completed with filename: " + filename,
+		})
 	}
+
 
 	return filename, nil
 }
