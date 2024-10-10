@@ -35,6 +35,7 @@ func handleRestoreError(c *gin.Context, err error, message string) {
 	historyErr := historianRepository.Create(&histories.History{
 		Status: "failed",
 		Type:   "restore",
+		Detail: err.Error(),
 	})
 	if historyErr != nil {
 		return
