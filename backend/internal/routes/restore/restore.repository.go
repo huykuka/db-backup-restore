@@ -35,7 +35,6 @@ func (r *RestoreRepository) Restore(id string) error {
 
 	//Restore DB
 	err = database.SelectDB().Restore(&dbSetting, &backUp.Filename)
-
 	if err != nil {
 		return err
 	}

@@ -1,6 +1,5 @@
 package backup
 
-import "C"
 import (
 	"db-tool/internal/routes/histories"
 	"db-tool/internal/utils"
@@ -19,11 +18,12 @@ type BackupService struct{}
 func (b *BackupService) backup(c *gin.Context) {
 	HandleHTTPError := func(err error, message string) {
 		if err != nil {
-			err := historianRepository.Create(&histories.History{
+			err2 := historianRepository.Create(&histories.History{
 				Status: "failed",
 				Type:   "backup",
+				Detail: err.Error(),
 			})
-			if err != nil {
+			if err2 != nil {
 				return
 			}
 			utils.HandleHTTPError(c, err.Error(), message, http.StatusBadRequest)

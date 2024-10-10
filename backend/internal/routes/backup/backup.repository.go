@@ -27,7 +27,6 @@ func (b *BackUpRepository) Backup() (string, error) {
 		return "", err
 	}
 	filename, err := database.SelectDB().BackUp(&dbSetting)
-
 	if err != nil {
 		return "", err
 	}
