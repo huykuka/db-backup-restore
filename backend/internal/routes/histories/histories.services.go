@@ -1,6 +1,7 @@
 package histories
 
 import (
+	"bufio"
 	"db-tool/internal/utils"
 	"encoding/csv"
 	"fmt"
@@ -32,7 +33,7 @@ func (s *HistoriesService) getAll(c *gin.Context) {
 func (s *HistoriesService) downloadCSV(c *gin.Context) {
 	query, _ := c.MustGet("Query").(QueryHistorianDTO)
 	// Define your chunk size and total number of records per query.
-	const chunkSize = 10000
+	const chunkSize = 50000
 	var offset int
 	var hasMoreData = true
 
@@ -47,6 +48,7 @@ func (s *HistoriesService) downloadCSV(c *gin.Context) {
 
 	// Start streaming the CSV file to the client
 	c.Stream(func(w io.Writer) bool {
+		bufWriter := bufio.NewWriterSize(w, 65536) // 64KB buffer
 		csvWriter := csv.NewWriter(w)
 		if offset == 0 {
 			// Write the CSV headers first
@@ -80,20 +82,22 @@ func (s *HistoriesService) downloadCSV(c *gin.Context) {
 				return false
 			}
 
-			// Write the chunk to the CSV
+			records := make([][]string, 0, len(rows))
 			for _, row := range rows {
-				csvWriter.Write([]string{
-					row.CreatedAt.String(),
-					row.Type,
-					row.Status,
-					row.Detail,
-				})
+				createdAt := row.CreatedAt.String()
+				records = append(records, []string{createdAt, row.Type, row.Status, row.Detail})
 			}
 
-			csvWriter.Flush()
+			csvWriter.WriteAll(records)
+			if err := csvWriter.Error(); err != nil {
+				c.Status(http.StatusInternalServerError)
+				return false
+			}
 
-			offset = offset + 1
+			offset++
 		}
+		csvWriter.Flush()
+		bufWriter.Flush()
 		return false // Stops the stream
 	})
 }
