@@ -1,31 +1,22 @@
 package backup
 
 import (
-	"db-tool/internal/routes/histories"
 	"db-tool/internal/utils"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
 	"path/filepath"
+
+	"github.com/gin-gonic/gin"
 )
 
 var backupRepository = new(BackUpRepository)
-var historianRepository = new(histories.HistoriesRepository)
 
 type BackupService struct{}
 
 func (b *BackupService) backup(c *gin.Context) {
 	HandleHTTPError := func(err error, message string) {
 		if err != nil {
-			err2 := historianRepository.Create(&histories.History{
-				Status: "failed",
-				Type:   "backup",
-				Detail: err.Error(),
-			})
-			if err2 != nil {
-				return
-			}
 			utils.HandleHTTPError(c, err.Error(), message, http.StatusBadRequest)
 		}
 	}
@@ -44,10 +35,6 @@ func (b *BackupService) backup(c *gin.Context) {
 		return
 	}
 
-	err = historianRepository.Create(&histories.History{
-		Status: "success",
-		Type:   "backup",
-	})
 	if err != nil {
 		return
 	}
@@ -88,7 +75,7 @@ func (b *BackupService) downloadBackUpFile(c *gin.Context) {
 	c.Header("Content-Disposition", fmt.Sprintf("attachment; filename=%s", filename))
 	c.Header("Content-Type", "application/octet-stream")
 	c.Header("Content-Transfer-Encoding", "binary")
-	c.Header("Content-Length", fmt.Sprintf("%d", fileInfo.Size()))
+	c.Header("Content-Length", fmt.Sprintf("%d", fileInfo.Size()+1))
 
 	// Send the file
 	c.File(path)

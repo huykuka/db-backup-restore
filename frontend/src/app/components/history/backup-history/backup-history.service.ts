@@ -72,6 +72,7 @@ class BackupHistoryService extends GenericHTTPService {
 
   public async downloadBackup(id: string) {
     try {
+      toast.loading('Downloading backup file...');
       const response = await apiClient.get(`/backup/download/${id}`, {
         responseType: 'blob',
       });
@@ -79,9 +80,9 @@ class BackupHistoryService extends GenericHTTPService {
       const contentDisposition = response.headers['content-disposition'];
       const filename = contentDisposition
         ? contentDisposition
-            .split('filename=')[1]
-            .split(';')[0]
-            .replace(/"/g, '')
+          .split('filename=')[1]
+          .split(';')[0]
+          .replace(/"/g, '')
         : `backup_${id}.zip`;
 
       // Create "a" HTML element with href to file & click
@@ -96,6 +97,9 @@ class BackupHistoryService extends GenericHTTPService {
       URL.revokeObjectURL(href);
     } catch (error) {
       toast.error('Cannot download backup file');
+    }
+    finally {
+      toast.dismiss();
     }
   }
 

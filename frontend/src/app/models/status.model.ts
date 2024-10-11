@@ -3,4 +3,5 @@ export interface Status {
   createdAt: string;
   type: string;
   status: string;
+  detail?: string;
 }

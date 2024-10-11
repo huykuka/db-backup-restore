@@ -1,9 +1,10 @@
 package interceptors
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 type JSONAPIResponse struct {
@@ -25,6 +26,14 @@ type JSONAPIError struct {
 func JsonApiInterceptor() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Next()
+		
+		isJsonAPI, exist := c.Get("IsJsonAPI")
+		if exist && !isJsonAPI.(bool) {
+			// Bypass the middleware if IsJsonAPI is false
+			c.Next()
+			return
+		}
+
 		// Initialize the JSON API response
 		jsonApiResponse := JSONAPIResponse{
 			Meta:  make(map[string]interface{}),

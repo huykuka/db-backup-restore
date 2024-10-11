@@ -1,3 +1,4 @@
 .idea
 backend/cmd/db-tool/gin.log
 backend/cmd/db-tool/myapp
+index.js

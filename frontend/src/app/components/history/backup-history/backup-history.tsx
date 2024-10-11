@@ -58,12 +58,7 @@ export function BackupHistory() {
   };
 
   const handleRestoreBackup = async (id: string) => {
-    try {
-      await backupHistoryService.restoreBackup(id);
-      toast.success('Backup Restored');
-    } catch (error) {
-      toast.error('Failed to restore backup');
-    }
+      await backupHistoryService.restoreBackup(id).then(() => toast.success('Backup Restored'));
   };
 
   const handleDownloadBackup = async (id: string) => {
