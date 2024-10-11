@@ -26,6 +26,7 @@ type JSONAPIError struct {
 func JsonApiInterceptor() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Next()
+		
 		isJsonAPI, exist := c.Get("IsJsonAPI")
 		if exist && !isJsonAPI.(bool) {
 			// Bypass the middleware if IsJsonAPI is false

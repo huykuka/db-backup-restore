@@ -3,6 +3,7 @@ package backup
 import (
 	"db-tool/internal/routes/backup"
 	"db-tool/internal/routes/histories"
+
 	log "github.com/sirupsen/logrus"
 )
 
@@ -32,11 +33,7 @@ func (*BackUpTask) Run() {
 		handleBackupError(err)
 		return
 	}
-
-	err = historianRepository.Create(&histories.History{
-		Status: "success",
-		Type:   "backup",
-	})
+	
 	if err != nil {
 		return
 	}

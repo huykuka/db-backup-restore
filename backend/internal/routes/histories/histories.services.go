@@ -3,10 +3,11 @@ package histories
 import (
 	"db-tool/internal/utils"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
 	"os"
+
+	"github.com/gin-gonic/gin"
 )
 
 type HistoriesService struct {

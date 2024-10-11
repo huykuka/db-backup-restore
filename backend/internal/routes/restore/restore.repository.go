@@ -44,6 +44,7 @@ func (r *RestoreRepository) Restore(id string) error {
 			Type:   "restore",
 			Detail: err.Error(),
 		})
+		return err
 	} else {
 		historianRepository.Create(&histories.History{
 			Status: "success",
