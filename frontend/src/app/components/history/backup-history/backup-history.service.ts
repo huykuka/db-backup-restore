@@ -52,6 +52,7 @@ class BackupHistoryService extends GenericHTTPService {
     try {
       await this.post('/backup');
       this.resetPaging();
+      toast.success('Backup created successfully');
       await this.getBackup();
     } catch (error) {
       throw error;
