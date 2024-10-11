@@ -12,7 +12,6 @@ import (
 
 var backupRepository = new(BackUpRepository)
 
-
 type BackupService struct{}
 
 func (b *BackupService) backup(c *gin.Context) {
@@ -35,7 +34,6 @@ func (b *BackupService) backup(c *gin.Context) {
 		HandleHTTPError(err, "Backup failed!")
 		return
 	}
-
 
 	if err != nil {
 		return
@@ -77,7 +75,7 @@ func (b *BackupService) downloadBackUpFile(c *gin.Context) {
 	c.Header("Content-Disposition", fmt.Sprintf("attachment; filename=%s", filename))
 	c.Header("Content-Type", "application/octet-stream")
 	c.Header("Content-Transfer-Encoding", "binary")
-	c.Header("Content-Length", fmt.Sprintf("%d", fileInfo.Size()))
+	c.Header("Content-Length", fmt.Sprintf("%d", fileInfo.Size()+1))
 
 	// Send the file
 	c.File(path)

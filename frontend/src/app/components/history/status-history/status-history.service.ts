@@ -1,9 +1,7 @@
 import { GenericHTTPService } from '../../../core/services/http-client.services';
-
 import { useZuStandStore } from '../../../core/hooks/useZustandStore';
-import { toast } from 'sonner';
-import apiClient from '../../../core/services/api-client.services';
 import { StatusHistoryState } from './status-history';
+import apiClient from '../../../core/services/api-client.services';
 
 export const statusHistoryInitialState: StatusHistoryState = {
   statuses: [],
@@ -26,17 +24,7 @@ export const useStatusHistory = useZuStandStore(statusHistoryInitialState);
 
 class StatusHistoryService extends GenericHTTPService {
   public async getStatusHistories() {
-    const state = this.getState();
-    const params = {
-      'page[size]': state?.size,
-      'page[number]': state?.page,
-      'filter[fromDate]': state?.filter.fromDate,
-      'filter[toDate]': state?.filter.toDate,
-      'filter[type]': state?.filter.type,
-      'filter[status]': state?.filter.status,
-      'sort[key]': state?.sort.key,
-      'sort[order]': state?.sort.order,
-    };
+    const params = { ...this.getParams() };
     try {
       this.setState('loading', true);
       const response = await super.get('/histories', {
@@ -54,30 +42,36 @@ class StatusHistoryService extends GenericHTTPService {
 
   public async downloadLog() {
     try {
-      const response = await apiClient.get(`/histories/download/`, {
+      const startTime = new Date().getTime();
+      const params = { ...this.getParams() };
+      const response: any = await apiClient.get('histories/download', {
+        params,
         responseType: 'blob',
       });
-      const href = URL.createObjectURL(response.data);
+
+      // Create a Blob from the response data
+      const blob = new Blob([response.data]);
       const contentDisposition = response.headers['content-disposition'];
       const filename = contentDisposition
-        ? contentDisposition
-            .split('filename=')[1]
-            .split(';')[0]
-            .replace(/"/g, '')
-        : `log.csv`;
+        .split('filename=')[1]
+        .split(';')[0]
+        .replace(/"/g, '');
 
-      // Create "a" HTML element with href to file & click
+      const downloadUrl = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
-      link.href = href;
-      link.setAttribute('download', filename); // or any other extension
+      link.href = downloadUrl;
+      link.download = filename;
+
+      // Trigger the download
       document.body.appendChild(link);
       link.click();
-
-      // Clean up "a" element & remove ObjectURL
-      document.body.removeChild(link);
-      URL.revokeObjectURL(href);
+      link.remove();
+      const endTime = new Date().getTime();
+      console.log('Download time:', endTime - startTime)
+      // Clean up
+      window.URL.revokeObjectURL(downloadUrl);
     } catch (error) {
-      toast.error('Cannot download backup file');
+      console.error('Download failed:', error);
     }
   }
 
@@ -99,6 +93,20 @@ class StatusHistoryService extends GenericHTTPService {
     } catch (error) {
       throw error;
     }
+  }
+
+  private getParams() {
+    const state = this.getState();
+    return {
+      'page[size]': state?.size,
+      'page[number]': state?.page,
+      'filter[fromDate]': state?.filter.fromDate,
+      'filter[toDate]': state?.filter.toDate,
+      'filter[type]': state?.filter.type,
+      'filter[status]': state?.filter.status,
+      'sort[key]': state?.sort.key,
+      'sort[order]': state?.sort.order,
+    };
   }
 }
 
