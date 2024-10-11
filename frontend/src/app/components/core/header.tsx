@@ -4,6 +4,7 @@ import { ModeToggle } from './mode-toggle';
 import { NavLink } from 'react-router-dom';
 import { Separator } from '@frontend/shared/components/ui/separator';
 import { NavigationBar } from './navigation-bar';
+import LeadingBar from './leading-bar';
 
 export interface NavBarItem {
   to: string;
@@ -18,35 +19,38 @@ const links: NavBarItem[] = [
 
 const Header: React.FC = () => {
   return (
-    <header
-      className="fixed top-0 left-0 right-0 z-50 flex  items-center p-2 px-6 mb-2 justify-between"
-      style={{ backgroundColor: '#033681' }}
-    >
-      <div className="flex flex-row items-center gap-5">
-        <div className="flex items-center gap-4 md:hidden">
-          <BurgerMenu links={links} />
+    <>
+      <header
+        className="fixed top-0 left-0 right-0 z-50 flex  items-center p-2 px-6 mb-2 justify-between"
+        style={{ backgroundColor: '#033681' }}
+      >
+        <div className="flex flex-row items-center gap-5">
+          <div className="flex items-center gap-4 md:hidden">
+            <BurgerMenu links={links} />
+          </div>
+
+          <NavLink to="/" className="flex items-center gap-2">
+            <span className="text-white text-xl font-semibold text-center flex items-center">
+              Database Management
+            </span>
+          </NavLink>
+
+          <Separator
+            className="hidden md:block h-[17px] bg-white"
+            orientation="vertical"
+          ></Separator>
+
+          <div className="hidden md:block">
+            <NavigationBar links={links} />
+          </div>
         </div>
 
-        <NavLink to="/" className="flex items-center gap-2">
-          <span className="text-white text-xl font-semibold text-center flex items-center">
-            Database Management
-          </span>
-        </NavLink>
-
-        <Separator
-          className="hidden md:block h-[17px] bg-white"
-          orientation="vertical"
-        ></Separator>
-
-        <div className="hidden md:block">
-          <NavigationBar links={links} />
+        <div className="flex flex-row items-center justify-start">
+          <ModeToggle />
         </div>
-      </div>
-
-      <div className="flex flex-row items-center justify-start">
-        <ModeToggle />
-      </div>
-    </header>
+      </header>
+      <LeadingBar />
+    </>
   );
 };
 
