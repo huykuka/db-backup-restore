@@ -13,8 +13,7 @@ import LoadingOverlay from '../../core/loader';
 export function StatusDataTable() {
   const { getState } = statusHistoryService;
   return (
-    <div className="relative bg-gree">
-      {getState().loading && <LoadingOverlay />}
+    <div>
       <Table>
         <TableHeader>
           <TableRow>
@@ -24,9 +23,10 @@ export function StatusDataTable() {
             <TableHead>Details</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
+        <TableBody className="relative">
+          {getState().loading && <LoadingOverlay />}
           {getState().statuses.map((status, index) => (
-            <TableRow key={status.id}>
+            <TableRow key={status.id} className="h-12">
               <TableCell>
                 <Badge
                   variant={status.type === 'backup' ? 'default' : 'secondary'}
@@ -40,15 +40,13 @@ export function StatusDataTable() {
                     status.status === 'failed' ? 'destructive' : 'success'
                   }
                 >
-                  {status.status}
+                  {status?.status}
                 </Badge>
               </TableCell>
               <TableCell>
                 {new Date(status.createdAt).toLocaleString()}
               </TableCell>
-              <TableCell>
-                Nothing....................................................
-              </TableCell>
+              <TableCell>{status?.detail}</TableCell>
             </TableRow>
           ))}
         </TableBody>

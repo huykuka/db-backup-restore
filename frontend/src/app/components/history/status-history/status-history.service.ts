@@ -2,6 +2,8 @@ import { GenericHTTPService } from '../../../core/services/http-client.services'
 import { useZuStandStore } from '../../../core/hooks/useZustandStore';
 import { StatusHistoryState } from './status-history';
 import apiClient from '../../../core/services/api-client.services';
+import { toast } from 'sonner';
+import { set } from 'date-fns';
 
 export const statusHistoryInitialState: StatusHistoryState = {
   statuses: [],
@@ -41,8 +43,8 @@ class StatusHistoryService extends GenericHTTPService {
   }
 
   public async downloadLog() {
+    toast.loading('Downloading log file...');
     try {
-      const startTime = new Date().getTime();
       const params = { ...this.getParams() };
       const response: any = await apiClient.get('histories/download', {
         params,
@@ -66,12 +68,12 @@ class StatusHistoryService extends GenericHTTPService {
       document.body.appendChild(link);
       link.click();
       link.remove();
-      const endTime = new Date().getTime();
-      console.log('Download time:', endTime - startTime)
       // Clean up
       window.URL.revokeObjectURL(downloadUrl);
     } catch (error) {
       console.error('Download failed:', error);
+    } finally {
+      toast.dismiss();
     }
   }
 
