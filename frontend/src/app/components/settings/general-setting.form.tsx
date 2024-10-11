@@ -15,13 +15,23 @@ import {Button} from "@frontend/shared/components/ui/button";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@frontend/shared/components/ui/card";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@frontend/shared/components/ui/select";
 import {Save} from "lucide-react";
+import {Setting} from "src/app/models/settings.model";
+import {useEffect} from "react";
+
+const dbTypes = ["postgresql", "mysql"] as const;
+const backupIntervals = ["midnight", "daily", "weekly", "hourly", "monthly"] as const;
 
 const formSchema = z.object({
-    dbType: z.enum(["postgresql", "mysql"], {message: "Database type is required."}),
-    backupInterval: z.enum(["midnight", "daily", "weekly", "hourly", "monthly"], {message: "Invalid backup interval."}),
+    dbType: z.enum(dbTypes, {message: "Database type is required."}),
+    backupInterval: z.enum(backupIntervals, {message: "Invalid backup interval."}),
 })
 
-export function GeneralSettingForm() {
+interface GeneralSettingFormProps {
+    settings: Setting[] | undefined;
+}
+
+export const GeneralSettingForm= ({ settings }: GeneralSettingFormProps) => {
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -29,6 +39,29 @@ export function GeneralSettingForm() {
             backupInterval: "midnight",
         },
     })
+
+    useEffect(() => {
+        if (settings) {
+            const generalSettings = settings.reduce((acc, setting) => {
+                switch (setting.key) {
+                    case 'GENERAL_DB_TYPE':
+                        acc.dbType = setting.value as (typeof dbTypes)[number];
+                        break;
+                    case 'GENERAL_BACKUP_INTERVAL':
+                        acc.backupInterval = setting.value as (typeof backupIntervals)[number];
+                        break;
+                    default:
+                        break;
+                }
+                return acc;
+            }, {
+                dbType: "postgresql" as (typeof dbTypes)[number],
+                backupInterval: "midnight" as (typeof backupIntervals)[number],
+            });
+
+            form.reset(generalSettings);
+        }
+    }, [settings, form]);
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values)

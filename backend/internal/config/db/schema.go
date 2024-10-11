@@ -1,29 +1,40 @@
 package db
 
 import (
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 	"time"
 )
 
+// Base contains common columns for all tables.
+type Base struct {
+	ID        string     `json:"id";gorm:"type:uuid;primary_key;"`
+	CreatedAt time.Time  `json:"createdAt"`
+	UpdatedAt time.Time  `json:"updatedAt"`
+	DeletedAt *time.Time `sql:"index" json:"deletedAt"`
+}
+
+// BeforeCreate will set a UUID rather than numeric ID.
+func (b *Base) BeforeCreate(tx *gorm.DB) (err error) {
+	b.ID = uuid.New().String()
+	return
+}
+
 type Setting struct {
-	ID        uint           `json:"id" gorm:"primaryKey"`
-	CreatedAt time.Time      `json:"createdAt"`
-	UpdatedAt time.Time      `json:"updatedAt"`
-	DeletedAt gorm.DeletedAt `json:"deletedAt,omitempty" gorm:"index"`
-	Key       string         `json:"key" gorm:"unique"`
-	Value     string         `json:"value"`
+	Base
+	Key   string `json:"key" gorm:"unique"`
+	Value string `json:"value"`
 }
 
 type BackUp struct {
-	ID        uint           `json:"id" gorm:"primaryKey"`
-	CreatedAt time.Time      `json:"createdAt"`
-	DeletedAt gorm.DeletedAt `json:"deletedAt,omitempty" gorm:"index"`
-	Filename  string         `json:"filename" gorm:"unique"`
-	POC       string         `json:"poc"`
+	Base
+	Filename string `json:"filename" gorm:"unique"`
+	POC      string `json:"poc"`
 }
 
 type History struct {
-	ID        uint      `json:"id" gorm:"primaryKey"`
-	CreatedAt time.Time `json:"createdAt"`
-	Status    string    `json:"status" gorm:"index"`
+	Base
+	Type   string `json:"type"`
+	Status string `json:"status" gorm:"index"`
+	Detail string `json:"detail"`
 }

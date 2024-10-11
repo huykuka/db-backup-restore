@@ -56,7 +56,7 @@ services:
     networks:
       - app_network
   postgres:
-    image: bitnami/postgresql:latest
+    image: bitnami/postgresql:16
     container_name: postgres
     networks:
       - app_network

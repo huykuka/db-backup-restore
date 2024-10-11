@@ -2,6 +2,7 @@ package restore
 
 import (
 	"db-tool/internal/utils"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,12 +14,17 @@ func (r *RestoreService) restore(c *gin.Context) {
 	id := c.Param("id")
 	err := restoreRepository.Restore(id)
 	if err != nil {
-		utils.HandleHTTPError(c, err.Error(), "Restore failed!")
+		handleRestoreError(c, err, "Restore failed!")
 		return
 	}
-
+	if err != nil {
+		return
+	}
 	c.Set("response", gin.H{
 		"message": "Restore completed",
 	})
+}
 
+func handleRestoreError(c *gin.Context, err error, message string) {
+	utils.HandleHTTPError(c, err.Error(), message)
 }

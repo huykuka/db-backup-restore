@@ -1,23 +1,22 @@
 package backup
 
-import "C"
 import (
-	"db-tool/internal/routes/histories"
 	"db-tool/internal/utils"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"net/http"
+	"os"
+	"path/filepath"
+
+	"github.com/gin-gonic/gin"
 )
 
 var backupRepository = new(BackUpRepository)
-var historianRepository = new(histories.HistoriesRepository)
 
 type BackupService struct{}
 
 func (b *BackupService) backup(c *gin.Context) {
 	HandleHTTPError := func(err error, message string) {
 		if err != nil {
-			historianRepository.Create("failed")
 			utils.HandleHTTPError(c, err.Error(), message, http.StatusBadRequest)
 		}
 	}
@@ -36,7 +35,6 @@ func (b *BackupService) backup(c *gin.Context) {
 		return
 	}
 
-	err = historianRepository.Create("success")
 	if err != nil {
 		return
 	}
@@ -66,15 +64,30 @@ func (b *BackupService) downloadBackUpFile(c *gin.Context) {
 		utils.HandleHTTPError(c, err.Error(), "Can not retrieve backup", http.StatusBadRequest)
 		return
 	}
-	// Format CreatedAt timestamp as part of the filename
-	formattedDate := backup.CreatedAt.Format("20060102") // YYYYMMDD format
-	filename := fmt.Sprintf("backup_%s.sql", formattedDate)
 
-	c.FileAttachment(backup.Filename, filename)
+	// Format CreatedAt timestamp as part of the filename
+	path := backup.Filename
+	filename := filepath.Base(path)
+	fileInfo, _ := os.Stat(path)
+	// Set the appropriate headers
+	c.Header("Access-Control-Expose-Headers", "Content-Disposition")
+	c.Header("Content-Description", "File Transfer")
+	c.Header("Content-Disposition", fmt.Sprintf("attachment; filename=%s", filename))
+	c.Header("Content-Type", "application/octet-stream")
+	c.Header("Content-Transfer-Encoding", "binary")
+	c.Header("Content-Length", fmt.Sprintf("%d", fileInfo.Size()+1))
+
+	// Send the file
+	c.File(path)
 }
 
 func (b *BackupService) deleteBackUp(c *gin.Context) {
 	id := c.Param("id")
+	if id == "" {
+		utils.HandleHTTPError(c, "ID is required", "Can not delete backup", http.StatusBadRequest)
+		return
+	}
+
 	//Delete the backup record from database
 	filename, err := backupRepository.Delete(id)
 	if err != nil {

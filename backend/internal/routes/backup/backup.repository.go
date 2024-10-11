@@ -2,14 +2,17 @@ package backup
 
 import (
 	"db-tool/internal/config/db"
+	"db-tool/internal/routes/histories"
 	"db-tool/internal/routes/settings"
 	"db-tool/internal/strategies/database"
 	"db-tool/internal/utils"
 	"fmt"
-	log "github.com/sirupsen/logrus"
-	"gorm.io/gorm"
 	"os"
 	"path/filepath"
+
+	"github.com/google/uuid"
+	log "github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 )
 
 type BackUpRepository struct{}
@@ -17,6 +20,7 @@ type BackUpRepository struct{}
 type BackUp db.BackUp
 
 var settingRepository = new(settings.SettingRepository)
+var historianRepository = new(histories.HistoriesRepository)
 
 func (b *BackUpRepository) Backup() (string, error) {
 	//Retrieve DB Settings
@@ -28,8 +32,20 @@ func (b *BackUpRepository) Backup() (string, error) {
 	filename, err := database.SelectDB().BackUp(&dbSetting)
 
 	if err != nil {
+		historianRepository.Create(&histories.History{
+			Status: "failed",
+			Type:   "backup",
+			Detail: err.Error(),
+		})
 		return "", err
+	}else{
+		historianRepository.Create(&histories.History{
+			Status: "success",
+			Type:   "backup",
+			Detail: "Backup completed with filename: " + filename,
+		})
 	}
+
 
 	return filename, nil
 }
@@ -47,8 +63,14 @@ func (b *BackUpRepository) CreateBackUp(filename *string) error {
 }
 
 func (b *BackUpRepository) Delete(id string) (string, error) {
+	// Validate the UUID
+	if _, err := uuid.Parse(id); err != nil {
+		log.Error("Invalid UUID format")
+		return "", err
+	}
+
 	var backup BackUp
-	if err := db.GetDB().First(&backup, id).Error; err != nil {
+	if err := db.GetDB().Where("id = ?", id).First(&backup).Error; err != nil {
 		log.Error(err.Error())
 		return "", err
 	}
@@ -61,18 +83,19 @@ func (b *BackUpRepository) Delete(id string) (string, error) {
 	return backup.Filename, nil
 }
 
-func (b *BackUpRepository) FindMany(filters *QueryBackupDTO) ([]BackUp, int64, error) {
+func (b *BackUpRepository) FindMany(query *QueryBackupDTO) ([]BackUp, int64, error) {
 	var backups []BackUp
 	var count int64
 
 	qr := db.GetDB().Model(&db.BackUp{})
-	createFilter(qr, filters)
+	createFilter(qr, query)
+	createSort(qr, query)
 
 	// Get the total count of records that match the filters
 	qr.Count(&count)
 
 	// Apply filter and get the records
-	utils.CreatePaging[QueryBackupDTO](qr, *filters)
+	utils.CreatePaging[QueryBackupDTO](qr, *query)
 	result := qr.Find(&backups)
 	if result.Error != nil {
 		log.Error(result.Error)
@@ -116,7 +139,7 @@ func (b *BackUpRepository) MoveBackUpFileToArchive(filename *string) {
 	if _, err := os.Stat(archiveDir); os.IsNotExist(err) {
 		err := os.MkdirAll(archiveDir, 0755)
 		if err != nil {
-			log.Error("Failed to create archive directory: %v\n", err)
+			log.Errorf("Failed to create archive directory: %v\n", err)
 			return
 		}
 	}
@@ -125,7 +148,7 @@ func (b *BackUpRepository) MoveBackUpFileToArchive(filename *string) {
 	// Move the backup file to the archive directory
 	err := os.Rename(*filename, fmt.Sprintf("%s/%s", archiveDir, baseFilename))
 	if err != nil {
-		log.Error("Failed to move backup file to archive: %v\n", err)
+		log.Errorf("Failed to move backup file to archive: %v\n", err)
 		return
 	}
 }
@@ -134,10 +157,18 @@ func createFilter(qr *gorm.DB, query *QueryBackupDTO) {
 	filter := query.Filter
 	// Apply date filter (fromDate)
 	if filter.FromDate != "" {
-		qr = qr.Where("createdAt >= ?", filter.FromDate)
+		qr = qr.Where("created_at >= ?", filter.FromDate)
 	}
 
 	if filter.ToDate != "" {
-		qr = qr.Where("createdAt >= ?", filter.FromDate)
+		qr = qr.Where("created_at <= ?", filter.ToDate)
+	}
+}
+
+func createSort(qr *gorm.DB, query *QueryBackupDTO) {
+	sort := query.Sort
+	// Apply sorting if key is provided
+	if sort.Key != "" {
+		qr = qr.Order(fmt.Sprintf("%s %s", sort.Key, sort.Order))
 	}
 }

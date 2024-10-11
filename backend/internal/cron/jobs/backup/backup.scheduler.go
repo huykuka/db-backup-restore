@@ -28,7 +28,6 @@ func Init() {
 			},
 		),
 	)
-
 	// start the scheduler
 	log.Printf("Backup job with ID %d has been started...", j.ID())
 	s.Start()
