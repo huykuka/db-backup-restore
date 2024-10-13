@@ -1,20 +1,39 @@
 import { Button } from '@frontend/shared/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@frontend/shared/components/ui/card';
 import { Input } from '@frontend/shared/components/ui/input';
-import { Label } from '@frontend/shared/components/ui/label';
 import { Progress } from '@frontend/shared/components/ui/progress';
 import { Upload } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import manualUploadService from './manual-upload.service';
 
 export default function FileUpload() {
+  const acceptedType = ['.psql'];
   const [fileName, setFileName] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null); // Store the selected file
 
-  const handleFile = useCallback((file: File) => {
+  const handleFile = useCallback(async (file: File) => {
+    const fileExtension = file.name.split('.').pop()?.toLowerCase(); // Extract the file extension
+
+    // Check if the file extension matches the accepted types
+    if (
+      !acceptedType.some(
+        (type) => fileExtension === type.replace('.', '').toLowerCase()
+      )
+    ) {
+      console.error('Invalid file type. Only .psql files are accepted.');
+      return;
+    }
+
     setFileName(file.name);
-    setSelectedFile(file); // Store the file to upload later
+    await manualUploadService.upload(file, setUploadProgress);
   }, []);
 
   const handleDragEnter = useCallback((e: React.DragEvent<HTMLDivElement>) => {
@@ -52,62 +71,69 @@ export default function FileUpload() {
     }
   };
 
-  const handleUpload = async () => {
-    if (selectedFile) {
-      await manualUploadService.upload(selectedFile, setUploadProgress);
-      setFileName(null); // Clear the filename after upload
-      setSelectedFile(null); // Clear the selected file
-    }
-  };
-
   return (
-    <div className="w-full space-y-4">
-      <Label htmlFor="file-upload" className="block text-sm font-medium">
-        This section allows you to upload the backup file manually to perform
-        restore action.
-      </Label>
-      <div
-        className={`border-2 border-dashed rounded-lg p-6 transition-colors ${
-          isDragging
-            ? 'border-primary bg-primary/10'
-            : 'border-muted-foreground/25'
-        }`}
-        onDragEnter={handleDragEnter}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-      >
-        <Input
-          id="file-upload"
-          type="file"
-          className="hidden"
-          onChange={handleFileChange}
-        />
-        <div className="text-center">
-          <Upload className="mx-auto h-12 w-12 text-muted-foreground" />
-          <p className="mt-2 text-sm text-muted-foreground">
-            <Button
-              onClick={() => document.getElementById('file-upload')?.click()}
-              variant="link"
-              className="text-primary"
-            >
-              Click to upload
-            </Button>{' '}
-            or drag and drop
-          </p>
-          <p className="mt-1 text-xs text-muted-foreground">.PSQL file</p>
+    <Card>
+      <CardHeader>
+        <CardTitle>Manual Backup Upload</CardTitle>
+        <CardDescription>
+          This section allows you to upload the backup file manually to perform
+          restore action.
+        </CardDescription>
+      </CardHeader>
+
+      <CardContent>
+        <div
+          className={`border-2 border-dashed rounded-lg p-6 transition-colors ${
+            isDragging
+              ? 'border-primary bg-primary/10'
+              : 'border-muted-foreground/25'
+          }`}
+          onDragEnter={handleDragEnter}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+        >
+          <Input
+            id="file-upload"
+            type="file"
+            className="hidden"
+            accept=".psql"
+            onChange={(e) => {
+              handleFileChange(e);
+              e.target.value = '';
+            }}
+          />
+          <div className="text-center">
+            <Upload
+              className={`mx-auto h-12 w-12 transition-colors duration-300 ease-in-out ${
+                isDragging
+                  ? 'text-primary animate-bounce'
+                  : 'text-muted-foreground'
+              }`}
+            />
+            <p className="mt-2 text-sm text-muted-foreground">
+              <Button
+                onClick={() => document.getElementById('file-upload')?.click()}
+                variant="link"
+                className="text-primary"
+              >
+                Click to upload
+              </Button>{' '}
+              or drag and drop
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">.PSQL file</p>
+          </div>
         </div>
-      </div>
-      {fileName && (
-        <>
-          <Progress value={uploadProgress} />
+      </CardContent>
+
+      <CardFooter className="flex flex-col items-start gap-4">
+        <Progress value={uploadProgress} />
+        {fileName && (
           <p className="text-sm text-muted-foreground">
             Selected file: {fileName}
           </p>
-          <Button onClick={handleUpload}>Submit</Button>{' '}
-          {/* Add a submit button */}
-        </>
-      )}
-    </div>
+        )}
+      </CardFooter>
+    </Card>
   );
 }
