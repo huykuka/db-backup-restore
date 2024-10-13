@@ -16,7 +16,7 @@ const App = () => {
           </Routes>
         </Layout>
       </Router>
-      <Toaster position={'top-right'} visibleToasts={10} duration={10000} />
+      <Toaster position={'top-right'} visibleToasts={10} duration={3000} />
     </ThemeProvider>
   );
 };
