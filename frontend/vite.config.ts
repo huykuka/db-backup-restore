@@ -1,7 +1,7 @@
+import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 /// <reference types='vitest' />
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
-import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
   root: __dirname,
@@ -17,7 +17,7 @@ export default defineConfig({
     host: 'localhost',
   },
 
-  plugins: [react(), tsconfigPaths()],
+  plugins: [react(), nxViteTsPaths()],
 
   // Uncomment this if you are using workers.
   // worker: {

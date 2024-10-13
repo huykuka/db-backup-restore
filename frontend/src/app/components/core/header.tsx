@@ -1,20 +1,35 @@
-import React from 'react';
-import BurgerMenu from './burger-menu';
-import { ModeToggle } from './mode-toggle';
-import { NavLink } from 'react-router-dom';
 import { Separator } from '@frontend/shared/components/ui/separator';
-import { NavigationBar } from './navigation-bar';
+import {
+  Database,
+  HardDriveUploadIcon,
+  LayoutDashboardIcon,
+  ScrollTextIcon,
+} from 'lucide-react';
+import React, { ReactNode } from 'react';
+import { NavLink } from 'react-router-dom';
+import BurgerMenu from './burger-menu';
 import LeadingBar from './leading-bar';
+import { ModeToggle } from './mode-toggle';
+import { NavigationBar } from './navigation-bar';
 
 export interface NavBarItem {
   to: string;
   label: string;
+  icon?: ReactNode; // optional property for icons
 }
 
 const links: NavBarItem[] = [
-  { to: '/', label: 'Dashboard' },
-  { to: '/manual', label: 'Manual' },
-  { to: '/log', label: 'Logs' },
+  {
+    to: '/',
+    label: 'Dashboard',
+    icon: <LayoutDashboardIcon className="w-4 h-4" />,
+  },
+  {
+    to: '/manual',
+    label: 'Manual',
+    icon: <HardDriveUploadIcon className="w-4 h-4" />,
+  },
+  { to: '/log', label: 'Logs', icon: <ScrollTextIcon className="w-4 h-4" /> },
 ];
 
 const Header: React.FC = () => {
@@ -30,6 +45,7 @@ const Header: React.FC = () => {
           </div>
 
           <NavLink to="/" className="flex items-center gap-2">
+            <Database className="mr-2 text-white" />
             <span className="text-white text-xl font-semibold text-center flex items-center">
               Database Management
             </span>
