@@ -46,9 +46,6 @@ class StatusHistoryService extends GenericHTTPService {
     toast.loading('Downloading log file...', {
       action: {
         label: 'Cancel',
-        actionButtonStyle: {
-          background: 'red',
-        },
         onClick: () => {
           controller.abort(); // Abort the download when the button is clicked
           toast.info('Download cancelled', { duration: 1000 }); // Show a cancellation message
