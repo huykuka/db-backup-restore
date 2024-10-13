@@ -6,5 +6,4 @@ const apiClient = axios.create({
   baseURL: BASE_URL,
 });
 
-export default apiClient;
-export { CanceledError, BASE_URL, apiClient };
+export { apiClient, BASE_URL, CanceledError };

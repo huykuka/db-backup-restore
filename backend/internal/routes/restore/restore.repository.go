@@ -6,7 +6,11 @@ import (
 	"db-tool/internal/routes/histories"
 	"db-tool/internal/routes/settings"
 	"db-tool/internal/strategies/database"
+	"fmt"
+	"path/filepath"
+	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	log "github.com/sirupsen/logrus"
 )
@@ -53,4 +57,25 @@ func (r *RestoreRepository) Restore(id string) error {
 		})
 	}
 	return nil
+}
+
+func (r *RestoreRepository) SaveFile(c *gin.Context) (filename string, err error) {
+	// Get the uploaded file
+	file, err := c.FormFile("file")
+	if err != nil {
+		return "", nil
+	}
+
+	// Create a unique filename by appending a timestamp
+	uniqueFilename := fmt.Sprintf("%s_%s", time.Now().Format("20060102150405"), file.Filename)
+	filePath := filepath.Join(UploadDir, uniqueFilename)
+
+	// Save the uploaded file to the specified path
+	if err := c.SaveUploadedFile(file, filePath); err != nil {
+		return "", nil
+	}
+
+	log.Println(uniqueFilename + " has been uploaded!")
+
+	return filePath, nil
 }

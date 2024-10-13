@@ -3,6 +3,7 @@ package histories
 import (
 	"db-tool/internal/core/middlewares"
 	"db-tool/internal/core/pipes"
+
 	"github.com/gin-gonic/gin"
 )
 

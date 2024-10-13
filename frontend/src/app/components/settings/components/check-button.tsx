@@ -1,8 +1,8 @@
+import { healthService } from '@core/services';
 import { Button } from '@frontend/shared/components/ui/button';
 import { Check, Loader } from 'lucide-react';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import HealthService from '../../../core/services/health.service';
 import { toast } from 'sonner';
 
 export const CheckButton = () => {
@@ -13,7 +13,7 @@ export const CheckButton = () => {
   async function onVerifyConnection() {
     setChecking(true);
     setSuccess(false);
-    const response = await HealthService.getDatabaseHealth();
+    const response = await healthService.getDatabaseHealth();
     const status = response.data.message === 'ok';
     setTimeout(() => {
       if (status) {

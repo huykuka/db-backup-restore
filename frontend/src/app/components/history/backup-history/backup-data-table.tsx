@@ -1,3 +1,4 @@
+import { Button } from '@frontend/shared/components/ui/button';
 import {
   Table,
   TableBody,
@@ -6,10 +7,9 @@ import {
   TableHeader,
   TableRow,
 } from '@frontend/shared/components/ui/table';
-import { Button } from '@frontend/shared/components/ui/button';
 import { ArchiveRestoreIcon, DeleteIcon, DownloadIcon } from 'lucide-react';
-import backupHistoryService from './backup-history.service';
 import LoadingOverlay from '../../core/loader';
+import backupHistoryService from './backup-history.service';
 
 interface BackupDataTableProps {
   onDeleteBackup: (id: string) => void;

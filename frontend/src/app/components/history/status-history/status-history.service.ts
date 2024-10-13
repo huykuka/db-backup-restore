@@ -1,7 +1,6 @@
-import { toast } from 'sonner';
 import { useZuStandStore } from '../../../core/hooks/useZustandStore';
-import apiClient from '../../../core/services/api-client.services';
-import { GenericHTTPService } from '../../../core/services/http-client.services';
+import { apiClient, toastService } from '../../../core/services';
+import { GenericHTTPService } from '../../../core/services/http-client.service';
 import { StatusHistoryState } from './status-history';
 
 export const statusHistoryInitialState: StatusHistoryState = {
@@ -21,6 +20,7 @@ export const statusHistoryInitialState: StatusHistoryState = {
   },
 };
 
+// eslint-disable-next-line react-hooks/rules-of-hooks
 export const useStatusHistory = useZuStandStore(statusHistoryInitialState);
 
 class StatusHistoryService extends GenericHTTPService {
@@ -43,12 +43,12 @@ class StatusHistoryService extends GenericHTTPService {
 
   public async downloadLog() {
     const controller = new AbortController(); // Create an AbortController instance
-    toast.loading('Downloading log file...', {
+    toastService.loading('Downloading log file...', {
       action: {
         label: 'Cancel',
         onClick: () => {
           controller.abort(); // Abort the download when the button is clicked
-          toast.info('Download cancelled', { duration: 1000 }); // Show a cancellation message
+          toastService.info('Download cancelled'); // Show a cancellation message
         },
       },
     });
@@ -88,7 +88,7 @@ class StatusHistoryService extends GenericHTTPService {
         console.error('Download failed:', error);
       }
     } finally {
-      toast.dismiss(); // Dismiss the toast
+      toastService.dismiss(); // Dismiss the toastService
     }
   }
 

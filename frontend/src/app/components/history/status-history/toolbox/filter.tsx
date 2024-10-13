@@ -12,7 +12,6 @@ export function Filter() {
   const datePickerRef = useRef<DatePickerRef>(null);
   const typeDropdownRef = useRef<{ reset: () => void }>(null);
   const statusDropdownRef = useRef<{ reset: () => void }>(null);
-  const dropdownRef = useRef<{ reset: () => void }>(null);
 
   const handleDateChange = (date: { from: string; to: string }) => {
     setState('filter', {

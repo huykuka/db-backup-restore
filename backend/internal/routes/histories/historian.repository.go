@@ -4,9 +4,10 @@ import (
 	"db-tool/internal/config/db"
 	"db-tool/internal/utils"
 	"fmt"
+	"strings"
+
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
-	"strings"
 )
 
 type HistoriesRepository struct {
@@ -42,6 +43,18 @@ func (h *HistoriesRepository) FindMany(query *QueryHistorianDTO) ([]History, int
 	return histories, count, nil
 }
 
+func (h *HistoriesRepository) Count(query *QueryHistorianDTO) (int64, error) {
+	var count int64
+
+	qr := db.GetDB().Model(&History{})
+	createFilter(qr, query)
+	createSort(qr, query)
+	// Get the total count of records that match the filters
+	qr.Count(&count)
+
+	return count, nil
+}
+
 func createFilter(qr *gorm.DB, query *QueryHistorianDTO) {
 	filter := query.Filter
 	// Apply date filter (fromDate)
@@ -57,7 +70,7 @@ func createFilter(qr *gorm.DB, query *QueryHistorianDTO) {
 		qr = qr.Where("UPPER(status) LIKE ?", strings.ToUpper(filter.Status)+"%")
 	}
 
-    if filter.Type != "" {
+	if filter.Type != "" {
 		qr = qr.Where("UPPER(type) LIKE ?", strings.ToUpper(filter.Type)+"%")
 	}
 }

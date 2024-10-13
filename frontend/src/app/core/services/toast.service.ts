@@ -1,6 +1,6 @@
 import { toast } from 'sonner';
 
-export class ToastService {
+class ToastService {
   success(message: string) {
     toast.success(message, {
       description: new Date().toLocaleString(),
@@ -39,5 +39,4 @@ export class ToastService {
   }
 }
 
-const toastService = new ToastService();
-export default toastService;
+export const toastService = new ToastService();

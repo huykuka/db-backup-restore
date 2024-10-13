@@ -1,8 +1,7 @@
-import { GenericHTTPService } from '../../../core/services/http-client.services';
+import { GenericHTTPService } from '../../../core/services/http-client.service';
 
-import { toast } from 'sonner';
+import { apiClient, toastService } from '@core/services';
 import { useZuStandStore } from '../../../core/hooks/useZustandStore';
-import apiClient from '../../../core/services/api-client.services';
 import { BackUpHistoryState } from './backup-history';
 
 export const initialState: BackUpHistoryState = {
@@ -20,6 +19,7 @@ export const initialState: BackUpHistoryState = {
   },
 };
 
+// eslint-disable-next-line react-hooks/rules-of-hooks
 export const useBackupHistory = useZuStandStore(initialState);
 
 class BackupHistoryService extends GenericHTTPService {
@@ -49,30 +49,22 @@ class BackupHistoryService extends GenericHTTPService {
   }
 
   public async createBackup() {
-    try {
-      await this.post('/backup');
-      this.resetPaging();
-      toast.success('Backup created successfully');
-      await this.getBackup();
-    } catch (error) {
-      throw error;
-    }
+    await this.post('/backup');
+    this.resetPaging();
+    toastService.success('Backup created successfully');
+    await this.getBackup();
   }
 
   public async deleteBackup(id: string) {
-    try {
-      await this.delete(`/backup/${id}`);
-      toast.success('Backup deleted successfully');
-      this.resetPaging();
-      await this.getBackup();
-    } catch (error) {
-      throw error;
-    }
+    await this.delete(`/backup/${id}`);
+    toastService.success('Backup deleted successfully');
+    this.resetPaging();
+    await this.getBackup();
   }
 
   public async downloadBackup(id: string) {
     try {
-      toast.loading('Downloading backup file...');
+      toastService.loading('Downloading backup file...');
       const response = await apiClient.get(`/backup/download/${id}`, {
         responseType: 'blob',
       });
@@ -96,9 +88,9 @@ class BackupHistoryService extends GenericHTTPService {
       document.body.removeChild(link);
       URL.revokeObjectURL(href);
     } catch (error) {
-      toast.error('Cannot download backup file');
+      toastService.error('Cannot download backup file');
     } finally {
-      toast.dismiss();
+      toastService.dismiss();
     }
   }
 
