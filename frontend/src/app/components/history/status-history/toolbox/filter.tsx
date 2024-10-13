@@ -1,11 +1,10 @@
-import * as React from 'react';
+import { Button } from '@frontend/shared/components/ui/button';
 import { useRef } from 'react';
 import { DatePicker, DatePickerRef } from '../../../core/date-picker';
+import { Dropdown } from '../../../core/dropdown';
 import statusHistoryService, {
   statusHistoryInitialState,
 } from '../status-history.service';
-import { Button } from '@frontend/shared/components/ui/button';
-import { Dropdown } from '../../../core/dropdown';
 
 export function Filter() {
   const { setState, getState } = statusHistoryService;

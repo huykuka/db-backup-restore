@@ -1,9 +1,9 @@
 import { GenericHTTPService } from '../../../core/services/http-client.services';
 
-import { useZuStandStore } from '../../../core/hooks/useZustandStore';
-import { BackUpHistoryState } from './backup-history';
 import { toast } from 'sonner';
+import { useZuStandStore } from '../../../core/hooks/useZustandStore';
 import apiClient from '../../../core/services/api-client.services';
+import { BackUpHistoryState } from './backup-history';
 
 export const initialState: BackUpHistoryState = {
   backups: [],
@@ -80,9 +80,9 @@ class BackupHistoryService extends GenericHTTPService {
       const contentDisposition = response.headers['content-disposition'];
       const filename = contentDisposition
         ? contentDisposition
-          .split('filename=')[1]
-          .split(';')[0]
-          .replace(/"/g, '')
+            .split('filename=')[1]
+            .split(';')[0]
+            .replace(/"/g, '')
         : `backup_${id}.zip`;
 
       // Create "a" HTML element with href to file & click
@@ -97,8 +97,7 @@ class BackupHistoryService extends GenericHTTPService {
       URL.revokeObjectURL(href);
     } catch (error) {
       toast.error('Cannot download backup file');
-    }
-    finally {
+    } finally {
       toast.dismiss();
     }
   }
@@ -120,11 +119,7 @@ class BackupHistoryService extends GenericHTTPService {
   }
 
   public getState(): BackUpHistoryState {
-    try {
-      return useBackupHistory.getState().state;
-    } catch (error) {
-      throw error;
-    }
+    return useBackupHistory.getState().state;
   }
 }
 
