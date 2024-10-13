@@ -1,5 +1,4 @@
-import { GenericHTTPService } from './http-client.services';
-import { toast } from 'sonner';
+import { GenericHTTPService } from './http-client.service';
 
 class HealthService extends GenericHTTPService {
   public async getDatabaseHealth() {
@@ -7,5 +6,4 @@ class HealthService extends GenericHTTPService {
   }
 }
 
-const healthService = new HealthService();
-export default healthService;
+export const healthService = new HealthService();

@@ -32,8 +32,23 @@ func (s *HistoriesService) getAll(c *gin.Context) {
 
 func (s *HistoriesService) downloadCSV(c *gin.Context) {
 	query, _ := c.MustGet("Query").(QueryHistorianDTO)
-	// Define your chunk size and total number of records per query.
-	const chunkSize = 50000
+
+	// Define total number of records per query.
+	count, _ := historiesRepository.Count(&query)
+
+	// Define base chunk size and maximum chunk size
+	const baseChunkSize = 1000
+	const maxChunkSize = 50000
+
+	// Determine the optimal chunk size based on the count
+	var chunkSize int
+	if count <= maxChunkSize {
+		chunkSize = baseChunkSize // Use larger chunk size for smaller counts
+	} else {
+		chunkSize = maxChunkSize // Use max chunk size for larger counts
+	}
+
+	// Initialize offset and hasMoreData
 	var offset int
 	var hasMoreData = true
 

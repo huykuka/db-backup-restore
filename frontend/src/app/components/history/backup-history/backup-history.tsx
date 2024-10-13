@@ -6,14 +6,15 @@ import {
   CardHeader,
   CardTitle,
 } from '@frontend/shared/components/ui/card';
-import { BackUpDataTable } from './backup-data-table';
-import { Backup } from '../../../models';
+
+import { toastService } from '@core/services';
 import { useEffect } from 'react';
-import { toast } from 'sonner';
+import { Backup } from '../../../models';
+import { Paging } from '../../core/paging';
+import { BackUpDataTable } from './backup-data-table';
 import backupHistoryService, {
   useBackupHistory,
 } from './backup-history.service';
-import { Paging } from '../../core/paging';
 
 export interface BackUpHistoryState {
   backups: Backup[];
@@ -58,15 +59,13 @@ export function BackupHistory() {
   };
 
   const handleRestoreBackup = async (id: string) => {
-      await backupHistoryService.restoreBackup(id).then(() => toast.success('Backup Restored'));
+    await backupHistoryService
+      .restoreBackup(id)
+      .then(() => toastService.success('Backup Restored'));
   };
 
   const handleDownloadBackup = async (id: string) => {
-    try {
-      await backupHistoryService.downloadBackup(id);
-    } catch (error) {
-      toast.error('Failed to download backup');
-    }
+    await backupHistoryService.downloadBackup(id);
   };
 
   return (

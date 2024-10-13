@@ -1,3 +1,4 @@
+import { Badge } from '@frontend/shared/components/ui/badge';
 import {
   Table,
   TableBody,
@@ -6,14 +7,14 @@ import {
   TableHeader,
   TableRow,
 } from '@frontend/shared/components/ui/table';
-import { Badge } from '@frontend/shared/components/ui/badge';
-import statusHistoryService from './status-history.service';
 import LoadingOverlay from '../../core/loader';
+import statusHistoryService from './status-history.service';
 
 export function StatusDataTable() {
   const { getState } = statusHistoryService;
   return (
-    <div>
+    <div className="relative">
+      {getState().loading && <LoadingOverlay />}
       <Table>
         <TableHeader>
           <TableRow>
@@ -23,8 +24,7 @@ export function StatusDataTable() {
             <TableHead>Details</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody className="relative">
-          {getState().loading && <LoadingOverlay />}
+        <TableBody>
           {getState().statuses.map((status, index) => (
             <TableRow key={status.id} className="h-12">
               <TableCell>

@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "8de35403-692c-40d8-bcb7-d5b78347e42f",
+		"_postman_id": "49fe57e1-0657-4c4d-8c8a-44645fe64f7a",
 		"name": "DBBackup",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "24218853"
@@ -234,13 +234,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{API_URL}}/backup/list",
+							"raw": "{{API_URL}}/histories/download",
 							"host": [
 								"{{API_URL}}"
 							],
 							"path": [
-								"backup",
-								"list"
+								"histories",
+								"download"
 							]
 						}
 					},
@@ -257,12 +257,69 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{API_URL}}/restore",
+							"raw": "{{API_URL}}/restore?id=fdb13bd5-8f99-430b-b64e-4615d096b4e4",
 							"host": [
 								"{{API_URL}}"
 							],
 							"path": [
 								"restore"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "fdb13bd5-8f99-430b-b64e-4615d096b4e4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload file",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/home/thaiqu/Downloads/log_20241013_034444.csv"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{API_URL}}/restore/upload",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"restore",
+								"upload"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Health",
+			"item": [
+				{
+					"name": "database health check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/health/database",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"health",
+								"database"
 							]
 						}
 					},

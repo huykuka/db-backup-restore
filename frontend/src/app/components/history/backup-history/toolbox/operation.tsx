@@ -1,5 +1,5 @@
-import { Button, buttonVariants } from '@frontend/shared/components/ui/button';
-import { Plus, Trash } from 'lucide-react';
+import { Button } from '@frontend/shared/components/ui/button';
+import { Plus } from 'lucide-react';
 import backupHistoryService from '../backup-history.service';
 
 export function Operation() {

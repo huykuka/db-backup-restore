@@ -1,9 +1,7 @@
-import { GenericHTTPService } from '../../../core/services/http-client.services';
 import { useZuStandStore } from '../../../core/hooks/useZustandStore';
+import { apiClient, toastService } from '../../../core/services';
+import { GenericHTTPService } from '../../../core/services/http-client.service';
 import { StatusHistoryState } from './status-history';
-import apiClient from '../../../core/services/api-client.services';
-import { toast } from 'sonner';
-import { set } from 'date-fns';
 
 export const statusHistoryInitialState: StatusHistoryState = {
   statuses: [],
@@ -22,6 +20,7 @@ export const statusHistoryInitialState: StatusHistoryState = {
   },
 };
 
+// eslint-disable-next-line react-hooks/rules-of-hooks
 export const useStatusHistory = useZuStandStore(statusHistoryInitialState);
 
 class StatusHistoryService extends GenericHTTPService {
@@ -43,12 +42,23 @@ class StatusHistoryService extends GenericHTTPService {
   }
 
   public async downloadLog() {
-    toast.loading('Downloading log file...');
+    const controller = new AbortController(); // Create an AbortController instance
+    toastService.loading('Downloading log file...', {
+      action: {
+        label: 'Cancel',
+        onClick: () => {
+          controller.abort(); // Abort the download when the button is clicked
+          toastService.info('Download cancelled'); // Show a cancellation message
+        },
+      },
+    });
+
     try {
       const params = { ...this.getParams() };
       const response: any = await apiClient.get('histories/download', {
         params,
         responseType: 'blob',
+        signal: controller.signal, // Pass the signal to the request options
       });
 
       // Create a Blob from the response data
@@ -70,10 +80,15 @@ class StatusHistoryService extends GenericHTTPService {
       link.remove();
       // Clean up
       window.URL.revokeObjectURL(downloadUrl);
-    } catch (error) {
-      console.error('Download failed:', error);
+    } catch (error: any) {
+      if (error.name === 'AbortError') {
+        // Catch the specific abort error
+        console.log('Download aborted:', error);
+      } else {
+        console.error('Download failed:', error);
+      }
     } finally {
-      toast.dismiss();
+      toastService.dismiss(); // Dismiss the toastService
     }
   }
 
@@ -90,11 +105,7 @@ class StatusHistoryService extends GenericHTTPService {
   }
 
   public getState(): StatusHistoryState {
-    try {
-      return useStatusHistory.getState().state;
-    } catch (error) {
-      throw error;
-    }
+    return useStatusHistory.getState().state;
   }
 
   private getParams() {
