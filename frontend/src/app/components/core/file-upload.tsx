@@ -7,17 +7,18 @@ import {
   CardHeader,
   CardTitle,
 } from '@frontend/shared/components/ui/card';
-import { Input } from '@frontend/shared/components/ui/input';
 import { Progress } from '@frontend/shared/components/ui/progress';
 import { Upload } from 'lucide-react';
 import { useCallback, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
 
 interface FileUploadProps {
   acceptedTypes: string[];
   title?: string;
   description?: string;
   uploadProgress?: number;
-  onFileUpload?: (file: File) => Promise<void>;
+  single?: boolean;
+  onFileUpload?: (file: File | File[]) => Promise<void>;
   onFileSelect?: (fileName: string) => void;
 }
 
@@ -26,70 +27,51 @@ export default function FileUpload({
   title = 'Upload File',
   description = 'Please upload a file',
   uploadProgress,
+  single = true,
   onFileUpload,
   onFileSelect,
 }: FileUploadProps) {
   const [fileName, setFileName] = useState<string | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
+  const onDrop = useCallback(
+    async (files: File[]) => {
+      const validFiles: File[] = [];
 
-  const handleFile = useCallback(
-    async (file: File) => {
-      const fileExtension = file.name.split('.').pop()?.toLowerCase(); // Extract file extension
+      for (const file of files) {
+        const fileExtension = file.name.split('.').pop()?.toLowerCase(); // Extract file extension
+        // Check if file extension matches accepted types
+        if (
+          !acceptedTypes.some(
+            (type) => fileExtension === type.replace('.', '').toLowerCase()
+          )
+        ) {
+          console.error('Invalid file type:', file.name);
+          continue; // Skip this file
+        }
 
-      // Check if file extension matches accepted types
-      if (
-        !acceptedTypes.some(
-          (type) => fileExtension === type.replace('.', '').toLowerCase()
-        )
-      ) {
-        console.error('Invalid file type.');
-        return;
+        validFiles.push(file);
       }
 
-      setFileName(file.name);
-      onFileSelect && onFileSelect(file.name);
-
-      if (onFileUpload) {
-        await onFileUpload(file);
+      if (single) {
+        const file = validFiles[0]; // Take the first valid file if single
+        if (file) {
+          setFileName(file.name as string);
+          onFileSelect && onFileSelect(file.name);
+          if (onFileUpload) {
+            await onFileUpload(file);
+          }
+        }
+      } else {
+        // Handle multiple files
+        const names = validFiles.map((file) => file.name);
+        if (onFileUpload) {
+          await onFileUpload(validFiles);
+        }
       }
     },
-    [acceptedTypes, onFileUpload, onFileSelect]
+    [acceptedTypes, onFileUpload, onFileSelect, single]
   );
 
-  const handleDragEnter = useCallback((e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(true);
-  }, []);
-
-  const handleDragLeave = useCallback((e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-  }, []);
-
-  const handleDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-  }, []);
-
-  const handleDrop = useCallback(
-    (e: React.DragEvent<HTMLDivElement>) => {
-      e.preventDefault();
-      e.stopPropagation();
-      setIsDragging(false);
-      const file = e.dataTransfer.files[0];
-      handleFile(file);
-    },
-    [handleFile]
-  );
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      handleFile(file);
-    }
-  };
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (
     <Card>
@@ -98,32 +80,22 @@ export default function FileUpload({
         <CardDescription>{description}</CardDescription>
       </CardHeader>
 
-      <CardContent>
+      <CardContent {...getRootProps({ className: 'dropzone' })}>
         <div
-          className={`border-2 border-dashed rounded-lg p-6 transition-colors ${
-            isDragging
+          className={`border-2 border-dashed hover:bg-primary/10 rounded-lg p-6 transition-colors z-40 ${
+            isDragActive
               ? 'border-primary bg-primary/10'
               : 'border-muted-foreground/25'
           }`}
-          onDragEnter={handleDragEnter}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
         >
-          <Input
-            id="file-upload"
-            type="file"
+          <input
+            {...getInputProps({ accept: acceptedTypes.join(',') })}
             className="hidden"
-            accept={acceptedTypes.join(',')}
-            onChange={(e) => {
-              handleFileChange(e);
-              e.target.value = ''; // Reset input after file selection
-            }}
           />
           <div className="text-center">
             <Upload
               className={`mx-auto h-12 w-12 transition-colors duration-300 ease-in-out ${
-                isDragging
+                isDragActive
                   ? 'text-primary animate-bounce'
                   : 'text-muted-foreground'
               }`}
