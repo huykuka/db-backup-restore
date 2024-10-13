@@ -89,7 +89,10 @@ export default function FileUpload({
           }`}
         >
           <input
-            {...getInputProps({ accept: acceptedTypes.join(',') })}
+            {...getInputProps({
+              accept: acceptedTypes.join(','),
+              multiple: !single,
+            })}
             className="hidden"
           />
           <div className="text-center">
