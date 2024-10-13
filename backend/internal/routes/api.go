@@ -8,12 +8,13 @@ import (
 	"db-tool/internal/routes/restore"
 	"db-tool/internal/routes/settings"
 	"db-tool/internal/routes/users"
+	"os"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	ginlogrus "github.com/toorop/gin-logrus"
-	"os"
 )
 
 func Init() {
@@ -21,7 +22,8 @@ func Init() {
 
 	r := gin.New()
 	r.Use(cors.Default())
-
+	// Set a lower memory limit for multipart forms (default is 32 MiB)
+	r.MaxMultipartMemory = 64 // 64MiB
 	//Middleware registration
 	r.Use(ginlogrus.Logger(log.StandardLogger()), gin.Recovery())
 	r.Use(static.Serve("/", static.LocalFile("web", false)))
