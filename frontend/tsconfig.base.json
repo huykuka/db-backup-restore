@@ -15,7 +15,6 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@frontend/shared": ["shared/src/index.ts"],
       "@frontend/shared/*": ["shared/src/*"],
       "@components/*": ["src/app/components/*"],
       "@core/*": ["src/app/core/*"],
