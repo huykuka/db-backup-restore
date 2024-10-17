@@ -1,7 +1,7 @@
-import { GenericHTTPService } from '../../../core/services/http-client.service';
+import { GenericHTTPService } from '../../../../core/services/http-client.service';
 
 import { apiClient, toastService } from '@core/services';
-import { useZuStandStore } from '../../../core/hooks/useZustandStore';
+import { useZuStandStore } from '../../../../core/hooks/useZustandStore';
 import { BackUpHistoryState } from './backup-history';
 
 export const initialState: BackUpHistoryState = {

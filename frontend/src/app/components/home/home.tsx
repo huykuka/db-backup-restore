@@ -1,8 +1,8 @@
 import { BarChartComponent } from '@components/core/charts/bar-chart';
 import { PieChartComponent } from '@components/core/charts/pie-chart';
 import { Separator } from "@frontend/shared/components/ui/separator";
-import { HistoryComponent } from "../components/history/history";
-import Settings from "../components/settings/settings";
+import { HistoryComponent } from "./history/history";
+import Settings from "./settings/settings";
 
 
 const Home = () => {

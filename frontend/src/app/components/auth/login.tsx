@@ -1,20 +1,22 @@
+import { ModeToggle } from "@components/core";
+import { Button } from "@frontend/shared/components/ui/button";
 import {
     Card,
     CardContent,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle
 } from "@frontend/shared/components/ui/card";
-import {Label} from "@frontend/shared/components/ui/label";
-import {Input} from "@frontend/shared/components/ui/input";
-import {Button} from "@frontend/shared/components/ui/button";
-import {Link} from "react-router-dom";
+import { Input } from "@frontend/shared/components/ui/input";
+import { Label } from "@frontend/shared/components/ui/label";
 
 
-export  function Login() {
+export function Login() {
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 py-12 sm:px-6 lg:px-8">
+        <div className="min-h-screen flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+            <div className="fixed top-0 right-0 m-2">
+                <ModeToggle></ModeToggle>
+            </div>
             <Card className="w-full max-w-md">
                 <CardHeader>
                     <CardTitle className="text-2xl font-bold text-center">Sign in to your account</CardTitle>
@@ -37,14 +39,6 @@ export  function Login() {
                         </Button>
                     </form>
                 </CardContent>
-                {/*<CardFooter className="flex justify-center">*/}
-                {/*    <p className="text-sm text-muted-foreground">*/}
-                {/*        Don't have an account?{" "}*/}
-                {/*        <Link href="/register" className="font-medium text-primary hover:underline">*/}
-                {/*            Sign up*/}
-                {/*        </Link>*/}
-                {/*    </p>*/}
-                {/*</CardFooter>*/}
             </Card>
         </div>
     )

@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from '@frontend/shared/components/ui/table';
-import LoadingOverlay from '../../core/loader';
+import LoadingOverlay from '../../../core/loader';
 import statusHistoryService from './status-history.service';
 
 export function StatusDataTable() {

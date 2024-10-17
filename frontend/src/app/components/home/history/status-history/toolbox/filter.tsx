@@ -1,7 +1,7 @@
 import { Button } from '@frontend/shared/components/ui/button';
 import { useRef } from 'react';
-import { DatePicker, DatePickerRef } from '../../../core/date-picker';
-import { Dropdown } from '../../../core/dropdown';
+import { DatePicker, DatePickerRef } from '../../../../core/date-picker';
+import { Dropdown } from '../../../../core/dropdown';
 import statusHistoryService, {
   statusHistoryInitialState,
 } from '../status-history.service';
@@ -84,8 +84,8 @@ export function Filter() {
 
       {JSON.stringify(getState().filter) !==
         JSON.stringify(statusHistoryInitialState.filter) && (
-        <Button onClick={onReset}>Reset</Button>
-      )}
+          <Button onClick={onReset}>Reset</Button>
+        )}
     </div>
   );
 }

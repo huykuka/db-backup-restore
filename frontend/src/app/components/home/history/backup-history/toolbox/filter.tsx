@@ -1,8 +1,8 @@
+import { Button } from '@frontend/shared/components/ui/button';
 import * as React from 'react';
 import { useRef } from 'react';
-import { Button } from '@frontend/shared/components/ui/button';
+import { DatePicker, DatePickerRef } from '../../../../core/date-picker';
 import backupHistoryService, { initialState } from '../backup-history.service';
-import { DatePicker, DatePickerRef } from '../../../core/date-picker';
 
 export function Filter({ className }: React.HTMLAttributes<HTMLDivElement>) {
   const { setState, getState } = backupHistoryService;
@@ -39,8 +39,8 @@ export function Filter({ className }: React.HTMLAttributes<HTMLDivElement>) {
 
       {JSON.stringify(getState().filter) !==
         JSON.stringify(initialState.filter) && (
-        <Button onClick={onReset}>Reset</Button>
-      )}
+          <Button onClick={onReset}>Reset</Button>
+        )}
     </div>
   );
 }
