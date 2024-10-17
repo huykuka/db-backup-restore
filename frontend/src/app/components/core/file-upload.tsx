@@ -60,8 +60,6 @@ export default function FileUpload({
         if (file) {
           setFileName(file.name as string);
           onFileSelect && onFileSelect(file.name);
-          console.log(file)
-          console.log(onFileUpload)
           if (onFileUpload) {
             await onFileUpload(file);
           }
