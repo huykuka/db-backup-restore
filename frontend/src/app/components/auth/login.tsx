@@ -1,5 +1,5 @@
 import { ModeToggle } from "@components/core";
-import { Button } from "@frontend/shared/components/ui/button";
+import { authService } from "@core/services/auth.service";
 import {
     Card,
     CardContent,
@@ -7,11 +7,16 @@ import {
     CardHeader,
     CardTitle
 } from "@frontend/shared/components/ui/card";
-import { Input } from "@frontend/shared/components/ui/input";
-import { Label } from "@frontend/shared/components/ui/label";
+import LoginForm from "./login-form";
 
 
 export function Login() {
+    const { getState, setState } = authService
+
+    const handleLogin = (data: { password: string, email: string }) => {
+        setState('isAuthenticated', true)
+    }
+
     return (
         <div className="min-h-screen flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
             <div className="fixed top-0 right-0 m-2">
@@ -25,21 +30,9 @@ export function Login() {
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <form className="space-y-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="email">Email address</Label>
-                            <Input id="email" type="email" placeholder="you@example.com" required />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="password">Password</Label>
-                            <Input id="password" type="password" required />
-                        </div>
-                        <Button type="submit" className="w-full">
-                            Sign in
-                        </Button>
-                    </form>
+                    <LoginForm onLogin={handleLogin} />
                 </CardContent>
             </Card>
-        </div>
+        </div >
     )
 }
