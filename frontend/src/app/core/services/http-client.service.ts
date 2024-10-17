@@ -55,7 +55,6 @@ export class GenericHTTPService {
       return await apiClient.delete<T>(url, config);
     } catch (error) {
       const errorMessage = this.extractErrorMessage(error);
-      toastService.error(errorMessage);
       throw error;
     }
   }

@@ -1,12 +1,25 @@
+import { useZuStandStore } from '@core/hooks';
+import { ManualFileUpload } from '@models/manual-file-upload.model';
 import { toastService } from '../../core/services';
 import { GenericHTTPService } from '../../core/services/http-client.service';
+
+export interface ManualFileUPloadState {
+  files: ManualFileUpload[];
+}
+
+export const manualFileUPloadState: ManualFileUPloadState = {
+  files: [],
+};
+
+// eslint-disable-next-line react-hooks/rules-of-hooks
+export const useManualUpload = useZuStandStore(manualFileUPloadState);
 
 class ManualUploadService extends GenericHTTPService {
   async upload(file: File, onProgress: (percent: number) => void) {
     const formData = new FormData();
     formData.append('file', file);
     try {
-      const response = await super.post('restore/upload', formData, {
+      const response: any = await super.post('restore/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -18,6 +31,16 @@ class ManualUploadService extends GenericHTTPService {
         },
       });
       toastService.success(`${file.name} uploaded!`);
+
+      this.setState('files', [
+        ...this.getState().files,
+        {
+          name: file.name,
+          filePath: response.data.data.fileName,
+          createdAt: new Date(),
+        },
+      ]);
+
       return response.data; // Return the response data
     } catch (error) {
       console.error('Error uploading file:', error);
@@ -26,6 +49,37 @@ class ManualUploadService extends GenericHTTPService {
     } finally {
       onProgress(0);
     }
+  }
+
+  async restore(filePath: string) {
+    try {
+      toastService.loading('Restore In Progress');
+      await super.post(`restore/manual`, {
+        filePath,
+      });
+      toastService.success('Restore successfully!');
+    } catch (err) {
+      toastService.error('File Restore Failed');
+    } finally {
+      toastService.dismiss();
+    }
+  }
+
+  private checkFileDuplicate(file: File) {
+    const fileNames = this.getState().files.map((file) => file.name);
+    return fileNames.includes(file.name);
+  }
+
+  public setState(key: keyof ManualFileUPloadState, value: any) {
+    useManualUpload.getState().setState(key, value);
+  }
+
+  public resetState() {
+    useManualUpload.getState().reset();
+  }
+
+  public getState(): ManualFileUPloadState {
+    return useManualUpload.getState().state;
   }
 }
 
