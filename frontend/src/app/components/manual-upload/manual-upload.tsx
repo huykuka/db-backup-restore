@@ -22,7 +22,6 @@ export default function ManualFileUpload() {
   return (
     <div className='flex flex-col gap-4'>
       <FileUpload
-        acceptedTypes={['.sql', '.psql', '.zip', '.MOV']}
         title="Manual Backup Upload"
         description="Upload your .psql file to restore the database."
         uploadProgress={uploadProgress}
