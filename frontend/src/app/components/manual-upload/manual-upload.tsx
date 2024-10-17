@@ -16,10 +16,9 @@ export default function ManualFileUpload() {
     setState('files', updatedFiles);
   }
 
-  const handleRestoreFile = (path: string) => {
-    console.log(path)
+  const handleRestoreFile = async (path: string) => {
+    await manualUploadService.restore(path)
   }
-
   return (
     <div className='flex flex-col gap-4'>
       <FileUpload

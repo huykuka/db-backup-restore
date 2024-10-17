@@ -22,17 +22,7 @@ var backupRepository = new(backup.BackUpRepository)
 var settingRepository = new(settings.SettingRepository)
 var historianRepository = new(histories.HistoriesRepository)
 
-func (r *RestoreRepository) Restore(id string) error {
-	if _, err := uuid.Parse(id); err != nil {
-		log.Error("Invalid UUID format")
-		return err
-	}
-	//Find Backup file
-	backUp, err := backupRepository.FindOne(id)
-	if err != nil {
-		return err
-	}
-
+func restoreFile(filepath *string) error {
 	//Retrieve DB Settings
 	dbSetting, err := settingRepository.GetDBSetting()
 	if err != nil {
@@ -41,7 +31,7 @@ func (r *RestoreRepository) Restore(id string) error {
 	}
 
 	//Restore DB
-	err = database.SelectDB().Restore(&dbSetting, &backUp.Filename)
+	err = database.SelectDB().Restore(&dbSetting, filepath)
 	if err != nil {
 		historianRepository.Create(&histories.History{
 			Status: "failed",
@@ -53,10 +43,29 @@ func (r *RestoreRepository) Restore(id string) error {
 		historianRepository.Create(&histories.History{
 			Status: "success",
 			Type:   "restore",
-			Detail: "Restore completed with filename: " + backUp.Filename,
+			Detail: "Restore completed with filename: " + *filepath,
 		})
 	}
 	return nil
+}
+
+func (r *RestoreRepository) Restore(id string) error {
+	if _, err := uuid.Parse(id); err != nil {
+		log.Error("Invalid UUID format")
+		return err
+	}
+	//Find Backup file
+	backUp, err := backupRepository.FindOne(id)
+	if err != nil {
+		return err
+	}
+
+	return restoreFile(&backUp.Filename)
+}
+
+func (r *RestoreRepository) manualRestore(filePath *string) error {
+	fmt.Println(filePath)
+	return restoreFile(filePath)
 }
 
 func (r *RestoreRepository) SaveFile(c *gin.Context) (filename string, err error) {

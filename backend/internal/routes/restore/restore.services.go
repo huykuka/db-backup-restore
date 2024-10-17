@@ -27,6 +27,18 @@ func (r *RestoreService) restore(c *gin.Context) {
 	})
 }
 
+func (r *RestoreService) manualRestore(c *gin.Context) {
+	path := c.MustGet("Body").(ManualRestoreDTO).FilePath
+	err := restoreRepository.manualRestore(&path)
+	if err != nil {
+		handleRestoreError(c, err, "Restore failed!")
+		return
+	}
+	c.Set("response", gin.H{
+		"message": "Restore completed",
+	})
+}
+
 func (r *RestoreService) upload(c *gin.Context) {
 
 	// Check if the directory exists

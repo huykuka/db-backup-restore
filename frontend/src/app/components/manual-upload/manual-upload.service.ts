@@ -51,6 +51,20 @@ class ManualUploadService extends GenericHTTPService {
     }
   }
 
+  async restore(filePath: string) {
+    try {
+      toastService.loading('Restore In Progress');
+      await super.post(`restore/manual`, {
+        filePath,
+      });
+      toastService.success('Restore successfully!');
+    } catch (err) {
+      toastService.error('File Restore Failed');
+    } finally {
+      toastService.dismiss();
+    }
+  }
+
   private checkFileDuplicate(file: File) {
     const fileNames = this.getState().files.map((file) => file.name);
     return fileNames.includes(file.name);
