@@ -13,7 +13,7 @@ import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 interface FileUploadProps {
-  acceptedTypes: string[];
+  acceptedTypes?: string[];
   title?: string;
   description?: string;
   uploadProgress?: number;
@@ -40,7 +40,7 @@ export default function FileUpload({
         const fileExtension = file.name.split('.').pop()?.toLowerCase(); // Extract file extension
         // Check if file extension matches accepted types
         if (
-          !acceptedTypes.some(
+          !acceptedTypes?.some(
             (type) => fileExtension === type.replace('.', '').toLowerCase()
           )
         ) {
@@ -82,26 +82,24 @@ export default function FileUpload({
 
       <CardContent {...getRootProps({ className: 'dropzone' })}>
         <div
-          className={`border-2 border-dashed hover:bg-primary/10 rounded-lg p-6 transition-colors z-40 ${
-            isDragActive
-              ? 'border-primary bg-primary/10'
-              : 'border-muted-foreground/25'
-          }`}
+          className={`border-2 border-dashed hover:bg-primary/10 rounded-lg p-6 transition-colors z-40 ${isDragActive
+            ? 'border-primary bg-primary/10'
+            : 'border-muted-foreground/25'
+            }`}
         >
           <input
             {...getInputProps({
-              accept: acceptedTypes.join(','),
+              accept: acceptedTypes?.join(','),
               multiple: !single,
             })}
             className="hidden"
           />
           <div className="text-center">
             <Upload
-              className={`mx-auto h-12 w-12 transition-colors duration-300 ease-in-out ${
-                isDragActive
-                  ? 'text-primary animate-bounce'
-                  : 'text-muted-foreground'
-              }`}
+              className={`mx-auto h-12 w-12 transition-colors duration-300 ease-in-out ${isDragActive
+                ? 'text-primary animate-bounce'
+                : 'text-muted-foreground'
+                }`}
             />
             <p className="mt-2 text-sm text-muted-foreground">
               <Button
@@ -113,9 +111,11 @@ export default function FileUpload({
               </Button>{' '}
               or drag and drop
             </p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              {acceptedTypes.join(', ')} files only
-            </p>
+            {acceptedTypes && (
+              <p className="mt-1 text-xs text-muted-foreground">
+                {acceptedTypes.join(', ')} files only
+              </p>
+            )}
           </div>
         </div>
       </CardContent>
@@ -128,6 +128,6 @@ export default function FileUpload({
           </p>
         )}
       </CardFooter>
-    </Card>
+    </Card >
   );
 }

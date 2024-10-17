@@ -46,7 +46,6 @@ func (b *BackUpRepository) Backup() (string, error) {
 		})
 	}
 
-
 	return filename, nil
 }
 
