@@ -6,13 +6,13 @@ import {
 } from '@frontend/shared/components/ui/card';
 import { StatusDataTable } from './status-data-table';
 
-import { Toolbox } from './toolbox/toolbox';
-import { Status } from '../../../models/status.model';
-import { Paging } from '../../core/paging';
+import { useEffect } from 'react';
+import { Status } from '../../../../models/status.model';
+import { Paging } from '../../../core/paging';
 import statusHistoryService, {
   useStatusHistory,
 } from './status-history.service';
-import { useEffect } from 'react';
+import { Toolbox } from './toolbox/toolbox';
 
 export interface StatusHistoryState {
   statuses: Status[];

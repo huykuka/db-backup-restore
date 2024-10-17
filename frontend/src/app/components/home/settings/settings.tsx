@@ -7,8 +7,8 @@ import {
 } from '@frontend/shared/components/ui/tabs';
 import { useEffect, useState } from 'react';
 import { Setting } from 'src/app/models/settings.model';
-import { useFetch } from '../../core/hooks/useFetch';
-import { apiClient } from '../../core/services/api-client.service';
+import { useFetch } from '../../../core/hooks/useFetch';
+import { apiClient } from '../../../core/services/api-client.service';
 import { DatabaseSettingForm } from './database-setting.form';
 import { GeneralSettingForm } from './general-setting.form';
 

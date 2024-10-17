@@ -9,8 +9,8 @@ import {
 
 import { toastService } from '@core/services';
 import { useEffect } from 'react';
-import { Backup } from '../../../models';
-import { Paging } from '../../core/paging';
+import { Backup } from '../../../../models';
+import { Paging } from '../../../core/paging';
 import { BackUpDataTable } from './backup-data-table';
 import backupHistoryService, {
   useBackupHistory,
