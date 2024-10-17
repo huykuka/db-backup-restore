@@ -8,7 +8,7 @@ import (
 
 var backUpTask = new(BackUpTask)
 
-func Init() {
+func  Init() {
 	// create a scheduler
 	s, err := gocron.NewScheduler()
 	if err != nil {
