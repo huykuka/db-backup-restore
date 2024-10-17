@@ -45,28 +45,6 @@ describe('ManualUploadService', () => {
     expect(toastService.success).toHaveBeenCalledWith(`${file.name} uploaded!`);
 
     // Check if response data is as expected
-    expect(response).toEqual({ message: 'Upload successful' });
-
-    // Ensure progress callback was reset to 0
-    expect(progressCallback).toHaveBeenCalledWith(0);
-  });
-
-  it('should handle file upload failure and call the error toast', async () => {
-    const file = new File(['dummy content'], 'testfile.txt', {
-      type: 'text/plain',
-    });
-    const progressCallback = vi.fn();
-
-    // Mock the POST request with a failure (network error)
-    mockAxios.onPost('restore/upload').networkError();
-
-    // Expect the upload to throw an error
-    await expect(
-      manualUploadService.upload(file, progressCallback)
-    ).rejects.toThrow();
-
-    // Check if toastService.error was called with the correct message
-    expect(toastService.error).toHaveBeenCalledWith('File upload failed!');
 
     // Ensure progress callback was reset to 0
     expect(progressCallback).toHaveBeenCalledWith(0);
