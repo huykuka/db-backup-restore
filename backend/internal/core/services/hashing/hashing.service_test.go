@@ -1,89 +1,73 @@
 package hashing
 
 import (
+	"errors"
+	"os"
 	"testing"
 )
 
-func TestHashingService(t *testing.T) {
-	// Test table
-	tests := []struct {
-		name     string
-		key      string
-		password string
-		want     string
-		wantErr  bool
-	}{
-		{
-			name:     "Basic hashing",
-			key:      "test-key",
-			password: "password123",
-			want:     "7c6a180b36896a0a8c02787eeafb0e4c6c4b9f6b", // This is a placeholder, actual hash will differ
-			wantErr:  false,
-		},
-		{
-			name:     "Empty password",
-			key:      "test-key",
-			password: "",
-			want:     "f7ff9e8b7bb2e09b70935a5d785e0cc5d9d0abf0", // This is a placeholder, actual hash will differ
-			wantErr:  false,
-		},
-		{
-			name:     "Long password",
-			key:      "test-key",
-			password: "thisisaverylongpasswordthatexceedssixtyfourcharactersinlength1234567890",
-			want:     "7c4a8d09ca3762af61e59520943dc26494f8941b", // This is a placeholder, actual hash will differ
-			wantErr:  false,
-		},
-	}
+func TestHashingServiceSingleton(t *testing.T) {
+	// Set up the environment variable for the password key
+	os.Setenv("HASH_PASSWORD_KEY", "supersecretkey")
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			s := NewPasswordService(tt.key)
+	// Call NewHashingService multiple times
+	service1 := NewHashingService()
+	service2 := NewHashingService()
 
-			// Test HashPassword
-			got, err := s.HashPassword(tt.password)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("HashPassword() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got == tt.want {
-				t.Errorf("HashPassword() = %v, want %v", got, tt.want)
-			}
-
-			// Test ComparePasswords
-			err = s.ComparePasswords(got, tt.password)
-			if err != nil {
-				t.Errorf("ComparePasswords() failed for correct password: %v", err)
-			}
-
-			err = s.ComparePasswords(got, "wrong-password")
-			if err == nil {
-				t.Error("ComparePasswords() did not return error for incorrect password")
-			}
-		})
+	// Assert that both instances point to the same object (singleton behavior)
+	if service1 != service2 {
+		t.Errorf("Expected singleton instance, but got different instances")
 	}
 }
 
-func TestHashingServiceWithDifferentKeys(t *testing.T) {
-	password := "test-password"
-	key1 := "key1"
-	key2 := "key2"
+func TestHashPasswordAndComparePasswords_TableDriven(t *testing.T) {
+	// Set up the environment variable for the password key
+	os.Setenv("HASH_PASSWORD_KEY", "supersecretkey")
 
-	s1 := NewPasswordService(key1)
-	s2 := NewPasswordService(key2)
+	// Get the singleton instance of HashingService
+	service := NewHashingService()
 
-	hash1, _ := s1.HashPassword(password)
-	hash2, _ := s2.HashPassword(password)
-
-	if hash1 == hash2 {
-		t.Error("Hashes should be different for different keys")
+	// Define a test table with "should" in the test names
+	tests := []struct {
+		name           string
+		password       string
+		hashedPassword string
+		expectedError  error
+	}{
+		{
+			name:          "should successfully compare valid password",
+			password:      "mysecretpassword",
+			expectedError: nil,
+		},
+		{
+			name:           "should fail to compare invalid password",
+			password:       "wrongpassword",
+			hashedPassword: "fakehash", // A fake hash to simulate a failed comparison
+			expectedError:  errors.New("invalid password"),
+		},
 	}
 
-	if err := s1.ComparePasswords(hash1, password); err != nil {
-		t.Error("ComparePasswords() failed for correct key")
-	}
+	// Iterate over the test cases
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// If a hashedPassword is not predefined, generate it
+			if tt.hashedPassword == "" {
+				tt.hashedPassword = service.HashPassword(tt.password)
+			}
 
-	if err := s2.ComparePasswords(hash1, password); err == nil {
-		t.Error("ComparePasswords() should fail for different key")
+			// Compare the password with the hashed password
+			err := service.ComparePasswords(tt.hashedPassword, tt.password)
+
+			// Check if the error matches the expected error
+			if err != nil && tt.expectedError == nil {
+				t.Errorf("Expected no error, but got: %v", err)
+			}
+			if err == nil && tt.expectedError != nil {
+				t.Errorf("Expected error '%v', but got none", tt.expectedError)
+			}
+			if err != nil && tt.expectedError != nil && err.Error() != tt.expectedError.Error() {
+				t.Errorf("Expected error '%v', but got '%v'", tt.expectedError, err)
+			}
+		})
 	}
 }

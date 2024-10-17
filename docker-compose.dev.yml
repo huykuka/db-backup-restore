@@ -49,7 +49,7 @@ services:
       - ENV=container-dev
       - PORT=${APP_PORT:-3000}
       - BACKUP_PATH=/home/thaiqu/backup
-      - SECRET_USERNAME=admin
+      - SECRET_EMAIL=admin@mail.com
       - SECRET_PASSWORD=admin123
       - HASH_PASSWORD_KEY=4883082245
       - HASH_JWT_KEY=9989258716

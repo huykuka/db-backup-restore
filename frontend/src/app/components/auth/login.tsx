@@ -7,14 +7,15 @@ import {
     CardHeader,
     CardTitle
 } from "@frontend/shared/components/ui/card";
-import LoginForm from "./login-form";
+import { LogInDto, LoginForm } from "./login-form";
 
 
 export function Login() {
-    const { getState, setState } = authService
+    const { setState } = authService
 
-    const handleLogin = (data: { password: string, email: string }) => {
-        setState('isAuthenticated', true)
+    const handleLogin = async (data: LogInDto) => {
+        // setState('isAuthenticated', true)
+        await authService.login(data)
     }
 
     return (

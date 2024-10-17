@@ -3,11 +3,17 @@ import Home from "@components/home/home"
 import Layout from "@components/layout"
 import ManualFileUpload from "@components/manual-upload/manual-upload"
 import { authService, useAuth } from "@core/services/auth.service"
+import { useEffect } from "react"
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
 
 export const RouteComponent = () => {
     useAuth()
-    const { getState } = authService
+    const { getState, setState } = authService
+    useEffect(() => {
+        const isAuthenticated = localStorage.getItem("isAuthenticated")
+        console.log(isAuthenticated)
+        setState('isAuthenticated', isAuthenticated === "true")
+    }, [])
     return (
         <BrowserRouter>
             <Routes>
