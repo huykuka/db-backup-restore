@@ -20,7 +20,7 @@ export interface NavBarItem {
 
 const links: NavBarItem[] = [
   {
-    to: '/',
+    to: '/home',
     label: 'Dashboard',
     icon: <LayoutDashboardIcon className="w-4 h-4" />,
   },

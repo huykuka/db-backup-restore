@@ -10,17 +10,33 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": ["es2020", "dom"],
+    "lib": [
+      "es2020",
+      "dom"
+    ],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@frontend/shared/*": ["shared/src/*"],
-      "@components/*": ["src/app/components/*"],
-      "@core/*": ["src/app/core/*"],
-      "@models/*": ["src/app/models/*"],
-      "@routes/*": ["src/app/routes/*"]
+      "@frontend/shared/*": [
+        "shared/src/*"
+      ],
+      "@components/*": [
+        "src/app/components/*"
+      ],
+      "@core/*": [
+        "src/app/core/*"
+      ],
+      "@models/*": [
+        "src/app/models/*"
+      ],
+      "@routes/*": [
+        "src/app/routes/*"
+      ]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }
