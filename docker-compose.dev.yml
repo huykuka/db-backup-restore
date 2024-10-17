@@ -38,8 +38,8 @@ services:
           path: ./backend
           target: /app
           ignore:
-           - bin/
-           - tmp/
+            - bin/
+            - tmp/
         - action: rebuild
           path: backend/go.mod
         - action: rebuild
@@ -50,7 +50,9 @@ services:
       - PORT=${APP_PORT:-3000}
       - BACKUP_PATH=/home/thaiqu/backup
       - SECRET_USERNAME=admin
-      - SECRET_PASSWORD=admin
+      - SECRET_PASSWORD=admin123
+      - HASH_PASSWORD_KEY=4883082245
+      - HASH_JWT_KEY=9989258716
     ports:
       - "8080:${APP_PORT:-3000}"
     networks:

@@ -2,6 +2,7 @@ package db
 
 import (
 	"errors"
+
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
@@ -50,7 +51,7 @@ func seedSetting(handler *gorm.DB) {
 	for _, setting := range settingSeed {
 		var existingSetting Setting
 		if err := handler.Where("key = ?", setting.Key).First(&existingSetting).Error; err != nil {
-			if errors.Is(gorm.ErrRecordNotFound, err) {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
 				handler.Create(setting)
 			}
 		}
