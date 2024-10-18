@@ -65,7 +65,7 @@ const Header: React.FC = () => {
 
         <div className="flex flex-row items-center  gap-3">
           <ModeToggle />
-          <UserSection onLogOut={() => authService.logout()} />
+          <UserSection onLogOut={() => authService.logout()} user={{ email: "admin@mail.com", name: "admin" }} />
         </div>
       </header>
       <LeadingBar />

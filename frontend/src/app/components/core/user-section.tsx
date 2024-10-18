@@ -6,18 +6,12 @@ import { LogOut } from "lucide-react"
 import { useState } from "react"
 
 export interface UserSectionProps {
+    user: { name: string, email: string }
     onLogOut: () => void
 }
 
-export default function UserSection({ onLogOut }: UserSectionProps) {
+export default function UserSection({ user, onLogOut }: UserSectionProps) {
     const [isOpen, setIsOpen] = useState(false)
-
-    // Fake user data
-    const user = {
-        name: "John Doe",
-        email: "john@example.com",
-        avatarUrl: "/placeholder.svg?height=32&width=32"
-    }
 
     return (
         <DropdownMenu open={isOpen} onOpenChange={setIsOpen} >
@@ -36,7 +30,7 @@ export default function UserSection({ onLogOut }: UserSectionProps) {
             <DropdownMenuContent className="w-56" align="end">
                 <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">{user.name}</p>
+                        <p className="text-sm font-medium leading-none">{user.name || "admin"} </p>
                         <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
                     </div>
                 </DropdownMenuLabel>
