@@ -5,6 +5,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"net/http"
+	"strconv"
 )
 
 type Page struct {
@@ -30,6 +31,7 @@ func HandleHTTPError(c *gin.Context, errMsg string, details string, statusCode .
 	}
 	log.WithFields(log.Fields{}).Error(errMsg)
 	c.Set("error", details)
+	c.Set("statusCode", strconv.Itoa(code))
 	c.AbortWithStatus(code)
 }
 
