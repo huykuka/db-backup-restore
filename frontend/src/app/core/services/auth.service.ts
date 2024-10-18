@@ -1,48 +1,53 @@
-import { LogInDto } from '@components/auth/login-form';
-import { useZuStandStore } from '@core/hooks';
-import { GenericHTTPService } from './http-client.service';
-import { toastService } from './toast.service';
+import {LogInDto} from '@components/auth/login-form';
+import {useZuStandStore} from '@core/hooks';
+import {GenericHTTPService} from './http-client.service';
+import {toastService} from './toast.service';
+import {ACCESS_TOKEN, LocalStorageService} from "@core/services/local-storage.service";
 
 export interface AuthState {
-  isAuthenticated: boolean;
-  user?: {
-    name?: string;
-    role?: string;
-  };
+    isAuthenticated: boolean;
+    user?: {
+        name?: string;
+        role?: string;
+    };
 }
 
 export const authInitialState: AuthState = {
-  isAuthenticated: false,
+    isAuthenticated: false,
 };
 // eslint-disable-next-line react-hooks/rules-of-hooks
 export const useAuth = useZuStandStore(authInitialState);
 
 class AuthService extends GenericHTTPService {
-  public async login(data: LogInDto) {
-    try {
-      const response: any = await super.post('/auth/login', {
-        email: data.email,
-        password: data.password,
-      });
-      toastService.success('Login successfully');
-      this.setState('isAuthenticated', true);
-      localStorage.setItem('accessToken', response.data.data.accessToken);
-    } catch (err: any) {}
-  }
+    public async login(data: LogInDto) {
+        try {
+            const response: any = await super.post('/auth/login', {
+                email: data.email,
+                password: data.password,
+            });
+            const token = response.data.data.accessToken;
+            if (token) {
+                toastService.success('Login successfully');
+                this.setState('isAuthenticated', true);
+                LocalStorageService.setItem(ACCESS_TOKEN, token);
+            }
 
-  public logout() {}
+        } catch (err: any) {
+            console.error(err)
+        }
+    }
 
-  public setState(key: keyof AuthState, value: any) {
-    useAuth.getState().setState(key, value);
-  }
+    public logout() {
+        console.log("logout")
+    }
 
-  public resetState() {
-    useAuth.getState().reset();
-  }
+    public setState(key: keyof AuthState, value: any) {
+        useAuth.getState().setState(key, value);
+    }
 
-  public getState(): AuthState {
-    return useAuth.getState().state;
-  }
+    public getState(): AuthState {
+        return useAuth.getState().state;
+    }
 }
 
 export const authService = new AuthService();
