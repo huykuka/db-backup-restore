@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"db-tool/internal/core/services/jwt"
+	jwttoken "db-tool/internal/core/services/jwt-token"
 	"db-tool/internal/utils"
 	"net/http"
 
@@ -12,7 +12,7 @@ type AuthSerivce struct {
 }
 
 var authRepository = new(AuthRepository)
-var jwtService = jwt.NewJWTService()
+var jwtService = jwttoken.NewJWTService()
 
 func (a *AuthSerivce) Login(c *gin.Context) {
 	dto := c.MustGet("Body").(LoginDTO)

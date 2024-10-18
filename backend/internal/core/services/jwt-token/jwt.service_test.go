@@ -1,4 +1,4 @@
-package jwt
+package jwttoken
 
 import (
 	"os"
@@ -109,5 +109,5 @@ func TestTokenExpiration(t *testing.T) {
 
 	// Assert
 	assert.Error(t, err)
-	assert.Contains(t, err.Error(), "token is expired")
+	assert.Contains(t, err.Error(), "Token is expired")
 }
