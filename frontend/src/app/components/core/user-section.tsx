@@ -20,15 +20,15 @@ export default function UserSection({ onLogOut }: UserSectionProps) {
     }
 
     return (
-        <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+        <DropdownMenu open={isOpen} onOpenChange={setIsOpen} >
             <DropdownMenuTrigger asChild>
                 <Button
                     className="rounded-full w-8 h-8"
                     variant="outline"
                     size="icon"
                 >
-                    <Avatar className="h-8 w-8">
-                        <AvatarImage src={user.avatarUrl} alt={user.name} />
+                    <Avatar className="h-8 w-8 hover:scale-110 duration-300 ease-in-out">
+                        <AvatarImage src="https://github.com/shadcn.png" />
                         <AvatarFallback className="bg-background">{user.name.charAt(0)}</AvatarFallback>
                     </Avatar>
                 </Button>
