@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"db-tool/internal/core/services/jwt"
 	"db-tool/internal/utils"
 	"net/http"
 
@@ -11,15 +12,22 @@ type AuthSerivce struct {
 }
 
 var authRepository = new(AuthRepository)
+var jwtService = jwt.NewJWTService()
 
 func (a *AuthSerivce) Login(c *gin.Context) {
-	user := c.MustGet("Body").(LoginDTO)
-	err := authRepository.Login(&user)
+	dto := c.MustGet("Body").(LoginDTO)
+	user, err := authRepository.Login(&dto)
+	if err != nil {
+		utils.HandleHTTPError(c, err.Error(), "Failed to Login", http.StatusBadRequest)
+	}
+
+	accessToken, err := jwtService.GenerateAccessToken(user.Email)
 	if err != nil {
 		utils.HandleHTTPError(c, err.Error(), "Failed to Login", http.StatusBadRequest)
 	}
 
 	c.Set("response", gin.H{
-		"messages": " Login successfully",
+		"messages":    " Login successfully",
+		"accessToken": accessToken,
 	})
 }

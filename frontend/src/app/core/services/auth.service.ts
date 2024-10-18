@@ -20,13 +20,13 @@ export const useAuth = useZuStandStore(authInitialState);
 class AuthService extends GenericHTTPService {
   public async login(data: LogInDto) {
     try {
-      const response = await super.post('/auth/login', {
+      const response: any = await super.post('/auth/login', {
         email: data.email,
         password: data.password,
       });
       toastService.success('Login successfully');
       this.setState('isAuthenticated', true);
-      localStorage.setItem('isAuthenticated', 'true');
+      localStorage.setItem('accessToken', response.data.data.accessToken);
     } catch (err: any) {}
   }
 
