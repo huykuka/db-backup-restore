@@ -1,11 +1,12 @@
 package utils
 
 import (
+	"net/http"
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
-	"net/http"
-	"strconv"
 )
 
 type Page struct {

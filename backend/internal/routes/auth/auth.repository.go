@@ -10,22 +10,20 @@ import (
 
 type User db.User
 
-type AuthRepository struct{}
-
-var hashingService = hashing.NewHashingService()
-var userRepository = new(users.UserRepository)
+type AuthRepository struct {
+	hashingService hashing.HashingService
+	userRepository users.UserRepository
+}
 
 func (r *AuthRepository) Login(userDto *LoginDTO) (*users.User, error) {
-	user, err := userRepository.FindOne(userDto.Email)
+	user, err := r.userRepository.FindOne(userDto.Email)
 	if err != nil {
-		log.Error(err.Error())
 		return nil, err
 	}
 
 	// Compare the hashed password with the provided password.
-	err = hashingService.ComparePasswords(user.Password, userDto.Password) // Ensure you compare the hashed password
+	err = r.hashingService.ComparePasswords(user.Password, userDto.Password) // Ensure you compare the hashed password
 	if err != nil {
-		log.Error(err.Error())
 		return nil, err
 	}
 
