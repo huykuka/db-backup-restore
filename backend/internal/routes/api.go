@@ -10,6 +10,7 @@ import (
 	"db-tool/internal/routes/settings"
 	"db-tool/internal/routes/users"
 	"os"
+	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/static"
@@ -22,7 +23,15 @@ func Init() {
 	port := os.Getenv("PORT")
 
 	r := gin.New()
-	r.Use(cors.Default())
+	// CORS configuration to allow all origins and expose all headers
+	r.Use(cors.New(cors.Config{
+		AllowAllOrigins:  true,
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"*"},
+		ExposeHeaders:    []string{"*"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 	// Set a lower memory limit for multipart forms (default is 32 MiB)
 	r.MaxMultipartMemory = 64 // 64MiB
 	//Middleware registration
