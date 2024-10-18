@@ -18,16 +18,17 @@ func (a *AuthSerivce) Login(c *gin.Context) {
 	dto := c.MustGet("Body").(LoginDTO)
 	user, err := authRepository.Login(&dto)
 	if err != nil {
-		utils.HandleHTTPError(c, err.Error(), "Failed to Login", http.StatusBadRequest)
+		utils.HandleHTTPError(c, err.Error(), "Failed to Login", http.StatusUnauthorized)
 	}
 
 	accessToken, err := jwtService.GenerateAccessToken(user.Email)
 	if err != nil {
-		utils.HandleHTTPError(c, err.Error(), "Failed to Login", http.StatusBadRequest)
+		utils.HandleHTTPError(c, err.Error(), "Failed to Login", http.StatusUnauthorized)
 	}
 
 	c.Set("response", gin.H{
 		"messages":    " Login successfully",
+		"email":       user.Email,
 		"accessToken": accessToken,
 	})
 }

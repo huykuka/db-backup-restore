@@ -1,6 +1,7 @@
 package jwt
 
 import (
+	"fmt"
 	"os"
 	"sync"
 	"time"
@@ -42,4 +43,13 @@ func (j *JWTService) GenerateAccessToken(email string) (string, error) {
 		return "", err
 	}
 	return tokenString, nil
+}
+
+func (j *JWTService) ValidateToken(token string) (*jwt.Token, error) {
+	return jwt.Parse(token, func(t_ *jwt.Token) (interface{}, error) {
+		if _, ok := t_.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method %v", t_.Header["alg"])
+		}
+		return []byte(j.JWTKey), nil
+	})
 }
