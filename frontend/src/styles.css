@@ -3,6 +3,18 @@
 @tailwind utilities;
 
 @layer base {
+    html,
+    body {
+        overflow-y: scroll; /* Allow scrolling */
+        scrollbar-width: none; /* Hide scrollbar in Firefox */
+    }
+
+    body::-webkit-scrollbar {
+        display: none; /* Hide scrollbar in Chrome, Safari, Edge */
+    }
+}
+
+@layer base {
     :root {
         --background: 0 0% 100%;
         --foreground: 222.2 84% 4.9%;

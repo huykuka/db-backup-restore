@@ -1,3 +1,4 @@
+import { authService } from '@core/services/auth.service';
 import { Separator } from '@frontend/shared/components/ui/separator';
 import {
   Database,
@@ -11,6 +12,7 @@ import BurgerMenu from './burger-menu';
 import LeadingBar from './leading-bar';
 import { ModeToggle } from './mode-toggle';
 import { NavigationBar } from './navigation-bar';
+import UserSection from './user-section';
 
 export interface NavBarItem {
   to: string;
@@ -36,7 +38,7 @@ const Header: React.FC = () => {
   return (
     <>
       <header
-        className="fixed top-0 left-0 right-0 z-50 flex  items-center p-2 px-6 mb-2 justify-between"
+        className="fixed w-screen overflow-hidden top-0 left-0 right-0 z-50 flex  items-center p-2 px-6 mb-2 justify-between"
         style={{ backgroundColor: '#033681' }}
       >
         <div className="flex flex-row items-center gap-5">
@@ -61,8 +63,9 @@ const Header: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex flex-row items-center justify-start">
+        <div className="flex flex-row items-center  gap-3">
           <ModeToggle />
+          <UserSection onLogOut={() => authService.logout()} />
         </div>
       </header>
       <LeadingBar />

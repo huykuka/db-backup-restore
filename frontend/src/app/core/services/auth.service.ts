@@ -40,8 +40,14 @@ class AuthService extends GenericHTTPService {
     }
   }
 
-  public logout() {
-    console.log('logout');
+  public async logout() {
+    try {
+    } catch (err: any) {
+      console.error(err);
+    } finally {
+      this.setState('isAuthenticated', false);
+      LocalStorageService.removeItem(ACCESS_TOKEN);
+    }
   }
 
   public async validateToken() {
