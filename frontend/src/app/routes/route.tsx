@@ -24,7 +24,7 @@ export const RouteComponent = () => {
                         getState().isAuthenticated ? (
                             <Navigate to="/home" replace />
                         ) : (
-                            <Login />
+                            <AnimatedContent><Login /></AnimatedContent>
                         )
                     }
                 />
