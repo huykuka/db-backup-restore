@@ -35,7 +35,7 @@ func TestRateLimiter(t *testing.T) {
 		expectedBody   string
 	}{
 		{
-			name:           "First request should pass",
+			name:           "Should first request pass",
 			sleepDuration:  0,
 			expectedStatus: http.StatusOK,
 			expectedBody:   "OK",
@@ -46,7 +46,7 @@ func TestRateLimiter(t *testing.T) {
 			expectedBody:   "Rate limit exceed",
 		},
 		{
-			name:           "Third request should pass after waiting",
+			name:           "should third request pass after waiting",
 			sleepDuration:  time.Second,
 			expectedStatus: http.StatusOK,
 			expectedBody:   "OK",

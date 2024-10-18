@@ -25,8 +25,12 @@ export default function ManualFileUpload() {
         title="Manual Backup Upload"
         description="Upload your .psql file to restore the database."
         uploadProgress={uploadProgress}
-        onFileUpload={async (file: any) => {
-          await manualUploadService.upload(file, setUploadProgress);
+        onFileUpload={async (file: File | File[]) => {
+          if (file instanceof File) {
+            await manualUploadService.upload(file, setUploadProgress);
+          } else {
+            console.error('Multiple file upload not supported');
+          }
         }}
       />
       <UploadFileTable onDeleteFile={handleDeleteFile} onRestoreFile={handleRestoreFile} />

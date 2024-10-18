@@ -1,36 +1,53 @@
 package guards
 
 import (
-	"fmt"
+	jwttoken "db-tool/internal/core/services/jwt-token"
+	"db-tool/internal/utils"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
+	"github.com/golang-jwt/jwt"
 )
 
-var validate = validator.New()
+type JWTService interface {
+	ValidateToken(tokenString string) (*jwt.Token, error)
+}
 
-// TODO add JWT validator here
-func BodyValidator[T any](c *gin.Context) {
-	var dto T // Data Transfer Object
+func JWTAuthGuard() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		isPublic := c.GetHeader("isPublic")
+		if isPublic == "true" {
+			c.Next()
+		}
+		authHeader := c.GetHeader("Authorization")
+		if authHeader == "" {
+			utils.HandleHTTPError(c, "Authorization header is required", "Permission denied", http.StatusUnauthorized)
+			return
+		}
 
-	// Bind JSON to the DTO
-	if err := c.ShouldBindJSON(&dto); err != nil {
-		// Append the error to the context without aborting the request
-		c.Error(fmt.Errorf("Invalid Input"))
-		// Set the status code to 400
-		c.Set("statusCode", http.StatusBadRequest)
+		bearerToken := strings.Split(authHeader, " ")
+		if len(bearerToken) != 2 || strings.ToLower(bearerToken[0]) != "bearer" {
+			utils.HandleHTTPError(c, "Invalid authorization header format", "Permission denied", http.StatusUnauthorized)
+			return
+		}
+
+		token, err := jwttoken.NewJWTService().ValidateToken(bearerToken[1])
+
+		if err != nil || !token.Valid {
+			utils.HandleHTTPError(c, "Invalid or expired token", "Permission denied", http.StatusUnauthorized)
+			return
+		}
+
+		claims, ok := token.Claims.(jwt.MapClaims)
+		if !ok {
+			utils.HandleHTTPError(c, "Failed to parse token claims", "Permission denied", http.StatusUnauthorized)
+			return
+		}
+
+		// You can add the claims to the context if needed
+		c.Set("username", claims["email"])
+
+		c.Next()
 	}
-
-	// Validate the DTO using the validator instance
-	if err := validate.Struct(dto); err != nil {
-		// Append the validation error to the context without aborting the request
-		c.Error(fmt.Errorf("Invalid Input"))
-
-		// Set the status code to 400
-		c.Set("statusCode", http.StatusBadRequest)
-	}
-
-	// Proceed to the next middleware or handler
-	c.Next()
 }

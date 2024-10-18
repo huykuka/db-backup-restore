@@ -1,9 +1,10 @@
 package db
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"gorm.io/gorm"
-	"time"
 )
 
 // Base contains common columns for all tables.
@@ -18,6 +19,13 @@ type Base struct {
 func (b *Base) BeforeCreate(tx *gorm.DB) (err error) {
 	b.ID = uuid.New().String()
 	return
+}
+
+type User struct {
+	Base
+	Name     string `json:"name"`
+	Email    string `json:"email" gorm:"unique"`
+	Password string `json:"password"`
 }
 
 type Setting struct {

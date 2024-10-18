@@ -16,13 +16,13 @@ const formSchema = z.object({
     password: z.string().min(6, 'Password must be at least 6 characters long'),
 });
 
+export type LogInDto = z.infer<typeof formSchema>
+export const LoginForm = ({ onLogin }: LoginFormProps) => {
 
-const LoginForm = ({ onLogin }: LoginFormProps) => {
-
-    const form = useForm<z.infer<typeof formSchema>>({
+    const form = useForm<LogInDto>({
         resolver: zodResolver(formSchema),
     });
-    const onSubmit = (data: z.infer<typeof formSchema>) => {
+    const onSubmit = (data: LogInDto) => {
         onLogin(data)
     };
 
@@ -70,4 +70,3 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
     );
 };
 
-export default LoginForm;

@@ -1,11 +1,12 @@
 package guards
 
 import (
-	"github.com/gin-gonic/gin"
 	"os"
+
+	"github.com/gin-gonic/gin"
 )
 
-var username = os.Getenv("SECRET_USERNAME")
+var username = "Test"
 var password = os.Getenv("SECRET_PASSWORD")
 
 func BasicAuthGuard() gin.HandlerFunc {
