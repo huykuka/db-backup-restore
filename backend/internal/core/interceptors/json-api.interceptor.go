@@ -26,7 +26,7 @@ type JSONAPIError struct {
 func JsonApiInterceptor() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Next()
-		
+
 		isJsonAPI, exist := c.Get("IsJsonAPI")
 		if exist && !isJsonAPI.(bool) {
 			// Bypass the middleware if IsJsonAPI is false
@@ -90,6 +90,7 @@ func handleError(c *gin.Context, err string) (*JSONAPIError, int) {
 	if code, exists := c.Get("statusCode"); exists {
 		statusCode, _ = strconv.Atoi(code.(string))
 	}
+
 	// Only append the first error from the Gin context to the JSON:API response
 	return &JSONAPIError{
 		Status: http.StatusText(statusCode),

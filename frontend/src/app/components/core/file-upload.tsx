@@ -18,7 +18,7 @@ interface FileUploadProps {
   description?: string;
   uploadProgress?: number;
   single?: boolean;
-  onFileUpload?: (file: File | File[]) => Promise<void>;
+  onFileUpload: (file: File | File[]) => Promise<void>;
   onFileSelect?: (fileName: string) => void;
 }
 
@@ -32,6 +32,7 @@ export default function FileUpload({
   onFileSelect,
 }: FileUploadProps) {
   const [fileName, setFileName] = useState<string | null>(null);
+
   const onDrop = useCallback(
     async (files: File[]) => {
       const validFiles: File[] = [];
@@ -40,7 +41,9 @@ export default function FileUpload({
         const fileExtension = file.name.split('.').pop()?.toLowerCase(); // Extract file extension
         // Check if file extension matches accepted types
         if (
-          !acceptedTypes?.some(
+          acceptedTypes &&
+          acceptedTypes.length > 0 &&
+          !acceptedTypes.some(
             (type) => fileExtension === type.replace('.', '').toLowerCase()
           )
         ) {
@@ -50,6 +53,7 @@ export default function FileUpload({
 
         validFiles.push(file);
       }
+
 
       if (single) {
         const file = validFiles[0]; // Take the first valid file if single
@@ -68,7 +72,7 @@ export default function FileUpload({
         }
       }
     },
-    [acceptedTypes, onFileUpload, onFileSelect, single]
+    [acceptedTypes, onFileSelect, single]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });

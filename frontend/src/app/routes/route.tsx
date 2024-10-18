@@ -1,13 +1,19 @@
 import { Login } from "@components/auth/login"
-import FileUpload from "@components/core/file-upload"
 import Home from "@components/home/home"
 import Layout from "@components/layout"
+import ManualFileUpload from "@components/manual-upload/manual-upload"
 import { authService, useAuth } from "@core/services/auth.service"
+import { useEffect } from "react"
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
 
 export const RouteComponent = () => {
     useAuth()
-    const { getState } = authService
+    const { getState, setState } = authService
+    useEffect(() => {
+        const isAuthenticated = localStorage.getItem("isAuthenticated")
+        console.log(isAuthenticated)
+        setState('isAuthenticated', isAuthenticated === "true")
+    }, [])
     return (
         <BrowserRouter>
             <Routes>
@@ -17,7 +23,7 @@ export const RouteComponent = () => {
                     <Route element={<Layout />}>
                         <Route path="/" element={<Navigate to="/home" replace />} />
                         <Route path="/home" element={<Home />} />
-                        <Route path="/manual" element={<FileUpload />} />
+                        <Route path="/manual" element={<ManualFileUpload />} />
                         {/* Catch-all route for authenticated users */}
                         <Route path="*" element={<Navigate to="/home" replace />} />
                     </Route>

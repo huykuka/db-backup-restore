@@ -6,7 +6,7 @@ import (
 )
 
 func Register(r *gin.RouterGroup) {
-	route := r.Group("/settings")
+	route := r.Group("/settings", guards.JWTAuthGuard())
 
 	settingService := new(SettingService)
 	// Register routes without trailing slashes

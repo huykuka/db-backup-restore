@@ -16,7 +16,7 @@ func Init() {
 	if err != nil {
 		panic("failed to connect database")
 	}
-	err = Handler.AutoMigrate(&Setting{}, &BackUp{}, &History{})
+	err = Handler.AutoMigrate(&Setting{}, &BackUp{}, &History{}, &User{})
 
 	if err != nil {
 		return
@@ -31,4 +31,5 @@ func GetDB() *gorm.DB {
 
 func seedDB(handler *gorm.DB) {
 	seedSetting(handler)
+	seedUser(handler)
 }
