@@ -3,8 +3,6 @@ package users
 import (
 	"db-tool/internal/config/db"
 	"strings"
-
-	log "github.com/sirupsen/logrus"
 )
 
 type User db.User
@@ -33,8 +31,6 @@ func (u *UserRepository) FindOne(email string) (*User, error) {
 	var user User
 	// Convert key to uppercase and find the setting by key
 	if err := db.GetDB().Model(&User{}).Where("UPPER(email) = ?", strings.ToUpper(email)).First(&user).Error; err != nil {
-		log.Error(err.Error())
-
 		return nil, err
 	}
 	return &user, nil

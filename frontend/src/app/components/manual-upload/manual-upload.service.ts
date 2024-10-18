@@ -59,7 +59,6 @@ class ManualUploadService extends GenericHTTPService {
       });
       toastService.success('Restore successfully!');
     } catch (err) {
-      toastService.error('File Restore Failed');
     } finally {
       toastService.dismiss();
     }
