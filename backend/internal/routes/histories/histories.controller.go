@@ -1,6 +1,7 @@
 package histories
 
 import (
+	"db-tool/internal/core/guards"
 	"db-tool/internal/core/middlewares"
 	"db-tool/internal/core/pipes"
 
@@ -9,7 +10,7 @@ import (
 
 func Register(r *gin.RouterGroup) {
 	//Similar to inject() in Nestjs
-	route := r.Group("/histories")
+	route := r.Group("/histories", guards.JWTAuthGuard())
 	//
 	historyService := new(HistoriesService)
 

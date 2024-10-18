@@ -1,13 +1,14 @@
 package users
 
 import (
+	"db-tool/internal/core/guards"
 	"db-tool/internal/core/pipes"
 	"github.com/gin-gonic/gin"
 )
 
 func Register(r *gin.RouterGroup) {
 	//Similar to inject() in Nestjs
-	route := r.Group("/users")
+	route := r.Group("/users", guards.JWTAuthGuard())
 
 	userService := new(UserService)
 	///Register routes
