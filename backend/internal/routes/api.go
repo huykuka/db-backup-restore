@@ -24,7 +24,7 @@ import (
 
 // Embed the web directory
 //
-//go:embed web/*
+//go:embed web
 var static embed.FS
 
 func Init() {
@@ -70,18 +70,12 @@ func Init() {
 
 	// Middleware to serve static files if the path does not match /api/*
 	r.Use(func(c *gin.Context) {
-		if !strings.HasPrefix(c.Request.URL.Path, "/api/") {
-			// Check if the requested file exists
-			filePath := "web" + c.Request.URL.Path
-			if _, err := contentStatic.Open(filePath); err != nil {
-				// If the file does not exist, serve index.html
-				c.Request.URL.Path = "/"
-			}
-			http.FileServer(http.FS(contentStatic)).ServeHTTP(c.Writer, c.Request)
-			c.Abort()
-		}
-	})
-	
+        if !strings.HasPrefix(c.Request.URL.Path, "/api/") {
+            http.FileServer(http.FS(contentStatic)).ServeHTTP(c.Writer, c.Request)
+            c.Abort()
+        }
+    })
+
 	// Start the Server
 	log.Printf("Server is running on port: %s", port)
 	if err := r.Run(":" + port); err != nil {
