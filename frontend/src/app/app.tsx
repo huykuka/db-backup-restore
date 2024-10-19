@@ -1,6 +1,6 @@
 import { Toaster } from '@frontend/shared/components/ui/sonner';
-import { ThemeProvider } from './components/core/theme-provider';
-import { RouteComponent } from './routes/route';
+import { ThemeProvider } from '@components/core';
+import { RouteComponent } from '@routes/route';
 
 const App = () => {
   return (
