@@ -1,19 +1,29 @@
-import { Login } from "@components/auth/login";
-import Home from "@components/home/home";
-import Layout from "@components/layout";
-import ManualFileUpload from "@components/manual-upload/manual-upload";
-import { authService, useAuth } from "@core/services/auth.service";
-import { useEffect } from 'react';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { Login } from '@components/auth/login';
+import ManualFileUpload from '@components/manual-upload/manual-upload';
+import { authService } from '@core/services/auth.service';
+
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AnimatedContent from './animated-route';
+import Layout from '@components/layout';
+import Home from '@components/home/home';
+
 
 export const RouteComponent = () => {
-    useAuth();
+    const [isLoading, setIsLoading] = useState(true);
     const { getState } = authService;
 
     useEffect(() => {
-        authService.validateToken();
+        const validateAuth = async () => {
+            await authService.validateToken();
+            setIsLoading(false);
+        };
+        validateAuth();
     }, []);
+
+    if (isLoading) {
+        return <div>Loading...</div>; // Or your preferred loading indicator
+    }
 
     return (
         <BrowserRouter>
@@ -29,18 +39,17 @@ export const RouteComponent = () => {
                     }
                 />
 
-                {getState().isAuthenticated ? (
-                    <Route element={<Layout />}>
-                        <Route path="/" element={<Navigate to="/home" replace />} />
-                        <Route path="/home" element={<AnimatedContent><Home /></AnimatedContent>} />
-                        <Route path="/manual" element={<AnimatedContent><ManualFileUpload /></AnimatedContent>} />
-                        <Route path="*" element={<Navigate to="/home" replace />} />
-                    </Route>
-                ) : (
-                    <Route path="/" element={<Login />} />
-                )}
+                <Route
+                    element={
+                        getState().isAuthenticated ? <Layout /> : <Navigate to="/login" replace />
+                    }
+                >
+                    <Route path="/" element={<Navigate to="/home" replace />} />
+                    <Route path="/home" element={<AnimatedContent><Home /></AnimatedContent>} />
+                    <Route path="/manual" element={<AnimatedContent><ManualFileUpload /></AnimatedContent>} />
+                </Route>
 
-                <Route path="*" element={<Navigate to="/login" replace />} />
+                <Route path="*" element={<Navigate to={getState().isAuthenticated ? "/home" : "/login"} replace />} />
             </Routes>
         </BrowserRouter>
     );
