@@ -4,7 +4,8 @@
   "license": "MIT",
   "scripts": {
     "start": "nx serve --host 0.0.0.0",
-    "build": "nx build",
+    "build": "nx build && npm run postbuild",
+    "postbuild": "cpx 'dist/frontend/**/*' '../backend/internal/routes/web'",
     "test": "nx test"
   },
   "private": true,
@@ -80,6 +81,7 @@
     "@vitest/ui": "^1.3.1",
     "autoprefixer": "10.4.13",
     "axios-mock-adapter": "^2.1.0",
+    "cpx": "^1.2.1",
     "eslint": "~8.57.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-import": "2.27.5",
