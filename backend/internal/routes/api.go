@@ -13,6 +13,7 @@ import (
 	"io/fs"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -70,11 +71,17 @@ func Init() {
 
 	// Middleware to serve static files if the path does not match /api/*
 	r.Use(func(c *gin.Context) {
-        if !strings.HasPrefix(c.Request.URL.Path, "/api/") {
-            http.FileServer(http.FS(contentStatic)).ServeHTTP(c.Writer, c.Request)
-            c.Abort()
-        }
-    })
+		if !strings.HasPrefix(c.Request.URL.Path, "/api/") {
+			filePath := filepath.Join(".", c.Request.URL.Path)
+			_, err := contentStatic.Open(filePath)
+			if os.IsNotExist(err) {
+				c.FileFromFS("index.html", http.FS(contentStatic))
+			} else {
+				http.StripPrefix("/", http.FileServer(http.FS(contentStatic))).ServeHTTP(c.Writer, c.Request)
+			}
+			c.Abort()
+		}
+	})
 
 	// Start the Server
 	log.Printf("Server is running on port: %s", port)

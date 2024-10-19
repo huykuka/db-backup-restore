@@ -23,7 +23,7 @@ export const authInitialState: AuthState = {
 export const useAuth = useZuStandStore(authInitialState);
 
 class AuthService extends GenericHTTPService {
-  public async login(data: LogInDto) {
+  public async login(data: LogInDto): Promise<void> {
     try {
       const response: any = await super.post('/auth/login', {
         email: data.email,
@@ -36,7 +36,7 @@ class AuthService extends GenericHTTPService {
         LocalStorageService.setItem(ACCESS_TOKEN, token);
       }
     } catch (err: any) {
-      console.error(err);
+      throw err; // Re-throw the error to be handled by the caller
     }
   }
 
@@ -58,7 +58,7 @@ class AuthService extends GenericHTTPService {
         this.setState('isAuthenticated', true);
       }
     } catch (err: any) {
-      console.error(err);
+      throw err
     }
   }
 

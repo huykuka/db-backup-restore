@@ -3,6 +3,7 @@ import { ThemeProvider } from '@components/core';
 import { RouteComponent } from '@routes/route';
 
 const App = () => {
+
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <RouteComponent />

@@ -11,8 +11,8 @@ const apiClient = axios.create({
 apiClient.interceptors.request.use(jwtInterceptor, (error) => Promise.reject(error));
 
 // Add the global error response interceptor
-apiClient.interceptors.response.use(
-    (response) => response,
-    globalErrorInterceptor
-);
+// apiClient.interceptors.response.use(
+//     (response) => response,
+//     globalErrorInterceptor
+// );
 export {apiClient, BASE_URL, CanceledError};
