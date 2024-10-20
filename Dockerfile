@@ -33,7 +33,7 @@ COPY backend/ ./
 COPY --from=frontend-builder /app/frontend/dist/frontend ./web
 
 # Build the backend
-RUN CGO_ENABLED=1 go build -o  ./tmp/main ./cmd/db-tool/main.go
+RUN CGO_ENABLED=1 go build -o  ./tmp/main.bin ./cmd/db-tool/main.go
 
 # Stage 3: Final Image (Slimmed Down)
 # Use Alpine as the base image
@@ -46,10 +46,10 @@ RUN apk add --no-cache postgresql-client
 WORKDIR /app
 
 # Copy the backend build output from the build stage
-COPY --from=backend-builder /app/backend/tmp/main ./main
+COPY --from=backend-builder /app/backend/tmp/main.bin ./main.bin
 
 # Ensure the binary is executable
-RUN chmod +x ./main
+RUN chmod +x ./main.bin
 
 # Set environment variables
 ENV CGO_ENABLED=1
@@ -59,4 +59,4 @@ ENV GIN_MODE=release
 EXPOSE 8080
 
 # Command to run the binary
-CMD ["./main"]
+CMD ["./main.bin"]

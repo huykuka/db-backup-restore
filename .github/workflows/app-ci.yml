@@ -91,7 +91,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: '1.23'
+          go-version: '1.22.2'
 
       - name: Install build dependencies
         run: sudo apt-get update && sudo apt-get install -y gcc musl-dev
@@ -103,7 +103,7 @@ jobs:
         run: cp -r frontend/dist/frontend backend/web
 
       - name: Build backend
-        run: CGO_ENABLED=1 go build -o backend/tmp/main ./cmd/db-tool/main.go
+        run: CGO_ENABLED=1 go build -o backend/tmp/main.bin ./cmd/db-tool/main.go
         working-directory: backend
 
       - name: List build output
@@ -114,4 +114,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: backend-build
-          path: backend/tmp/main
+          path: backend/tmp/main.bin
