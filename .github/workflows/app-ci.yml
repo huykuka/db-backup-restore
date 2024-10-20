@@ -100,10 +100,10 @@ jobs:
         working-directory: backend
 
       - name: Copy frontend build to backend
-        run: cp -r frontend/dist/frontend backend/web
+        run: cp -r frontend/dist/frontend backend/internal/routes/web
 
       - name: Build backend
-        run: CGO_ENABLED=1 go build -o backend/output/main.bin ./cmd/db-tool/main.go
+        run: CGO_ENABLED=1 go build -o output/main.bin ./cmd/db-tool/main.go
         working-directory: backend
 
       - name: List build output
