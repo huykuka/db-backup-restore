@@ -30,10 +30,10 @@ RUN go mod download
 COPY backend/ ./
 
 # Copy the frontend build output to the backend's web directory
-COPY --from=frontend-builder /app/frontend/dist/frontend ./web
+COPY --from=frontend-builder /app/frontend/dist/frontend ./internal/routes/web
 
 # Build the backend
-RUN go build -o  ./tmp/main ./cmd/db-tool/main.go
+RUN CGO_ENABLED=1 go build -o ./tmp/main ./cmd/db-tool/main.go
 
 # Stage 3: Final Image (Slimmed Down)
 # Use Alpine as the base image
