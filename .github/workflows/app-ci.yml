@@ -114,5 +114,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: main-binary
-          path: backend/tmp/
+          path: backend/tmp/*
       
