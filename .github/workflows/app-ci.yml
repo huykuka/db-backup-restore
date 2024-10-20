@@ -107,7 +107,7 @@ jobs:
         working-directory: backend
 
       - name: List build output
-        run: ls -l backend/build
+        run: ls -l backend/output
         working-directory: backend
 
       - name: Upload binary artifact
