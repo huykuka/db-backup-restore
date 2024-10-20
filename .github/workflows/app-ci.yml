@@ -94,8 +94,7 @@ jobs:
           go-version: '1.23'
 
       - name: Install build dependencies
-        run: apk add --no-cache gcc musl-dev
-
+        run: sudo apt-get update && sudo apt-get install -y gcc musl-dev
       - name: Install backend dependencies
         run: go mod download
         working-directory: backend
@@ -104,7 +103,7 @@ jobs:
         run: cp -r frontend/dist/frontend backend/web
 
       - name: Build backend
-        run: go build -o backend/tmp/main ./cmd/db-tool/main.go
+        run: CGO_ENABLED=1 go build -o backend/tmp/main ./cmd/db-tool/main.go
         working-directory: backend
 
       - name: Upload backend build artifacts

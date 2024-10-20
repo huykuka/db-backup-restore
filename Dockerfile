@@ -33,7 +33,7 @@ COPY backend/ ./
 COPY --from=frontend-builder /app/frontend/dist/frontend ./web
 
 # Build the backend
-RUN go build -o  ./tmp/main ./cmd/db-tool/main.go
+RUN CGO_ENABLED=1 go build -o  ./tmp/main ./cmd/db-tool/main.go
 
 # Stage 3: Final Image (Slimmed Down)
 # Use Alpine as the base image
