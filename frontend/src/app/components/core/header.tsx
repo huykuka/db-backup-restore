@@ -31,7 +31,7 @@ const links: NavBarItem[] = [
     label: 'Manual',
     icon: <HardDriveUploadIcon className="w-4 h-4" />,
   },
-  { to: '/log', label: 'Logs', icon: <ScrollTextIcon className="w-4 h-4" /> },
+  // { to: '/log', label: 'Logs', icon: <ScrollTextIcon className="w-4 h-4" /> },
 ];
 
 const Header: React.FC = () => {

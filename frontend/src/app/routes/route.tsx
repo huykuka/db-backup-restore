@@ -4,7 +4,7 @@ import Layout from "@components/layout";
 import ManualFileUpload from "@components/manual-upload/manual-upload";
 import { authService, useAuth } from "@core/services/auth.service";
 import { useEffect } from 'react';
-import { BrowserRouter, HashRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { HashRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import AnimatedContent from './animated-route';
 
 export const RouteComponent = () => {
@@ -24,7 +24,6 @@ const InnerRoutes = () => {
     useEffect(() => {
         authService.validateToken()
             .then(() => {
-                console.log(location.pathname);
                 if (location.pathname === '/login') return;
                 if (location.pathname === '/') {
                     navigate('/home', { replace: true });
