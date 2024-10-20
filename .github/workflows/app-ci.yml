@@ -10,7 +10,7 @@ on:
 
 jobs:
   test-frontend:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -29,7 +29,7 @@ jobs:
         working-directory: frontend
 
   test-backend:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: test-frontend
     steps:
       - name: Checkout code
@@ -49,7 +49,7 @@ jobs:
         working-directory: backend
 
   build-frontend:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: test-frontend
     steps:
       - name: Checkout code
@@ -76,7 +76,7 @@ jobs:
 
           
   build-backend:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: [build-frontend,test-backend]
     steps:
       - name: Checkout code
