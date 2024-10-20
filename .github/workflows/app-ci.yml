@@ -105,7 +105,7 @@ jobs:
       - name: Build backend
         run: CGO_ENABLED=1 go build -o backend/tmp/main ./cmd/db-tool/main.go
         working-directory: backend
-        
+
       - name: List build output
         run: ls -l backend/tmp
         working-directory: backend
@@ -114,4 +114,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: backend-build
-          path: backend/tmp/
+          path: backend/tmp/main
