@@ -103,16 +103,16 @@ jobs:
         run: cp -r frontend/dist/frontend backend/web
 
       - name: Build backend
-        run: CGO_ENABLED=1 go build -o backend/tmp/main.bin ./cmd/db-tool/main.go
+        run: CGO_ENABLED=1 go build -o backend/output/main.bin ./cmd/db-tool/main.go
         working-directory: backend
 
       - name: List build output
-        run: ls -l backend/tmp
+        run: ls -l backend/build
         working-directory: backend
 
       - name: Upload binary artifact
         uses: actions/upload-artifact@v4
         with:
           name: main-binary
-          path: backend/tmp/*
+          path: backend/output/main.bin
       
