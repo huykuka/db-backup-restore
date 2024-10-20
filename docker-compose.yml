@@ -1,24 +1,7 @@
 services:
-  backend:
-    build:
-        context: backend
-        dockerfile: backend/docker/prod/Dockerfile
+  app:
+    build: .
+    env_file:
+      - .env
     ports:
-      - '8082:8082'
-    entrypoint: /entrypoint.sh
-    environment:
-        - ENV=prod
-        - PORT=8082
-        - BACKUP_PATH=/home/thaiqu/backup
-    restart: always
-    volumes:
-      - backup_data:/app/backup
-
-
-volumes:
-  backup_data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /home/thaiqu/backup
+      - "3001:8080"
