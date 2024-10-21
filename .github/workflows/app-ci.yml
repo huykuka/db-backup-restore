@@ -96,7 +96,7 @@ jobs:
           go-version: '1.23'
 
       - name: Install build dependencies
-        run: sudo apt-get update && sudo apt-get install -y gcc musl-dev
+        run: apk add --no-cache gcc musl-dev 
       - name: Install backend dependencies
         run: go mod download
         working-directory: backend
