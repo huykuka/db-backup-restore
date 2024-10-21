@@ -103,7 +103,7 @@ jobs:
         run: cp -r frontend/dist/frontend backend/internal/routes/web
 
       - name: Build backend
-        run: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o output/main ./cmd/db-tool/main.go
+        run: CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o output/main ./cmd/db-tool/main.go
         working-directory: backend
 
       - name: Upload binary artifact
