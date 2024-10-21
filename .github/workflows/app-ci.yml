@@ -105,7 +105,7 @@ jobs:
         run: ls -la frontend/dist/frontend
 
       - name: Copy frontend build to backend
-        run: cp -r frontend/dist/frontend backend/internal/routes/web
+        run: cp -r frontend/dist/frontend/* backend/internal/routes/web
 
       - name: Build backend
         run: CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o output/main ./cmd/db-tool/main.go
