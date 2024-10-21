@@ -1,6 +1,6 @@
 services:
   app:
-    build: .
+    image: 010497/db-tools:latest
     env_file:
       - .env
     ports:
