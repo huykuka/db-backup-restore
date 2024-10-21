@@ -103,14 +103,14 @@ jobs:
         run: cp -r frontend/dist/frontend backend/internal/routes/web
 
       - name: Build backend
-        run: CGO_ENABLED=1 go build -o output/main.bin ./cmd/db-tool/main.go
+        run: CGO_ENABLED=1 go build -o output/main ./cmd/db-tool/main.go
         working-directory: backend
 
       - name: Upload binary artifact
         uses: actions/upload-artifact@v4
         with:
           name: backend-build
-          path: backend/output/main.bin
+          path: backend/output/main
   
   build-docker:
     runs-on: ubuntu-latest
@@ -123,7 +123,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: backend-build
-          path: backend/output
+          path: backend/output/main
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
