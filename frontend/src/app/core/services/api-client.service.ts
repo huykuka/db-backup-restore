@@ -1,7 +1,9 @@
 import axios, {CanceledError} from 'axios';
 import {globalErrorInterceptor, jwtInterceptor} from "@core/interceptors";
+import { environment } from '../../../environments/environment';
 
-const BASE_URL = 'http://127.0.0.1:8080/api';
+
+const BASE_URL = environment.apiEndPoint
 
 const apiClient = axios.create({
     baseURL: BASE_URL,
@@ -11,8 +13,8 @@ const apiClient = axios.create({
 apiClient.interceptors.request.use(jwtInterceptor, (error) => Promise.reject(error));
 
 // Add the global error response interceptor
-// apiClient.interceptors.response.use(
-//     (response) => response,
-//     globalErrorInterceptor
-// );
+apiClient.interceptors.response.use(
+    (response) => response,
+    globalErrorInterceptor
+);
 export {apiClient, BASE_URL, CanceledError};
