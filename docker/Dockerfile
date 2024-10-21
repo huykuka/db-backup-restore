@@ -10,7 +10,7 @@ WORKDIR /app
 COPY backend/output ./
 
 # Ensure the binary is executable
-RUN chmod +x ./main.bin
+RUN chmod +x ./main
 
 # Set environment variables
 ENV CGO_ENABLED=1
@@ -20,4 +20,4 @@ ENV GIN_MODE=release
 EXPOSE 8080
 
 # Command to run the binary
-CMD ["./main.bin"]
+CMD ["./main"]
