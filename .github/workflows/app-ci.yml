@@ -141,5 +141,5 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -t 010497/db-tools:latest -f docker/Dockerfile .
+          docker build -t 010497/db-tools:latest -f docker/Dockerfile.build .
           docker push 010497/db-tools:latest
