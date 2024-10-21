@@ -13,6 +13,7 @@ COPY backend/output ./
 RUN chmod +x ./main
 
 # Set environment variables
+ENV CGO_ENABLED=1
 ENV GIN_MODE=release
 
 # Expose the application port
