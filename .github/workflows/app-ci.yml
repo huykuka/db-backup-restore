@@ -109,7 +109,7 @@ jobs:
       - name: Upload binary artifact
         uses: actions/upload-artifact@v4
         with:
-          name: main-binary
+          name: backend-build
           path: backend/output/main.bin
   
   build-docker:
