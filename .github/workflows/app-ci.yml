@@ -101,6 +101,9 @@ jobs:
         run: go mod download
         working-directory: backend
 
+      - name: List files in frontend build
+        run: ls -la frontend/dist/frontend
+
       - name: Copy frontend build to backend
         run: cp -r frontend/dist/frontend backend/internal/routes/web
 
