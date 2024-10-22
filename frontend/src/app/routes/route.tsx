@@ -4,9 +4,8 @@ import Layout from "@components/layout";
 import ManualFileUpload from "@components/manual-upload/manual-upload";
 import { authService, useAuth } from "@core/services/auth.service";
 import { useEffect } from 'react';
-import { HashRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { HashRouter, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import AnimatedContent from './animated-route';
-import { environment } from "@environment/environment";
 
 export const RouteComponent = () => {
     useAuth();

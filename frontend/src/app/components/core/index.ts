@@ -7,5 +7,6 @@ export * from './loader';
 export * from './mode-toggle';
 export * from './navigation-bar';
 export * from './paging';
+export * from './read-more';
 export * from './side-bar';
 export * from './theme-provider';
