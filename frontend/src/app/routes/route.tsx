@@ -6,6 +6,7 @@ import { authService, useAuth } from "@core/services/auth.service";
 import { useEffect } from 'react';
 import { HashRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import AnimatedContent from './animated-route';
+import { environment } from "@environment/environment";
 
 export const RouteComponent = () => {
     useAuth();
@@ -20,21 +21,12 @@ export const RouteComponent = () => {
 const InnerRoutes = () => {
     const navigate = useNavigate();
     const { getState } = authService;
-    const location = useLocation();
     useEffect(() => {
         authService.validateToken()
-            .then(() => {
-                if (location.pathname === '/login') return;
-                if (location.pathname === '/') {
-                    navigate('/home', { replace: true });
-                    return;
-                }
-                navigate(location.pathname, { replace: true });
-            })
             .catch(() => {
                 navigate('/login', { replace: true });
             });
-    }, [navigate, location.pathname]);
+    }, []);
 
     return (
         <Routes>

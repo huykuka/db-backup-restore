@@ -1,6 +1,4 @@
-import {zodResolver} from "@hookform/resolvers/zod"
-import {useForm} from "react-hook-form"
-import {z} from "zod"
+import { Button } from "@frontend/shared/components/ui/button";
 import {
     Form,
     FormControl,
@@ -10,28 +8,30 @@ import {
     FormLabel,
     FormMessage
 } from "@frontend/shared/components/ui/form";
-import {Button} from "@frontend/shared/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@frontend/shared/components/ui/card";
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@frontend/shared/components/ui/select";
-import {Save} from "lucide-react";
-import {Setting} from "src/app/models/settings.model";
-import {useEffect} from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@frontend/shared/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@frontend/shared/components/ui/select";
+import { Save } from "lucide-react";
+import { useEffect } from "react";
+import settingService from "./settings.service";
 
 const dbTypes = ["postgresql", "mysql"] as const;
 const backupIntervals = ["midnight", "daily", "weekly", "hourly", "monthly"] as const;
 
 const formSchema = z.object({
-    dbType: z.enum(dbTypes, {message: "Database type is required."}),
-    backupInterval: z.enum(backupIntervals, {message: "Invalid backup interval."}),
+    dbType: z.enum(dbTypes, { message: "Database type is required." }),
+    backupInterval: z.enum(backupIntervals, { message: "Invalid backup interval." }),
 })
 
 interface GeneralSettingFormProps {
-    settings: Setting[] | undefined;
 }
 
-export const GeneralSettingForm= ({ settings }: GeneralSettingFormProps) => {
+export const GeneralSettingForm = ({ }: GeneralSettingFormProps) => {
 
+    const { getState } = settingService
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -41,27 +41,25 @@ export const GeneralSettingForm= ({ settings }: GeneralSettingFormProps) => {
     })
 
     useEffect(() => {
-        if (settings) {
-            const generalSettings = settings.reduce((acc, setting) => {
-                switch (setting.key) {
-                    case 'GENERAL_DB_TYPE':
-                        acc.dbType = setting.value as (typeof dbTypes)[number];
-                        break;
-                    case 'GENERAL_BACKUP_INTERVAL':
-                        acc.backupInterval = setting.value as (typeof backupIntervals)[number];
-                        break;
-                    default:
-                        break;
-                }
-                return acc;
-            }, {
-                dbType: "postgresql" as (typeof dbTypes)[number],
-                backupInterval: "midnight" as (typeof backupIntervals)[number],
-            });
+        const generalSettings = getState().settings.reduce((acc, setting) => {
+            switch (setting.key) {
+                case 'GENERAL_DB_TYPE':
+                    acc.dbType = setting.value as (typeof dbTypes)[number];
+                    break;
+                case 'GENERAL_BACKUP_INTERVAL':
+                    acc.backupInterval = setting.value as (typeof backupIntervals)[number];
+                    break;
+                default:
+                    break;
+            }
+            return acc;
+        }, {
+            dbType: "postgresql" as (typeof dbTypes)[number],
+            backupInterval: "midnight" as (typeof backupIntervals)[number],
+        });
 
-            form.reset(generalSettings);
-        }
-    }, [settings, form]);
+        form.reset(generalSettings);
+    }, [getState()]);
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values)
@@ -79,13 +77,13 @@ export const GeneralSettingForm= ({ settings }: GeneralSettingFormProps) => {
                         <FormField
                             control={form.control}
                             name="dbType"
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Database Type</FormLabel>
                                     <FormControl>
                                         <Select {...field}>
                                             <SelectTrigger>
-                                                <SelectValue placeholder="Database Type"/>
+                                                <SelectValue placeholder="Database Type" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectItem value="postgresql">PostgreSQL</SelectItem>
@@ -96,20 +94,20 @@ export const GeneralSettingForm= ({ settings }: GeneralSettingFormProps) => {
                                     <FormDescription>
                                         This is your database type.
                                     </FormDescription>
-                                    <FormMessage/>
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
                         <FormField
                             control={form.control}
                             name="backupInterval"
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Backup Interval</FormLabel>
                                     <FormControl>
                                         <Select {...field}>
                                             <SelectTrigger>
-                                                <SelectValue placeholder="Backup Interval"/>
+                                                <SelectValue placeholder="Backup Interval" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectItem value="midnight">Midnight</SelectItem>
@@ -123,12 +121,12 @@ export const GeneralSettingForm= ({ settings }: GeneralSettingFormProps) => {
                                     <FormDescription>
                                         This is your backup interval.
                                     </FormDescription>
-                                    <FormMessage/>
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
                         <Button type="submit">
-                            <Save className="mr-2"/>
+                            <Save className="mr-2" />
                             Save Preferences
                         </Button>
                     </form>

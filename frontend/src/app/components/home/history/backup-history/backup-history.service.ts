@@ -1,6 +1,6 @@
 import { GenericHTTPService } from '../../../../core/services/http-client.service';
 
-import { apiClient, toastService } from '@core/services';
+import { apiClient, ToastService } from '@core/services';
 import { useZuStandStore } from '../../../../core/hooks/useZustandStore';
 import { BackUpHistoryState } from './backup-history';
 
@@ -51,20 +51,20 @@ class BackupHistoryService extends GenericHTTPService {
   public async createBackup() {
     await this.post('/backup');
     this.resetPaging();
-    toastService.success('Backup created successfully');
+    ToastService.success('Backup created successfully');
     await this.getBackup();
   }
 
   public async deleteBackup(id: string) {
     await this.delete(`/backup/${id}`);
-    toastService.success('Backup deleted successfully');
+    ToastService.success('Backup deleted successfully');
     this.resetPaging();
     await this.getBackup();
   }
 
   public async downloadBackup(id: string) {
     try {
-      toastService.loading('Downloading backup file...');
+      ToastService.loading('Downloading backup file...');
       const response = await apiClient.get(`/backup/download/${id}`, {
         responseType: 'blob',
       });
@@ -88,9 +88,9 @@ class BackupHistoryService extends GenericHTTPService {
       document.body.removeChild(link);
       URL.revokeObjectURL(href);
     } catch (error) {
-      toastService.error('Cannot download backup file');
+      ToastService.error('Cannot download backup file');
     } finally {
-      toastService.dismiss();
+      ToastService.dismiss();
     }
   }
 

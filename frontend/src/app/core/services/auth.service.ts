@@ -6,7 +6,7 @@ import {
 } from '@core/services/local-storage.service';
 import { apiClient } from './api-client.service';
 import { GenericHTTPService } from './http-client.service';
-import { toastService } from './toast.service';
+import { ToastService } from './toast.service';
 
 export interface AuthState {
   isAuthenticated: boolean;
@@ -31,7 +31,7 @@ class AuthService extends GenericHTTPService {
       });
       const token = response.data.data.accessToken;
       if (token) {
-        toastService.success('Login successfully');
+        ToastService.success('Login successfully');
         this.setState('isAuthenticated', true);
         LocalStorageService.setItem(ACCESS_TOKEN, token);
       }
@@ -52,13 +52,19 @@ class AuthService extends GenericHTTPService {
 
   public async validateToken() {
     try {
+      const token = LocalStorageService.getItem(ACCESS_TOKEN);
+      if (!token) {
+        return;
+      }
       const response = await apiClient.get('/auth/validate');
       const statusCode = response.status;
       if (statusCode == 200) {
         this.setState('isAuthenticated', true);
       }
     } catch (err: any) {
-      throw err
+      LocalStorageService.removeItem(ACCESS_TOKEN);
+      this.setState('isAuthenticated', false);
+      throw err;
     }
   }
 

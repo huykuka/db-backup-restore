@@ -11,7 +11,7 @@ export default function ManualFileUpload() {
 
   const { getState, setState } = manualUploadService
 
-  const handleDeleteFile = (path: String) => {
+  const handleDeleteFile = (path: string) => {
     const updatedFiles = getState().files.filter(file => file.filePath !== path);
     setState('files', updatedFiles);
   }

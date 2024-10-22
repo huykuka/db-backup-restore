@@ -1,7 +1,7 @@
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 import { apiClient } from './api-client.service';
-import { toastService } from './toast.service';
+import { ToastService } from './toast.service';
 
 export class GenericHTTPService {
   // Update in `frontend/src/app/core/services/http-client.services.ts`
@@ -14,7 +14,7 @@ export class GenericHTTPService {
       return response.data;
     } catch (error) {
       const errorMessage = this.extractErrorMessage(error);
-      toastService.error(errorMessage);
+      ToastService.error(errorMessage);
       throw error;
     }
   }
@@ -28,7 +28,7 @@ export class GenericHTTPService {
       return await apiClient.post<T>(url, data, config);
     } catch (error) {
       const errorMessage = this.extractErrorMessage(error);
-      toastService.error(errorMessage);
+      ToastService.error(errorMessage);
       throw error;
     }
   }
@@ -42,7 +42,7 @@ export class GenericHTTPService {
       return await apiClient.put<T>(url, data, config);
     } catch (error) {
       const errorMessage = this.extractErrorMessage(error);
-      toastService.error(errorMessage);
+      ToastService.error(errorMessage);
       throw error;
     }
   }

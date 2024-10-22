@@ -1,5 +1,5 @@
 import { useZuStandStore } from '../../../../core/hooks/useZustandStore';
-import { apiClient, toastService } from '../../../../core/services';
+import { apiClient, ToastService } from '../../../../core/services';
 import { GenericHTTPService } from '../../../../core/services/http-client.service';
 import { StatusHistoryState } from './status-history';
 
@@ -43,12 +43,12 @@ class StatusHistoryService extends GenericHTTPService {
 
   public async downloadLog() {
     const controller = new AbortController(); // Create an AbortController instance
-    toastService.loading('Downloading log file...', {
+    ToastService.loading('Downloading log file...', {
       action: {
         label: 'Cancel',
         onClick: () => {
           controller.abort(); // Abort the download when the button is clicked
-          toastService.info('Download cancelled'); // Show a cancellation message
+          ToastService.info('Download cancelled'); // Show a cancellation message
         },
       },
     });
@@ -88,7 +88,7 @@ class StatusHistoryService extends GenericHTTPService {
         console.error('Download failed:', error);
       }
     } finally {
-      toastService.dismiss(); // Dismiss the toastService
+      ToastService.dismiss(); // Dismiss the ToastService
     }
   }
 

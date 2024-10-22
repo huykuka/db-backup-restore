@@ -1,6 +1,6 @@
 import { useZuStandStore } from '@core/hooks';
 import { ManualFileUpload } from '@models/manual-file-upload.model';
-import { toastService } from '../../core/services';
+import { ToastService } from '../../core/services';
 import { GenericHTTPService } from '../../core/services/http-client.service';
 
 export interface ManualFileUPloadState {
@@ -30,7 +30,7 @@ class ManualUploadService extends GenericHTTPService {
           onProgress(percentCompleted); // Call the progress callback
         },
       });
-      toastService.success(`${file.name} uploaded!`);
+      ToastService.success(`${file.name} uploaded!`);
 
       this.setState('files', [
         ...this.getState().files,
@@ -44,7 +44,7 @@ class ManualUploadService extends GenericHTTPService {
       return response.data; // Return the response data
     } catch (error) {
       console.error('Error uploading file:', error);
-      toastService.error('File upload failed!');
+      ToastService.error('File upload failed!');
       throw error; // Rethrow the error for handling in the component
     } finally {
       onProgress(0);
@@ -53,14 +53,14 @@ class ManualUploadService extends GenericHTTPService {
 
   async restore(filePath: string) {
     try {
-      toastService.loading('Restore In Progress');
+      ToastService.loading('Restore In Progress');
       await super.post(`restore/manual`, {
         filePath,
       });
-      toastService.success('Restore successfully!');
+      ToastService.success('Restore successfully!');
     } catch (err) {
     } finally {
-      toastService.dismiss();
+      ToastService.dismiss();
     }
   }
 
