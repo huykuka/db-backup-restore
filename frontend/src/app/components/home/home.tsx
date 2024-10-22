@@ -1,6 +1,7 @@
-import { BarChartComponent } from '@components/core/charts/bar-chart';
-import { PieChartComponent } from '@components/core/charts/pie-chart';
+import { BarChartComponent } from "@components/core/charts/bar-chart";
+import { PieChartComponent } from "@components/core/charts/pie-chart";
 import { Separator } from "@frontend/shared/components/ui/separator";
+import Widget from './charts/widget';
 import { HistoryComponent } from "./history/history";
 import Settings from "./settings/settings";
 
@@ -10,9 +11,8 @@ const Home = () => {
         <div className="flex flex-col gap-5">
             <div className="flex flex-row gap-4 ">
                 <div className="flex flex-row gap-4 h-fit">
-                    <PieChartComponent></PieChartComponent>
-                    <PieChartComponent></PieChartComponent>
-                    <PieChartComponent></PieChartComponent>
+                    <Widget />
+                    <PieChartComponent />
                 </div>
                 <BarChartComponent />
             </div>

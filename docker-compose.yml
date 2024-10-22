@@ -4,5 +4,6 @@ services:
     image: 010497/db-tools:latest
     env_file:
       - .env
+    tty: true
     ports:
       - "3022:8080"
