@@ -1,5 +1,6 @@
 services:
   app:
+    container_name: backup-tools
     image: 010497/db-tools:latest
     env_file:
       - .env
