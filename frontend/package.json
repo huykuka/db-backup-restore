@@ -6,6 +6,7 @@
     "start": "nx serve --host 0.0.0.0",
     "build": "nx build && npm run postbuild",
     "postbuild": "cpx 'dist/frontend/**/*' '../backend/internal/routes/web'",
+    "lint": "nx run frontend:lint --fix",
     "test": "nx test"
   },
   "private": true,

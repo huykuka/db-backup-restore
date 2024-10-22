@@ -1,6 +1,11 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { Button } from '@frontend/shared/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@frontend/shared/components/ui/card';
 import {
   Form,
   FormControl,
@@ -10,18 +15,12 @@ import {
   FormLabel,
   FormMessage,
 } from '@frontend/shared/components/ui/form';
-import { Button } from '@frontend/shared/components/ui/button';
 import { Input } from '@frontend/shared/components/ui/input';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@frontend/shared/components/ui/card';
-import { Check, Loader, Save } from 'lucide-react';
-import { Setting } from 'src/app/models/settings.model';
-import { useEffect, useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Save } from 'lucide-react';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 import { CheckButton } from './components/check-button';
 import settingService from './settings.service';
 
@@ -59,38 +58,38 @@ export function DatabaseSettingForm({
 
   useEffect(() => {
     const dbSettings = getState().settings.reduce(
-        (acc, setting) => {
-          switch (setting.key) {
-            case 'DB_USER':
-              acc.username = setting.value;
-              break;
-            case 'DB_PASSWORD':
-              acc.password = setting.value;
-              break;
-            case 'DB_PORT':
-              acc.port = parseInt(setting.value, 10);
-              break;
-            case 'DB_NAME':
-              acc.dbName = setting.value;
-              break;
-            case 'DB_HOST':
-              acc.dbHost = setting.value;
-              break;
-            default:
-              break;
-          }
-          return acc;
-        },
-        {
-          username: '',
-          password: '',
-          port: 5432,
-          dbName: '',
-          dbHost: '',
+      (acc, setting) => {
+        switch (setting.key) {
+          case 'DB_USER':
+            acc.username = setting.value;
+            break;
+          case 'DB_PASSWORD':
+            acc.password = setting.value;
+            break;
+          case 'DB_PORT':
+            acc.port = parseInt(setting.value, 10);
+            break;
+          case 'DB_NAME':
+            acc.dbName = setting.value;
+            break;
+          case 'DB_HOST':
+            acc.dbHost = setting.value;
+            break;
+          default:
+            break;
         }
-      );
-      form.reset(dbSettings);
-    }
+        return acc;
+      },
+      {
+        username: '',
+        password: '',
+        port: 5432,
+        dbName: '',
+        dbHost: '',
+      }
+    );
+    form.reset(dbSettings);
+  }
     , [getState()]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {

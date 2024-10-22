@@ -1,4 +1,3 @@
-import { ToastService } from '@core/services';
 import {
   Tabs,
   TabsContent,
@@ -6,10 +5,11 @@ import {
   TabsTrigger,
 } from '@frontend/shared/components/ui/tabs';
 import { useEffect } from 'react';
-import { Setting } from 'src/app/models/settings.model';;
+import { Setting } from 'src/app/models/settings.model';
 import { DatabaseSettingForm } from './database-setting.form';
 import { GeneralSettingForm } from './general-setting.form';
 import settingService, { useSettings } from './settings.service';
+;
 
 interface DatabaseSettingFormProps {
   settings: Setting[] | undefined;
