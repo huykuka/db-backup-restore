@@ -7,8 +7,8 @@ FROM node:20-alpine AS frontend-builder
 WORKDIR /app/frontend
 
 # Copy the frontend source code
-COPY frontend/package*.json ./
-COPY frontend/ ./
+COPY ../frontend/package*.json ./
+COPY ../frontend/ ./
 
 # Install dependencies and build the frontend
 RUN npm i --verbose
@@ -23,11 +23,11 @@ WORKDIR /app/backend
 
 RUN apk add --no-cache gcc musl-dev 
 # Copy the backend source code
-COPY backend/go.mod backend/go.sum ./
+COPY ../backend/go.mod ../backend/go.sum ./
 RUN go mod download
 
 # Copy the rest of the backend source code
-COPY backend/ ./
+COPY ../backend/ ./
 
 # Copy the frontend build output to the backend's web directory
 COPY --from=frontend-builder /app/frontend/dist/frontend ./internal/routes/web
