@@ -54,7 +54,6 @@ class AuthService extends GenericHTTPService {
     try {
       const token = LocalStorageService.getItem(ACCESS_TOKEN);
       if (!token) {
-        this.setState('isAuthenticated', false);
         return;
       }
       const response = await apiClient.get('/auth/validate');

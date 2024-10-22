@@ -21,21 +21,12 @@ export const RouteComponent = () => {
 const InnerRoutes = () => {
     const navigate = useNavigate();
     const { getState } = authService;
-    const location = useLocation();
     useEffect(() => {
         authService.validateToken()
-            .then(() => {
-                if (location.pathname === '/login') return;
-                if (location.pathname === '/') {
-                    navigate('/home', { replace: true });
-                    return;
-                }
-                navigate(location.pathname, { replace: true });
-            })
             .catch(() => {
                 navigate('/login', { replace: true });
             });
-    }, [navigate, location.pathname]);
+    }, []);
 
     return (
         <Routes>

@@ -21,13 +21,6 @@ describe('AuthService', () => {
     });
 
     describe('validateToken', () => {
-        it('should set isAuthenticated to false if no token is present', async () => {
-            vi.spyOn(LocalStorageService, 'getItem').mockReturnValue(null);
-            const setStateSpy = vi.spyOn(authService, 'setState');
-            await authService.validateToken();
-
-            expect(setStateSpy).toHaveBeenCalledWith('isAuthenticated', false);
-        });
 
         it('should set isAuthenticated to true if token is valid', async () => {
             vi.spyOn(LocalStorageService, 'getItem').mockReturnValue('valid-token');
