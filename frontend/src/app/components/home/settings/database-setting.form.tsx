@@ -23,6 +23,7 @@ import { Check, Loader, Save } from 'lucide-react';
 import { Setting } from 'src/app/models/settings.model';
 import { useEffect, useState } from 'react';
 import { CheckButton } from './components/check-button';
+import settingService from './settings.service';
 
 const formSchema = z.object({
   username: z
@@ -37,14 +38,14 @@ const formSchema = z.object({
 });
 
 interface DatabaseSettingFormProps {
-  settings: Setting[] | undefined;
   onDatabaseSettingUpdate: (eventData: any) => void;
 }
 
 export function DatabaseSettingForm({
-  settings,
   onDatabaseSettingUpdate,
 }: DatabaseSettingFormProps) {
+  const { getState } = settingService
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -57,8 +58,7 @@ export function DatabaseSettingForm({
   });
 
   useEffect(() => {
-    if (settings) {
-      const dbSettings = settings.reduce(
+    const dbSettings = getState().settings.reduce(
         (acc, setting) => {
           switch (setting.key) {
             case 'DB_USER':
@@ -91,7 +91,7 @@ export function DatabaseSettingForm({
       );
       form.reset(dbSettings);
     }
-  }, [settings, form]);
+    , [getState()]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     onDatabaseSettingUpdate(values);
