@@ -1,4 +1,4 @@
-import { toastService } from '@core/services';
+import { ToastService } from '@core/services';
 import {
   Tabs,
   TabsContent,
@@ -40,10 +40,10 @@ const Settings = () => {
     apiClient
       .post('settings/update/db-settings', settings)
       .then((response) => {
-        toastService.success('Settings updated successfully');
+        ToastService.success('Settings updated successfully');
         setDbSettings(response.data.data.settings);
       })
-      .catch(() => toastService.error('Can not update the settings'));
+      .catch(() => ToastService.error('Can not update the settings'));
   };
 
   const tabConfigurations = [

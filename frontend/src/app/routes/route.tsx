@@ -6,6 +6,7 @@ import { authService, useAuth } from "@core/services/auth.service";
 import { useEffect } from 'react';
 import { HashRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import AnimatedContent from './animated-route';
+import { environment } from "@environment/environment";
 
 export const RouteComponent = () => {
     useAuth();

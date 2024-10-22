@@ -1,29 +1,29 @@
 import { toast } from 'sonner';
 
-class ToastService {
+export const ToastService = {
   success(message: string) {
     toast.success(message, {
       description: new Date().toLocaleString(),
     });
-  }
+  },
 
   error(message: string) {
     toast.error(message, {
       description: new Date().toLocaleString(),
     });
-  }
+  },
 
   info(message: string) {
     toast.info(message, {
       description: new Date().toLocaleString(),
     });
-  }
+  },
 
   warning(message: string) {
     toast.warning(message, {
       description: new Date().toLocaleString(),
     });
-  }
+  },
 
   loading(message: string, options = {}) {
     const loadingToast = toast.loading(message, {
@@ -32,11 +32,9 @@ class ToastService {
     });
 
     return loadingToast; // Return the toast ID for further actions like dismissing
-  }
+  },
 
   dismiss() {
     toast.dismiss(); // Method to dismiss a specific toast by ID
-  }
+  },
 }
-
-export const toastService = new ToastService();
