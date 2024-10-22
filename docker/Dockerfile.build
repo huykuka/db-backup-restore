@@ -7,8 +7,7 @@ RUN apk add --no-cache postgresql-client
 # Set the working directory
 WORKDIR /app
 
-# Copy the backend build output from the build stage
-COPY --from=backend-builder /app/backend/tmp/main ./main
+COPY backend/output ./
 
 # Ensure the binary is executable
 RUN chmod +x ./main

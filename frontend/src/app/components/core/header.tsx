@@ -7,7 +7,7 @@ import {
   ScrollTextIcon,
 } from 'lucide-react';
 import React, { ReactNode } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import BurgerMenu from './burger-menu';
 import LeadingBar from './leading-bar';
 import { ModeToggle } from './mode-toggle';
@@ -31,10 +31,16 @@ const links: NavBarItem[] = [
     label: 'Manual',
     icon: <HardDriveUploadIcon className="w-4 h-4" />,
   },
-  { to: '/log', label: 'Logs', icon: <ScrollTextIcon className="w-4 h-4" /> },
+  // { to: '/log', label: 'Logs', icon: <ScrollTextIcon className="w-4 h-4" /> },
 ];
 
 const Header: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    authService.logout().then(() => navigate('/login'));
+  }
+
   return (
     <>
       <header
@@ -65,7 +71,7 @@ const Header: React.FC = () => {
 
         <div className="flex flex-row items-center  gap-3">
           <ModeToggle />
-          <UserSection onLogOut={() => authService.logout()} user={{ email: "admin@mail.com", name: "admin" }} />
+          <UserSection onLogOut={handleLogout} user={{ email: "admin@mail.com", name: "admin" }} />
         </div>
       </header>
       <LeadingBar />

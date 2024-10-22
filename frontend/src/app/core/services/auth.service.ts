@@ -6,7 +6,7 @@ import {
 } from '@core/services/local-storage.service';
 import { apiClient } from './api-client.service';
 import { GenericHTTPService } from './http-client.service';
-import { toastService } from './toast.service';
+import { ToastService } from './toast.service';
 
 export interface AuthState {
   isAuthenticated: boolean;
@@ -23,7 +23,7 @@ export const authInitialState: AuthState = {
 export const useAuth = useZuStandStore(authInitialState);
 
 class AuthService extends GenericHTTPService {
-  public async login(data: LogInDto) {
+  public async login(data: LogInDto): Promise<void> {
     try {
       const response: any = await super.post('/auth/login', {
         email: data.email,
@@ -31,12 +31,12 @@ class AuthService extends GenericHTTPService {
       });
       const token = response.data.data.accessToken;
       if (token) {
-        toastService.success('Login successfully');
+        ToastService.success('Login successfully');
         this.setState('isAuthenticated', true);
         LocalStorageService.setItem(ACCESS_TOKEN, token);
       }
     } catch (err: any) {
-      console.error(err);
+      throw err; // Re-throw the error to be handled by the caller
     }
   }
 
@@ -52,13 +52,19 @@ class AuthService extends GenericHTTPService {
 
   public async validateToken() {
     try {
+      const token = LocalStorageService.getItem(ACCESS_TOKEN);
+      if (!token) {
+        return;
+      }
       const response = await apiClient.get('/auth/validate');
       const statusCode = response.status;
       if (statusCode == 200) {
         this.setState('isAuthenticated', true);
       }
     } catch (err: any) {
-      console.error(err);
+      LocalStorageService.removeItem(ACCESS_TOKEN);
+      this.setState('isAuthenticated', false);
+      throw err
     }
   }
 

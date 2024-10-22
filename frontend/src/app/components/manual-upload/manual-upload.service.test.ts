@@ -2,9 +2,9 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import {afterEach, beforeEach, describe, vi} from 'vitest';
 
-// Mock the toastService module
+// Mock the ToastService module
 vi.mock('../../core/services/toast.service', () => ({
-    toastService: {
+    ToastService: {
         success: vi.fn(),
         error: vi.fn(),
     },
@@ -44,8 +44,8 @@ describe('ManualUploadService', () => {
     //     // Check if progress callback is called with a progress percentage
     //     expect(progressCallback).toHaveBeenCalledWith(expect.any(Number));
     //
-    //     // Check if toastService.success was called with the correct message
-    //     expect(toastService.success).toHaveBeenCalledWith(`${file.name} uploaded!`);
+    //     // Check if ToastService.success was called with the correct message
+    //     expect(ToastService.success).toHaveBeenCalledWith(`${file.name} uploaded!`);
     //
     //     // Ensure progress callback was reset to 0
     //     expect(progressCallback).toHaveBeenCalledWith(0);

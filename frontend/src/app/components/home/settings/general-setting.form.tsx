@@ -14,9 +14,9 @@ import {Button} from "@frontend/shared/components/ui/button";
 
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@frontend/shared/components/ui/card";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@frontend/shared/components/ui/select";
-import {Save} from "lucide-react";
-import {Setting} from "src/app/models/settings.model";
+import { Save } from "lucide-react";
 import {useEffect} from "react";
+import settingService from "./settings.service";
 
 const dbTypes = ["postgresql", "mysql"] as const;
 const backupIntervals = ["midnight", "daily", "weekly", "hourly", "monthly"] as const;
@@ -27,11 +27,11 @@ const formSchema = z.object({
 })
 
 interface GeneralSettingFormProps {
-    settings: Setting[] | undefined;
 }
 
-export const GeneralSettingForm= ({ settings }: GeneralSettingFormProps) => {
+export const GeneralSettingForm = ({ }: GeneralSettingFormProps) => {
 
+    const { getState } = settingService
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -41,8 +41,7 @@ export const GeneralSettingForm= ({ settings }: GeneralSettingFormProps) => {
     })
 
     useEffect(() => {
-        if (settings) {
-            const generalSettings = settings.reduce((acc, setting) => {
+        const generalSettings = getState().settings.reduce((acc, setting) => {
                 switch (setting.key) {
                     case 'GENERAL_DB_TYPE':
                         acc.dbType = setting.value as (typeof dbTypes)[number];
@@ -59,9 +58,8 @@ export const GeneralSettingForm= ({ settings }: GeneralSettingFormProps) => {
                 backupInterval: "midnight" as (typeof backupIntervals)[number],
             });
 
-            form.reset(generalSettings);
-        }
-    }, [settings, form]);
+        form.reset(generalSettings);
+    }, [getState()]);
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values)

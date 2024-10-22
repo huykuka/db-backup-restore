@@ -1,7 +1,9 @@
 import axios, {CanceledError} from 'axios';
 import {globalErrorInterceptor, jwtInterceptor} from "@core/interceptors";
+import { environment } from '../../../environments/environment';
 
-const BASE_URL = 'http://127.0.0.1:8080/api';
+
+const BASE_URL = environment.apiEndPoint
 
 const apiClient = axios.create({
     baseURL: BASE_URL,

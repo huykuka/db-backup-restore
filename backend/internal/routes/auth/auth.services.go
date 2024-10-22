@@ -3,7 +3,6 @@ package auth
 import (
 	jwttoken "db-tool/internal/core/services/jwt-token"
 	"db-tool/internal/utils"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -22,7 +21,7 @@ func (a *AuthService) Login(c *gin.Context) {
 		utils.HandleHTTPError(c, err.Error(), "Failed to Login", http.StatusUnauthorized)
 		return
 	}
-	fmt.Println("hello")
+
 	accessToken, err := jwtService.GenerateAccessToken(user.Email)
 	if err != nil {
 		utils.HandleHTTPError(c, err.Error(), "Failed to Login", http.StatusUnauthorized)

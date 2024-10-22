@@ -8,15 +8,14 @@ import {
     CardTitle
 } from "@frontend/shared/components/ui/card";
 import { LogInDto, LoginForm } from "./login-form";
+import { useNavigate } from "react-router-dom";
 
 
 export function Login() {
-    const { setState } = authService
-
+    const navigate = useNavigate();
     const handleLogin = async (data: LogInDto) => {
-        // setState('isAuthenticated', true)
-        await authService.login(data)
-    }
+        await authService.login(data).then(() => navigate('/home', { replace: true }));
+    };
 
     return (
         <div className="min-h-screen flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">

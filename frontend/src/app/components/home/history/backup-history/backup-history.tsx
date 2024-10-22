@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from '@frontend/shared/components/ui/card';
 
-import { toastService } from '@core/services';
+import { ToastService } from '@core/services';
 import { useEffect } from 'react';
 import { Backup } from '../../../../models';
 import { Paging } from '../../../core/paging';
@@ -61,7 +61,7 @@ export function BackupHistory() {
   const handleRestoreBackup = async (id: string) => {
     await backupHistoryService
       .restoreBackup(id)
-      .then(() => toastService.success('Backup Restored'));
+      .then(() => ToastService.success('Backup Restored'));
   };
 
   const handleDownloadBackup = async (id: string) => {
