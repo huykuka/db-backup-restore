@@ -103,6 +103,7 @@ jobs:
 
       - name: Install build dependencies
         run: apk add --no-cache gcc musl-dev
+
       - name: Install backend dependencies
         run: go mod download
         working-directory: backend
@@ -113,8 +114,11 @@ jobs:
       - name: Copy frontend build to backend
         run: cp -r frontend/dist/frontend/* backend/internal/routes/web
 
+      # Build the backend and ensure the binary has executable permissions
       - name: Build backend
-        run: CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o output/main ./cmd/db-tool/main.go
+        run: |
+          CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o output/main ./cmd/db-tool/main.go
+          chmod +x output/main    # Set executable permissions
         working-directory: backend
 
       - name: Upload binary artifact
