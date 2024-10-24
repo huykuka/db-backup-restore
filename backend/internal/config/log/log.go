@@ -1,14 +1,16 @@
 package log
 
 import (
+	"os"
+	"time"
+
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"github.com/rifflock/lfshook"
 	log "github.com/sirupsen/logrus"
-	"os"
-	"time"
 )
 
 func Init() {
+	env := os.Getenv("ENV")
 	log.SetFormatter(&log.TextFormatter{
 		FullTimestamp:    true, // Enables full timestamps
 		DisableTimestamp: false,
@@ -31,6 +33,12 @@ func Init() {
 		},
 		&log.JSONFormatter{},
 	))
+
+	if env == "dev" {
+		log.SetLevel(log.DebugLevel)
+	} else {
+		log.SetLevel(log.ErrorLevel)
+	}
 
 	// Log to stdout for now to verify output
 	log.SetOutput(os.Stdout)
