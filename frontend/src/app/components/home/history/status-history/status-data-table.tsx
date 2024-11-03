@@ -1,3 +1,4 @@
+import ReadMore from '@components/core/read-more';
 import { Badge } from '@frontend/shared/components/ui/badge';
 import {
   Table,
@@ -8,7 +9,7 @@ import {
   TableRow,
 } from '@frontend/shared/components/ui/table';
 import LoadingOverlay from '../../../core/loader';
-import statusHistoryService from './status-history.service';
+import { statusHistoryService } from './status-history.service';
 
 export function StatusDataTable() {
   const { getState } = statusHistoryService;
@@ -46,7 +47,9 @@ export function StatusDataTable() {
               <TableCell>
                 {new Date(status.createdAt).toLocaleString()}
               </TableCell>
-              <TableCell>{status?.detail}</TableCell>
+              <TableCell>
+                <ReadMore text={status?.detail || ''}></ReadMore>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

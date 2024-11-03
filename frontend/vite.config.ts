@@ -1,8 +1,7 @@
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 /// <reference types='vitest' />
 import react from '@vitejs/plugin-react';
-import path, { join } from 'path';
-import { cwd } from 'process';
+import path from 'path';
 import { defineConfig, loadEnv } from 'vite';
 
 export default defineConfig(({ mode }) => {
@@ -11,7 +10,6 @@ export default defineConfig(({ mode }) => {
 
   // Load the environment variables from the environments folder
   const env = loadEnv(mode, environmentsPath);
-
 
   // Automatically include all VITE_ prefixed env variables
   const envPrefix = 'VITE_';
@@ -44,7 +42,7 @@ export default defineConfig(({ mode }) => {
       reportCompressedSize: true,
       commonjsOptions: {
         transformMixedEsModules: true,
-      }
+      },
     },
 
     define: processEnv,

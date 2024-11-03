@@ -38,7 +38,7 @@ func (b *BackUpRepository) Backup() (string, error) {
 			Detail: err.Error(),
 		})
 		return "", err
-	}else{
+	} else {
 		historianRepository.Create(&histories.History{
 			Status: "success",
 			Type:   "backup",

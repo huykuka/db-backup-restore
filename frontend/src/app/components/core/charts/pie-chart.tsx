@@ -13,17 +13,12 @@ import { Label, Pie, PieChart } from "recharts"
 export const description = "A donut chart with text"
 
 const chartData = [
-  { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-  { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-  { browser: "firefox", visitors: 287, fill: "var(--color-firefox)" },
-  { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
-  { browser: "other", visitors: 190, fill: "var(--color-other)" },
+  { browser: "pass", visitors: 275, fill: "var(--color-chrome)" },
+  { browser: "failed", visitors: 200, fill: "var(--color-safari)" },
 ]
 
 const chartConfig = {
-  visitors: {
-    label: "Visitors",
-  },
+
   chrome: {
     label: "Chrome",
     color: "hsl(var(--chart-1))",
@@ -32,18 +27,8 @@ const chartConfig = {
     label: "Safari",
     color: "hsl(var(--chart-2))",
   },
-  firefox: {
-    label: "Firefox",
-    color: "hsl(var(--chart-3))",
-  },
-  edge: {
-    label: "Edge",
-    color: "hsl(var(--chart-4))",
-  },
-  other: {
-    label: "Other",
-    color: "hsl(var(--chart-5))",
-  },
+
+
 } satisfies ChartConfig
 
 export function PieChartComponent() {
@@ -54,8 +39,8 @@ export function PieChartComponent() {
   return (
     <Card className="flex flex-col min-w-[300px]">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Pie Chart - Donut with Text</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Back Up Statistic</CardTitle>
+        <CardDescription>Pass Failed Ratio</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
@@ -96,7 +81,7 @@ export function PieChartComponent() {
                           y={(viewBox.cy || 0) + 24}
                           className="fill-muted-foreground"
                         >
-                          Visitors
+                          Jobs
                         </tspan>
                       </text>
                     )

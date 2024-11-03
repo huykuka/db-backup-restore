@@ -64,7 +64,7 @@ class AuthService extends GenericHTTPService {
     } catch (err: any) {
       LocalStorageService.removeItem(ACCESS_TOKEN);
       this.setState('isAuthenticated', false);
-      throw err
+      throw err;
     }
   }
 

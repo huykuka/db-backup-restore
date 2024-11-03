@@ -37,4 +37,4 @@ export const ToastService = {
   dismiss() {
     toast.dismiss(); // Method to dismiss a specific toast by ID
   },
-}
+};

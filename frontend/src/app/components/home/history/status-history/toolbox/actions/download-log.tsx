@@ -1,7 +1,7 @@
 import { Button, buttonVariants } from '@frontend/shared/components/ui/button';
 import { DownloadIcon, EllipsisIcon } from 'lucide-react';
 import { useState } from 'react';
-import statusHistoryService from '../../status-history.service';
+import { statusHistoryService } from '../../status-history.service';
 
 export const DownLoadLogButton = () => {
   const [isDownloading, setIsDownloading] = useState(false);

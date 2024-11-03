@@ -9,7 +9,8 @@ import { StatusDataTable } from './status-data-table';
 import { useEffect } from 'react';
 import { Status } from '../../../../models/status.model';
 import { Paging } from '../../../core/paging';
-import statusHistoryService, {
+import {
+  statusHistoryService,
   useStatusHistory,
 } from './status-history.service';
 import { Toolbox } from './toolbox/toolbox';

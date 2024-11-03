@@ -2,6 +2,7 @@ package routes
 
 import (
 	"db-tool/internal/core/interceptors"
+	"db-tool/internal/core/middlewares"
 	"db-tool/internal/routes/auth"
 	"db-tool/internal/routes/backup"
 	"db-tool/internal/routes/health"
@@ -45,8 +46,6 @@ func Init() {
 		MaxAge:           12 * time.Hour,
 	}))
 
-	// Set a lower memory limit for multipart forms (default is 32 MiB)
-	r.MaxMultipartMemory = 64 << 20 // 64MiB
 	// Middleware registration
 	r.Use(ginlogrus.Logger(log.StandardLogger()), gin.Recovery())
 	r.Use(interceptors.JsonApiInterceptor())
@@ -69,14 +68,15 @@ func Init() {
 		log.Fatal(err)
 	}
 
-	// Middleware to serve static files if the path does not match /api/*
-	r.Use(func(c *gin.Context) {
+	r.Use(middlewares.NoJsonAPI(), func(c *gin.Context) {
 		if !strings.HasPrefix(c.Request.URL.Path, "/api/") {
 			filePath := filepath.Join(".", c.Request.URL.Path)
 			_, err := contentStatic.Open(filePath)
+			c.Writer.Header().Del("Content-Length")
 			if os.IsNotExist(err) {
 				c.FileFromFS("index.html", http.FS(contentStatic))
 			} else {
+
 				http.StripPrefix("/", http.FileServer(http.FS(contentStatic))).ServeHTTP(c.Writer, c.Request)
 			}
 			c.Abort()
