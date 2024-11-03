@@ -1,10 +1,7 @@
-import {
-  ACCESS_TOKEN,
-  LocalStorageService,
-} from '@core/services/local-storage.service';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { apiClient } from './api-client.service';
-import { authService } from './auth.service';
+import {ACCESS_TOKEN, LocalStorageService} from './local-storage.service';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {apiClient} from './api-client.service';
+import {authService} from './auth.service';
 
 vi.mock('@core/services/local-storage.service');
 vi.mock('./api-client.service');
