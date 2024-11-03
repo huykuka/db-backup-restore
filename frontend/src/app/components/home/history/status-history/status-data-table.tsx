@@ -9,7 +9,7 @@ import {
   TableRow,
 } from '@frontend/shared/components/ui/table';
 import LoadingOverlay from '../../../core/loader';
-import statusHistoryService from './status-history.service';
+import { statusHistoryService } from './status-history.service';
 
 export function StatusDataTable() {
   const { getState } = statusHistoryService;

@@ -123,5 +123,4 @@ class StatusHistoryService extends GenericHTTPService {
   }
 }
 
-const statusHistoryService = new StatusHistoryService();
-export default statusHistoryService;
+export const statusHistoryService = new StatusHistoryService();
