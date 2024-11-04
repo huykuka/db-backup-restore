@@ -1,10 +1,9 @@
-import { authService } from '@core/services/auth.service';
+import { authService } from '../../core/services/auth.service';
 import { Separator } from '@frontend/shared/components/ui/separator';
 import {
   Database,
   HardDriveUploadIcon,
   LayoutDashboardIcon,
-  ScrollTextIcon,
 } from 'lucide-react';
 import React, { ReactNode } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
@@ -39,7 +38,7 @@ const Header: React.FC = () => {
 
   const handleLogout = () => {
     authService.logout().then(() => navigate('/login'));
-  }
+  };
 
   return (
     <>
@@ -53,7 +52,7 @@ const Header: React.FC = () => {
           </div>
 
           <NavLink to="/" className="flex items-center gap-2">
-            <Database className="mr-2 text-white" />
+            <Database className="mr-2 text-white hidden md:block" />
             <span className="text-white text-xl font-semibold text-center flex items-center">
               Database Management
             </span>
@@ -71,7 +70,10 @@ const Header: React.FC = () => {
 
         <div className="flex flex-row items-center  gap-3">
           <ModeToggle />
-          <UserSection onLogOut={handleLogout} user={{ email: "admin@mail.com", name: "admin" }} />
+          <UserSection
+            onLogOut={handleLogout}
+            user={{ email: 'admin@mail.com', name: 'admin' }}
+          />
         </div>
       </header>
       <LeadingBar />
