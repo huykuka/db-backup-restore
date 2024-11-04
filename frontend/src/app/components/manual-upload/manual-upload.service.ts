@@ -1,7 +1,6 @@
 import { useZuStandStore } from '@core/hooks';
 import { ManualFileUpload } from '@models/manual-file-upload.model';
-import { ToastService } from '../../core/services';
-import { GenericHTTPService } from '../../core/services/http-client.service';
+import { GenericHTTPService, ToastService } from '@core/services';
 
 export interface ManualFileUPloadState {
   files: ManualFileUpload[];
@@ -64,11 +63,6 @@ class ManualUploadService extends GenericHTTPService {
     }
   }
 
-  private checkFileDuplicate(file: File) {
-    const fileNames = this.getState().files.map((file) => file.name);
-    return fileNames.includes(file.name);
-  }
-
   public setState(key: keyof ManualFileUPloadState, value: any) {
     useManualUpload.getState().setState(key, value);
   }
@@ -79,6 +73,11 @@ class ManualUploadService extends GenericHTTPService {
 
   public getState(): ManualFileUPloadState {
     return useManualUpload.getState().state;
+  }
+
+  private checkFileDuplicate(file: File) {
+    const fileNames = this.getState().files.map((file) => file.name);
+    return fileNames.includes(file.name);
   }
 }
 
