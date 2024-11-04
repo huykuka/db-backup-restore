@@ -9,13 +9,14 @@ export interface StatisticState {
   count?: number;
   totalJob: number;
   passRecords: number;
-  failedRecord?: number;
+  failedRecord: number;
 }
 
 export const statisticInitialState: StatisticState = {
   count: 0,
   passRecords: 0,
   totalJob: 0,
+  failedRecord: 0,
 };
 
 // eslint-disable-next-line react-hooks/rules-of-hooks

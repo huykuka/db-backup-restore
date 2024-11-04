@@ -1,50 +1,48 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@frontend/shared/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@frontend/shared/components/ui/card';
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@frontend/shared/components/ui/chart"
-import * as React from "react"
-import { Label, Pie, PieChart } from "recharts"
+} from '@frontend/shared/components/ui/chart';
+import * as React from 'react';
+import { Label, Pie, PieChart } from 'recharts';
 
+export const description = 'A donut chart with text';
 
+// Define the types for props
+interface PieChartComponentProps {
+  data: Array<{ browser: string; visitors: number; fill: string }>;
+  config: ChartConfig;
+  title: string;
+  description: string;
+}
 
-export const description = "A donut chart with text"
-
-const chartData = [
-  { browser: "pass", visitors: 275, fill: "var(--color-chrome)" },
-  { browser: "failed", visitors: 200, fill: "var(--color-safari)" },
-]
-
-const chartConfig = {
-
-  chrome: {
-    label: "Chrome",
-    color: "hsl(var(--chart-1))",
-  },
-  safari: {
-    label: "Safari",
-    color: "hsl(var(--chart-2))",
-  },
-
-
-} satisfies ChartConfig
-
-export function PieChartComponent() {
+export function PieChartComponent({
+  data,
+  config,
+  title,
+  description,
+}: PieChartComponentProps) {
   const totalVisitors = React.useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.visitors, 0)
-  }, [])
+    return data.reduce((acc, curr) => acc + curr.visitors, 0);
+  }, [data]);
 
   return (
     <Card className="flex flex-col min-w-[300px]">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Back Up Statistic</CardTitle>
-        <CardDescription>Pass Failed Ratio</CardDescription>
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
-          config={chartConfig}
+          config={config}
           className="mx-auto aspect-square max-h-[250px]"
         >
           <PieChart>
@@ -53,7 +51,7 @@ export function PieChartComponent() {
               content={<ChartTooltipContent hideLabel />}
             />
             <Pie
-              data={chartData}
+              data={data}
               dataKey="visitors"
               nameKey="browser"
               innerRadius={60}
@@ -61,7 +59,7 @@ export function PieChartComponent() {
             >
               <Label
                 content={({ viewBox }) => {
-                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                  if (viewBox && 'cx' in viewBox && 'cy' in viewBox) {
                     return (
                       <text
                         x={viewBox.cx}
@@ -84,7 +82,7 @@ export function PieChartComponent() {
                           Jobs
                         </tspan>
                       </text>
-                    )
+                    );
                   }
                 }}
               />
@@ -92,7 +90,6 @@ export function PieChartComponent() {
           </PieChart>
         </ChartContainer>
       </CardContent>
-
     </Card>
-  )
+  );
 }
