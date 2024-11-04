@@ -3,7 +3,6 @@ import { authService } from '../../core/services/auth.service';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from '@frontend/shared/components/ui/card';

@@ -1,4 +1,3 @@
-import { BarChartComponent } from '../core/charts/bar-chart';
 import { PieChartComponent } from '../core/charts/pie-chart';
 import { Separator } from '@frontend/shared/components/ui/separator';
 import Widget from './charts/widget';
