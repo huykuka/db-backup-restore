@@ -42,7 +42,7 @@ const Home = () => {
   return (
     <div className="flex flex-col gap-5">
       <div className="flex flex-row gap-4">
-        <div className="flex flex-row gap-4 h-fit">
+        <div className="flex flex-col md:flex-row gap-4 h-fit">
           <Widget />
           <PieChartComponent
             data={chartData}

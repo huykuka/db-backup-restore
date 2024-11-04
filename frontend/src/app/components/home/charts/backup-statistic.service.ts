@@ -59,8 +59,6 @@ class BackUpStatisticService extends GenericHTTPService {
     const jobs = response.data.statuses as Status[];
     const passJobs = jobs.filter((job) => job.status === 'success');
     const total = response.data.total;
-    console.log(passJobs.length);
-    console.log(total);
     this.setState('passRecords', passJobs.length);
     this.setState('failedRecord', total - passJobs.length);
     this.setState('totalJob', total);
