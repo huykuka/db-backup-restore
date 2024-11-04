@@ -9,13 +9,14 @@ export interface StatisticState {
   count?: number;
   totalJob: number;
   passRecords: number;
-  failedRecord?: number;
+  failedRecord: number;
 }
 
 export const statisticInitialState: StatisticState = {
   count: 0,
   passRecords: 0,
   totalJob: 0,
+  failedRecord: 0,
 };
 
 // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -58,8 +59,6 @@ class BackUpStatisticService extends GenericHTTPService {
     const jobs = response.data.statuses as Status[];
     const passJobs = jobs.filter((job) => job.status === 'success');
     const total = response.data.total;
-    console.log(passJobs.length);
-    console.log(total);
     this.setState('passRecords', passJobs.length);
     this.setState('failedRecord', total - passJobs.length);
     this.setState('totalJob', total);
