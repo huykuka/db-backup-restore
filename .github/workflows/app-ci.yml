@@ -89,14 +89,21 @@ jobs:
     container:
       image: golang:1.24-alpine
     steps:
+      # Install Node.js for actions/checkout@v4
+      - name: Install Node.js
+        run: |
+          apk add --no-cache nodejs npm
+      
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          path: source
 
       - name: Download frontend build artifacts
         uses: actions/download-artifact@v4
         with:
           name: frontend-build
-          path: frontend/dist
+          path: source/frontend/dist
 
       - name: Set up Go
         uses: actions/setup-go@v5
@@ -108,26 +115,26 @@ jobs:
 
       - name: Install backend dependencies
         run: go mod download
-        working-directory: backend
+        working-directory: source/backend
 
       - name: List files in frontend build
-        run: ls -la frontend/dist/frontend
+        run: ls -la source/frontend/dist/frontend
 
       - name: Copy frontend build to backend
-        run: cp -r frontend/dist/frontend/* backend/internal/routes/web
+        run: cp -r source/frontend/dist/frontend/* source/backend/internal/routes/web
 
       # Build the backend and ensure the binary has executable permissions
       - name: Build backend
         run: |
           CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o output/main ./cmd/db-tool/main.go
           chmod +x output/main    # Set executable permissions
-        working-directory: backend
+        working-directory: source/backend
 
       - name: Upload binary artifact
         uses: actions/upload-artifact@v4
         with:
           name: backend-build
-          path: backend/output
+          path: source/backend/output
 
   build-docker:
     runs-on: self-hosted
