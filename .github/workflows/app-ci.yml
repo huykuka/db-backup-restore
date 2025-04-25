@@ -10,7 +10,7 @@ on:
 
 jobs:
   lint-and-test-frontend:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -34,7 +34,7 @@ jobs:
         working-directory: frontend
 
   test-backend:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: lint-and-test-frontend
     steps:
       - name: Checkout code
@@ -54,7 +54,7 @@ jobs:
         working-directory: backend
 
   build-frontend:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: lint-and-test-frontend
     steps:
@@ -81,7 +81,7 @@ jobs:
           path: frontend/dist
 
   build-backend:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: [build-frontend, test-backend]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     container:
@@ -128,7 +128,7 @@ jobs:
           path: backend/output
 
   build-docker:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: build-backend
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
