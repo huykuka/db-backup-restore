@@ -8,3 +8,8 @@ services:
     restart: always
     ports:
       - "3022:8080"
+    volumes:
+      - app-data:/app # Mount a volume to avoid data loss
+
+volumes:
+  app-data:
