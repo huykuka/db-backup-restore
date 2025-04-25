@@ -1,5 +1,5 @@
-import { ModeToggle } from '../core/mode-toggle';
-import { authService } from '../../core/services/auth.service';
+import { ModeToggle } from '@components/core';
+import { authService } from '@core/services/auth.service';
 import {
   Card,
   CardContent,
