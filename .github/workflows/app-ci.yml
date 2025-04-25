@@ -81,37 +81,47 @@ jobs:
         with:
           name: frontend-build
           path: frontend/dist
+          
   build-backend:
     runs-on: self-hosted
     needs: [build-frontend, test-backend]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    container:
-      image: node:20-bullseye # Keep using the Node.js image
     steps:
-      - name: Install Go
-        run: apt-get update && apt-get install -y golang-go build-essential
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
         with:
-          path: source
+          go-version: "1.23"
+
       - name: Download frontend build artifacts
         uses: actions/download-artifact@v4
         with:
           name: frontend-build
-          path: source/frontend/dist
+          path: frontend/dist
+
       - name: Install backend dependencies
         run: go mod download
-        working-directory: source/backend
+        working-directory: backend
+        
+      - name: List files in frontend build
+        run: ls -la frontend/dist/frontend
+        
+      - name: Copy frontend build to backend
+        run: cp -r frontend/dist/frontend/* backend/internal/routes/web
+
       - name: Build backend
         run: |
           CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o output/main ./cmd/db-tool/main.go
           chmod +x output/main
-        working-directory: source/backend
+        working-directory: backend
+
       - name: Upload binary artifact
         uses: actions/upload-artifact@v4
         with:
           name: backend-build
-          path: source/backend/output
+          path: backend/output
 
   build-docker:
     runs-on: self-hosted
