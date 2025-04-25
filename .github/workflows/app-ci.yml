@@ -81,54 +81,37 @@ jobs:
         with:
           name: frontend-build
           path: frontend/dist
-
   build-backend:
     runs-on: self-hosted
     needs: [build-frontend, test-backend]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     container:
-      image: node:20-bullseye # Use a Node.js image that supports Go installation
+      image: node:20-bullseye # Keep using the Node.js image
     steps:
-      # Install Go
       - name: Install Go
         run: |
-          apt-get update && apt-get install -y golang-go
+          apt-get update && apt-get install -y curl
+          curl -LO https://golang.org/dl/go1.23.linux-amd64.tar.gz
+          tar -C /usr/local -xzf go1.23.linux-amd64.tar.gz
+          export PATH=$PATH:/usr/local/go/bin
           go version  # Verify Go installation
-
-      # Check out the repository code
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           path: source
-
-      # Download frontend build artifacts
       - name: Download frontend build artifacts
         uses: actions/download-artifact@v4
         with:
           name: frontend-build
           path: source/frontend/dist
-
-      # Install backend dependencies
       - name: Install backend dependencies
         run: go mod download
         working-directory: source/backend
-
-      # List files in the frontend build directory
-      - name: List files in frontend build
-        run: ls -la source/frontend/dist/frontend
-
-      # Copy frontend build to the backend directory
-      - name: Copy frontend build to backend
-        run: cp -r source/frontend/dist/frontend/* source/backend/internal/routes/web
-
-      # Build the backend and ensure the binary has executable permissions
       - name: Build backend
         run: |
           CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o output/main ./cmd/db-tool/main.go
-          chmod +x output/main    # Set executable permissions
+          chmod +x output/main
         working-directory: source/backend
-
-      # Upload the backend binary artifact
       - name: Upload binary artifact
         uses: actions/upload-artifact@v4
         with:
