@@ -90,10 +90,11 @@ jobs:
       image: golang:1.24-alpine
     steps:
       # Install Node.js for actions/checkout@v4
-      - name: Install Node.js
-        run: |
-          apk add --no-cache nodejs npm
-      
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
       - name: Checkout code
         uses: actions/checkout@v4
         with:
