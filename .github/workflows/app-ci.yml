@@ -87,40 +87,37 @@ jobs:
     needs: [build-frontend, test-backend]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     container:
-      image: golang:1.24-alpine
+      image: node:20-bullseye # Use a Node.js image that supports Go installation
     steps:
-      # Install Node.js for actions/checkout@v4
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
+      # Install Go
+      - name: Install Go
+        run: |
+          apt-get update && apt-get install -y golang-go
+          go version  # Verify Go installation
 
+      # Check out the repository code
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           path: source
 
+      # Download frontend build artifacts
       - name: Download frontend build artifacts
         uses: actions/download-artifact@v4
         with:
           name: frontend-build
           path: source/frontend/dist
 
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: "1.23"
-
-      - name: Install build dependencies
-        run: apk add --no-cache gcc musl-dev
-
+      # Install backend dependencies
       - name: Install backend dependencies
         run: go mod download
         working-directory: source/backend
 
+      # List files in the frontend build directory
       - name: List files in frontend build
         run: ls -la source/frontend/dist/frontend
 
+      # Copy frontend build to the backend directory
       - name: Copy frontend build to backend
         run: cp -r source/frontend/dist/frontend/* source/backend/internal/routes/web
 
@@ -131,6 +128,7 @@ jobs:
           chmod +x output/main    # Set executable permissions
         working-directory: source/backend
 
+      # Upload the backend binary artifact
       - name: Upload binary artifact
         uses: actions/upload-artifact@v4
         with:
